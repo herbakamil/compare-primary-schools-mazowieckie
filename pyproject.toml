@@ -1,0 +1,14 @@
+[project]
+name = "porownanie-podstawowek-mazowsze"
+version = "0.1.0"
+description = "Analiza wynikow egzaminu osmoklasisty dla szkol podstawowych."
+requires-python = ">=3.11"
+dependencies = [
+    "jupyterlab",
+    "matplotlib",
+    "notebook>=7.5.6",
+    "numpy",
+    "openpyxl",
+    "pandas",
+    "seaborn",
+]
