@@ -145,58 +145,71 @@ def main() -> None:
 
     schools_by_rspo = {s["rspo"]: s for s in schools}
 
-    geocoded_count = 0
     kept_count = 0
     updated_count = 0
     new_count = 0
 
-    # 1. Walk existing rows in order; keep or re-geocode in place.
-    result_by_rspo: dict[int, dict] = {}
+    # 1. Plan: collect every school that needs geocoding (changed address or new).
+    all_to_geocode: list[tuple[int, dict, str]] = []  # (rspo, school, action)
     for rspo in ordered_rspo:
         cached = cache_by_rspo[rspo]
         school = schools_by_rspo.get(rspo)
         if school is None:
-            # School no longer present in data — keep the cached row as-is
-            result_by_rspo[rspo] = cached
-            kept_count += 1
             continue
-
         old_addr = normalize_address(cached.get("miejscowosc"), cached.get("ulica_nr"))
         new_addr = normalize_address(school["miejscowosc"], school["ulica_nr"])
         has_coords = bool(cached.get("latitude")) and bool(cached.get("longitude"))
+        if not (old_addr == new_addr and has_coords):
+            all_to_geocode.append((rspo, school, "update"))
 
-        if old_addr == new_addr and has_coords:
-            # Unchanged address with coordinates — keep cached row in its position
-            result_by_rspo[rspo] = cached
-            kept_count += 1
-        else:
-            # Changed address (or missing coords) — re-geocode, update in place
-            if args.limit is not None and geocoded_count >= args.limit:
-                result_by_rspo[rspo] = cached  # leave as-is for now
-                continue
-            print(f"  re-geocoding rspo={rspo}: {school['miejscowosc']}, {school['ulica_nr']}")
-            coords = geocode_address(school["miejscowosc"], school["ulica_nr"])
-            geocoded_count += 1
-            updated_count += 1
-            result_by_rspo[rspo] = {
-                "rspo": rspo,
-                "miejscowosc": school["miejscowosc"],
-                "ulica_nr": school["ulica_nr"],
-                "latitude": coords[0] if coords else "",
-                "longitude": coords[1] if coords else "",
-            }
-
-    # 2. Append new schools (not in cache) at the end, in schools-base order.
     for school in schools:
-        rspo = school["rspo"]
-        if rspo in result_by_rspo:
+        if school["rspo"] not in cache_by_rspo:
+            all_to_geocode.append((school["rspo"], school, "new"))
+
+    to_geocode = all_to_geocode if args.limit is None else all_to_geocode[: args.limit]
+    n_total = len(to_geocode)
+    to_geocode_rspos = {rspo for rspo, _, _ in to_geocode}
+    deferred_count = len(all_to_geocode) - n_total
+
+    # 2. Pre-populate result_by_rspo with rows that will NOT be re-geocoded
+    #    (kept rows + deferred updates fall through with their cached values).
+    deferred_rspos = {rspo for rspo, _, _ in all_to_geocode[n_total:]}
+    result_by_rspo: dict[int, dict] = {}
+    for rspo in ordered_rspo:
+        if rspo in to_geocode_rspos:
             continue
-        if args.limit is not None and geocoded_count >= args.limit:
-            break
-        print(f"  geocoding NEW rspo={rspo}: {school['miejscowosc']}, {school['ulica_nr']}")
+        result_by_rspo[rspo] = cache_by_rspo[rspo]
+        if rspo not in deferred_rspos:
+            kept_count += 1
+
+    # 3. Geocode with progress, saving every SAVE_EVERY processed schools.
+    SAVE_EVERY = 50
+
+    def assemble_rows() -> list[dict]:
+        rows = [result_by_rspo[r] for r in ordered_rspo if r in result_by_rspo]
+        for r in result_by_rspo:
+            if r not in ordered_rspo:
+                rows.append(result_by_rspo[r])
+        return rows
+
+    print(
+        f"\nGeocoding {n_total:,} schools"
+        + (f" ({deferred_count:,} deferred due to --limit)" if deferred_count else "")
+    )
+
+    for index, (rspo, school, action) in enumerate(to_geocode, start=1):
+        pct = index / n_total * 100 if n_total else 100.0
+        label = "re-geocoding" if action == "update" else "geocoding NEW"
+        print(
+            f"  [{index:>4,}/{n_total:,} ({pct:5.1f}%)] {label} rspo={rspo}: "
+            f"{school['miejscowosc']}, {school['ulica_nr']}"
+        )
         coords = geocode_address(school["miejscowosc"], school["ulica_nr"])
-        geocoded_count += 1
-        new_count += 1
+        if action == "update":
+            updated_count += 1
+        else:
+            new_count += 1
+            ordered_rspo.append(rspo)
         result_by_rspo[rspo] = {
             "rspo": rspo,
             "miejscowosc": school["miejscowosc"],
@@ -204,15 +217,13 @@ def main() -> None:
             "latitude": coords[0] if coords else "",
             "longitude": coords[1] if coords else "",
         }
-        ordered_rspo.append(rspo)
 
-    # 3. Assemble final ordered rows: existing positions first, then appended new.
-    final_rows = [result_by_rspo[rspo] for rspo in ordered_rspo if rspo in result_by_rspo]
-    # Include any new rspo that were appended but not yet in ordered_rspo
-    for rspo in result_by_rspo:
-        if rspo not in ordered_rspo:
-            final_rows.append(result_by_rspo[rspo])
+        if index % SAVE_EVERY == 0 and index < n_total:
+            write_cache(COORDS_CSV, assemble_rows())
+            print(f"    [partial cache saved — {index:,}/{n_total:,} done]")
 
+    # 4. Final save.
+    final_rows = assemble_rows()
     write_cache(COORDS_CSV, final_rows)
 
     missing = sum(1 for r in final_rows if not r.get("latitude"))
