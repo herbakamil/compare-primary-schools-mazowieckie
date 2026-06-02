@@ -1,294 +1,326 @@
-# Project: School Quality Analysis — Warsaw OKE District
+# CLAUDE.md — Technical reference for the school quality project
 
-## What this project is
-
-Analysis of 8th-grade exam results (egzamin ósmoklasisty) from the Warsaw OKE district,
-2021–2025 (new year added annually). Goal: produce a public interactive map where parents
-can see how schools in their area perform, with honest uncertainty communication.
-
-Two outputs:
-1. `how_to_measure_school_quality.ipynb` — methodology notebook, readable by a
-   mathematically literate parent (understands median/mean). Written in English,
-   published on GitHub. Explains every methodological decision including rejected alternatives.
-2. `docs/index.html` — standalone interactive map (Leaflet.js), hosted on GitHub Pages.
-   No backend, no server, no API keys required.
+This file is the technical reference for an AI agent (Claude Code) working on this
+project. It documents the data, conventions, methodology decisions, and output
+formats. For a human-facing overview, see `README.md`.
 
 ---
 
-## Repository structure
+## What this project does
+
+Analyses results of the Polish 8th-grade exam (**egzamin ósmoklasisty**) published
+by the **Warsaw OKE district** and produces data for an external school-quality map.
+
+**Critical scope fact:** the OKE Warszawa data covers **only the Mazowieckie
+voivodeship** (1,663–1,720 schools depending on year), *not* all of Poland.
+Always use **"voivodeship"** rather than "national" in code, comments, variable
+names, chart labels, and markdown. For example: `voivodeship_mean`, not
+`national_mean`; "Voivodeship median per year", not "National median per year".
+
+If the data is ever extended to other OKE districts, the metric is still
+well-defined per voivodeship, but the reference-computing functions should be
+made parametric over the grouping level.
+
+---
+
+## Repository layout
 
 ```
-analiza-egzaminow/
-├── data/
-│   ├── egzamin-osmoklasisty/    # raw xlsx files, one per year (YYYY_*.xlsx)
-│   ├── geocode_cache.json       # cached lat/lon per RSPO — commit this to repo
-│   └── school_scores.csv        # exported by notebook, consumed by build_map.py
-├── docs/
-│   ├── index.html               # the public map — GitHub Pages serves this directory
-│   └── schools.json             # pre-built data file for the map (~1 MB)
+porownanie-podstawowek-mazowsze/
 ├── notebooks/
-│   └── how_to_measure_school_quality.ipynb
+│   └── how_to_measure_school_quality.ipynb   # the analysis + export (run end to end)
 ├── scripts/
-│   └── build_map.py             # geocoding + schools.json generation, run locally once/year
-├── CLAUDE.md
-└── pyproject.toml               # managed by uv
+│   └── geocode_schools.py                      # geocode addresses → data/school_coords.csv
+├── data/                                       # INPUT (read-only source data)
+│   ├── egzamin-osmoklasisty/                   # OKE xlsx files, one per year
+│   │   ├── 2021_-_*.xlsx
+│   │   ├── 2022_-_*.xlsx
+│   │   └── ...
+│   └── school_coords.csv                       # geocoding cache (rspo, address, lat, lon)
+├── output/                                     # OUTPUT (generated — singular, mirrors `data`)
+│   ├── schools-base.json
+│   ├── schools-{metric}.json   × 4
+│   └── schools-{metric}.xlsx   × 4
+├── README.md
+└── CLAUDE.md
 ```
 
-Run notebook with: `uv run jupyter lab`
-Build map with: `uv run python scripts/build_map.py`
+`data/` and `output/` are both singular mass nouns (input data / output data),
+paralleling each other. `notebooks/` and `scripts/` are plural (countable files).
 
 ---
 
-## Annual update workflow (when new year's data arrives)
+## Source data format
 
-1. Drop new xlsx into `data/egzamin-osmoklasisty/`
-2. Re-run notebook → new `school_scores.csv`
-3. Run `build_map.py` → geocodes only new schools (cache handles the rest),
-   outputs new `docs/schools.json`
-4. Commit and push → GitHub Pages auto-deploys
+Each OKE xlsx has a sheet named `SAS` with a two-level header. After loading and
+normalising (lowercase, strip Polish diacritics, collapse whitespace), the
+relevant columns are:
 
-Geocoding is a one-time cost (~30 min for 1,663 schools via Nominatim at 1 req/s).
-Subsequent years add only new schools (~50–100 per year), taking < 2 minutes.
-`geocode_cache.json` must be committed to the repo so other machines skip geocoding.
+**Metadata columns** (level-0 group is blank / "meta"):
+- `rspo` — unique school identifier (stable across years)
+- `nazwa szkoly` — school name
+- `czy publiczna` — public/private flag
+- `powiat - nazwa`, `gmina - nazwa`, `typ gminy` — administrative geography
+- `miejscowosc`, `ulica nr` — address (used for geocoding)
+- `wojewodztwo - nazwa` — always "Mazowieckie" (sanity-check this)
 
----
+**Per-subject columns** (level-0 group is the subject name):
+- `liczba zdajacych` — number of students who sat the exam
+- `wynik sredni (%)` — mean score
+- `mediana (%)` — median score
+- (also `odchylenie standardowe (%)`, `modalna (%)` — not currently used)
 
-## Data structure
-
-- Source: Excel files, sheet `SAS`, two-row header (MultiIndex after loading)
-- Column structure after loading:
-  - `('meta', 'rok')` — year
-  - `('meta', 'rspo')` — unique school ID, stable across years
-  - `('meta', 'nazwa szkoły')` — school name
-  - `('meta', 'miejscowosc')` + `('meta', 'ulica nr')` — address for geocoding
-  - `('jezyk polski'|'matematyka'|'jezyk angielski', 'liczba zdajacych')` — n students
-  - `('jezyk polski'|'matematyka'|'jezyk angielski', 'mediana (%)')` — median score
-  - `('jezyk polski'|'matematyka'|'jezyk angielski', 'wynik sredni (%)')` — mean score
-  - `('jezyk polski'|'matematyka'|'jezyk angielski', 'odchylenie standardowe (%)')` — loaded but unused in main metric
-- One row = one school × one year
-- 8,260 rows total across 5 years, ~1,663 unique schools per year
-
-**On load, immediately drop:**
-- All columns where metric contains `modalna` — artifact of 1pp scoring grid, no value
-
-**Subject short codes used throughout:**
-- `polski` → `jezyk polski`
-- `matematyka` → `matematyka`
-- `angielski` → `jezyk angielski`
-
-**Geocoding:** use address from the most recent year available for each school
-(schools occasionally relocate). Key = RSPO number.
+Subjects present: `polski`, `matematyka`, `angielski`, and several minor foreign
+languages (`francuski`, `hiszpanski`, `niemiecki`, `rosyjski`, `wloski`).
 
 ---
 
-## Final metric — what we use and why
+## Working DataFrame conventions
 
-### Per-subject score (pp above/below national median)
+The notebook builds a flat `df` with one row per (school, year) and these columns:
+
+- `rspo`, `year`, `school_name`, `is_public`
+- `gmina`, `powiat`, `typ_gminy`, `miejscowosc`, `ulica_nr`
+- Per subject `s`: `n_{s}`, `mean_{s}`, `median_{s}`
+  (e.g. `n_polski`, `mean_matematyka`, `median_angielski`)
+
+Only **3 core subjects** are usable for quality scoring: `polski`, `matematyka`,
+`angielski`. The minor languages are taken by too few students per school to be
+statistically meaningful (`core_short = ['polski', 'matematyka', 'angielski']`).
+
+`ALL_YEARS` is the sorted list of years present in the data. `rspo_all_years` is
+the set of schools with data in every year (used for stability analysis that needs
+a constant fold population).
+
+---
+
+## The metric (final decision)
+
+### Per-year, per-subject normalised score
 
 ```
-diff_year(school, subject, year) =
-    school_median(subject, year) − national_median(subject, year)
+diff_mean_year(school, subject, year) =
+    school_mean(subject, year) − voivodeship_mean(subject, year)
 
-score(school, subject) =
-    Σ_year [ n_students(year) × diff_year ] / Σ_year [ n_students(year) ]
+unit_norm_diff_mean_year =
+    diff_mean_year / (100 − voivodeship_mean)   if diff_mean_year ≥ 0
+    diff_mean_year / voivodeship_mean           if diff_mean_year < 0
 ```
 
-Result is in percentage points. Positive = above national average. Zero = exactly average.
-Years are weighted by student count — a year with 50 students counts 10× more than a year
-with 5. This is both statistically correct and eliminates the need for separate shrinkage.
+Range [−1, +1]: 0 = at the voivodeship mean, +1 = at the ceiling (100%),
+−1 = at the floor (0%). In practice values rarely exceed ±0.5.
 
-### Composite score
+`voivodeship_mean(subject, year)` = mean of all schools' `mean_{subject}` in that
+year (a per-year reference that neutralises exam-difficulty drift — e.g. the
+Maths voivodeship mean jumped ~14 pp between 2021 and 2022).
 
-Mean of the three per-subject percentile ranks (0–100).
-Additionally flag `good_in_all_3`: school is ≥ 60th percentile in ALL three subjects.
-Note: the 60th percentile threshold is somewhat arbitrary — see open questions below.
+### Aggregation across years
 
-### Map colour scale
+The per-school score aggregates the yearly values. **The aggregation method
+depends on whether the metric is a baseline or an advanced one:**
 
-Diverging green–yellow–red gradient, computed per subject:
-- Yellow zone: ±0.33σ from zero (school is not meaningfully different from national average)
-- Gradient: linear from ±0.33σ to ±1.5σ
-- Saturates at ±1.5σ (deep green / deep red) — schools beyond this are all the same colour
-- σ values (from data): Polish ≈ 9 pp, Maths ≈ 17 pp, English ≈ 19 pp
-- Saturation is intentional: differences between rank #1 and #15 are within statistical noise
+| Metric | Aggregation across years | Why |
+|--------|--------------------------|-----|
+| `mean` (baseline) | arithmetic mean (equal weight) | simplest, for users who want a plain baseline |
+| `median` (baseline) | arithmetic mean (equal weight) | same |
+| `diff_mean` (advanced) | weighted mean by `n_students` | more evidence from larger cohorts |
+| `unit_norm_diff_mean` (advanced, **primary**) | weighted mean by `n_students` | same |
 
-```python
-def score_to_color(score_pp, sigma):
-    # t in [-1, 1], where ±1 = ±1.5σ
-    t = np.clip(score_pp / (1.5 * sigma), -1, 1)
-    if t >= 0:
-        r = int(255 * (1 - t))
-        g = int(255 - 75 * t)
-        b = 0
-    else:
-        r = int(220 + 35 * t)
-        g = int(255 * (1 + t))
-        b = 0
-    return f'#{r:02x}{g:02x}{b:02x}'
+This is encoded in `AGGREGATION_BY_METRIC` in the export section.
+
+### Why `unit_norm_diff_mean` with weighted mean
+
+Chosen by **leave-one-out (LOO) jackknife stability** testing: for each school
+with ≥ 2 years, compute the score with each year left out; the metric whose LOO
+estimates are closest together (lowest LOO standard deviation, normalised by the
+metric's overall spread) is the most stable. Tested 8 per-year metrics × 5
+aggregation methods. `unit_norm_diff_mean` + weighted-mean-by-n wins across all
+subjects and school sizes ≥ 10 students, and the result holds on the larger
+2022-onward population (1,297 schools, including small schools that started
+reporting after 2021).
+
+`diff_mean` and `unit_norm_diff_mean` correlate at Spearman 1.000 — identical
+rankings, different scales. `diff_median` (median-based) is consistently *worse*
+than `diff_mean`, because the median responds more violently to year-to-year
+difficulty shifts (the median student moves the full shift, while the mean is
+damped by floor/ceiling effects).
+
+---
+
+## Composite across subjects
+
+```
+composite_min(school) = min(
+    unit_norm_diff_mean_polski,
+    unit_norm_diff_mean_matematyka,
+    unit_norm_diff_mean_angielski,
+)
 ```
 
----
+The **minimum** (not mean) of the three subject scores — answers "is this school
+weak in *any* subject?". This is the **primary value shown on the map**.
 
-## Key empirical facts (verified on actual data, 2021–2025)
+`good_in_all_3` has been **removed** — do not reintroduce it.
 
-- 51% of schools have ≤ 20 students sitting any exam in a given year
-- 25% have ≤ 10 students
-- National Maths median swings 14 pp between 2021 (46 pp) and 2022 (60 pp)
-- Within-school year-to-year std of percentile rank: median ≈ 6.4 pp for schools
-  with 5 years of data; 12.6% of schools have std > 10 pp
-- A school missing the hard 2021 Maths year gets a +2.9 pp bonus with raw scores,
-  but only +0.16 pp bonus with diff_median — key reason we use diff_median
-- Top 30 schools: median max rank swing across LOO folds = 13 positions;
-  30% of top-50 schools swing > 20 positions when one year is dropped
-- LOO std comparison for Maths, n 20–49: diff_median = 1.83 pp vs raw median = 2.22 pp
-  (diff_median more stable for schools with ≥ 10 students, which is 75% of schools)
+The three subjects correlate ~0.7–0.8 (Pearson), so they are informative but not
+redundant; the min captures the bottleneck subject.
 
 ---
 
-## Rejected approaches — DO NOT reintroduce without discussion
+## Colour scale (for the map)
 
-### Raw median or mean score (not normalised by year)
-**Rejected because:** National difficulty changes dramatically year to year (+14 pp in Maths).
-A school missing 2021 gets a systematic +2.9 pp bonus with raw scores (only +0.16 pp
-with diff_median). LOO stability is worse than diff_median for n ≥ 10 (75% of schools).
+Diverging green–yellow–red gradient, 5 classes, computed **per (metric, subject)**:
 
-### Percentile rank as intermediate aggregation metric
-**Rejected because:** Percentile is sensitive to the entire national distribution shifting
-each year. LOO std for pct_median is 4.87 pp vs 3.18 pp for raw median at n < 10.
-Around the 50th percentile, 175 schools are clustered — a 2 pp score difference
-maps to dozens of percentile positions, implying false precision.
-**Use percentile ONLY as the final display step** (map colour), never as an intermediate.
+| Class | Condition |
+|-------|-----------|
+| Saturated red | score ≤ centre − 1.5σ |
+| Red | centre − 1.5σ < score < centre − 0.33σ |
+| Yellow | centre − 0.33σ ≤ score ≤ centre + 0.33σ |
+| Green | centre + 0.33σ < score < centre + 1.5σ |
+| Saturated green | score ≥ centre + 1.5σ |
 
-### Bayesian shrinkage per year before aggregation
-**Rejected as primary approach** (may be revisited as a secondary display metric).
-Problem: a school consistently at the 90th percentile with n=8 every year gets
-penalised every year independently. The penalty never diminishes because shrinkage
-operates per-year, not on pooled data. A school that is consistently small and good
-receives a permanent downward bias. The n-weighted aggregation already provides
-regularisation — years with small n contribute less automatically.
+- **Per-subject scores**: centre = 0, σ = standard deviation across all schools.
+- **`composite_min`**: centre = the empirical *mean* of composite_min (≈ −0.059),
+  σ = its own standard deviation (≈ 0.245). This is **Option 1** from the
+  methodology discussion — composite_min's distribution is shifted left (minimum
+  of 3 draws is systematically below each draw), so 63.7% of schools have
+  composite_min ≤ 0. Centring on the empirical mean gives a usable map where
+  ~8.5% of schools reach saturated green, instead of <1% if centred at zero.
 
-### Median of years (instead of weighted mean across years)
-**Rejected because:** With 5 years, median = 3rd sorted value, discarding 40% of data.
-Ignores that a year with 50 students is more informative than a year with 5.
-Weighted mean consistently wins or ties LOO stability across all school sizes.
+Empirical σ values (recomputed each run; these are indicative):
+- polski ≈ 0.192, matematyka ≈ 0.284, angielski ≈ 0.361, composite_min ≈ 0.245
 
-### Trimmed mean across years
-**Tested, marginally worse than weighted mean** in LOO stability. No advantage over
-weighted mean; adds complexity for no gain.
-
-### Ratio normalisation (school_median / national_median)
-**Rejected because:** Non-comparable scale across subjects. Ceiling effects distort
-the ratio when national median is high. Range 0.17–2.09 is unintuitive. Multiplicative
-model not justified for percentage-point scores with hard floor/ceiling.
-
-### odchylenie standardowe (within-school std) in the main metric
-**Not used in main metric.** Within-school std reflects student intake composition
-(selective vs non-selective admissions), not teaching quality. Without baseline student
-ability data we cannot separate the two effects.
-**May be used in exploratory analysis:** scatter of median vs std, coloured by
-public/private, to show that "top" schools are often selective rather than better
-at teaching. This is an important caveat for the map's readers.
-
-### Modalna (modal score)
-**Removed on load.** Artifact of 1pp scoring grid, no analytical value.
-
-### Google Maps for the interactive map
-**Rejected:** Requires API key with billing enabled, rate limits, ongoing cost.
-
-### Folium for the interactive map
-**Rejected for production** (fine for notebook exploration).
-Folium embeds all data as a single HTML blob — 1,663 markers with no lazy loading
-causes slow initial render. No native clustering, no viewport filtering, no easy
-annual update workflow. Replaced by Leaflet.js with MarkerCluster.
-
-### RSPO API for geocoding
-**Rejected:** Requires formal written application, 14-day approval process,
-institutional affiliation. Not appropriate for a hobby project.
+The **app defaults to `composite_min`** but exports all four views (3 subjects +
+composite) so the user can toggle which subject colours the map.
 
 ---
 
-## Open methodological questions (not yet resolved)
+## Notebook structure (`how_to_measure_school_quality.ipynb`)
 
-These have not been fully analysed. Do not silently assume an answer.
+- **0. Setup** — imports, `DATA_DIR`, `OUTPUT_DIR`, helper `render_min_highlighted_table`
+- **1. Load data** — read all xlsx, build flat `df`, drop rows missing core subjects
+- **2. Why only 3 subjects** — student-count distributions justify dropping minor languages
+- **3. Choosing the best per-year metric** — the LOO stability analysis:
+  - why the median jumps more than the mean (difficulty shifts)
+  - within-school year-to-year swing vs voivodeship swing
+  - candidate metrics + aggregation methods (joint LOO test, 8 × 5)
+  - rank-swing analysis + the density-effect explanation
+- **4. Final metric definition** — formulas, why, colour scale; subsection
+  "Combining all three subjects" (correlation, composite_min, colour-class counts)
+- **5. How school level and rank changes** — base vs LOO vs single-year views;
+  lollipop charts for two samples (12 schools = 4 top/4 mid/4 bottom; 15 schools
+  = 3 each at P10/30/50/70/90); population-wide scatter of range and min/max
+- **6. Export data to external map** — computes alternative views, writes JSON + xlsx
 
-1. **Independence of years.** We treat each year as an independent observation.
-   But a school with a weak Maths teacher for 3 consecutive years produces correlated
-   results, not 3 independent observations. Does this affect the optimal aggregation?
+### Helper: `render_min_highlighted_table(df, caption, value_fmt='{:.3f}', axis=1)`
 
-2. **good_in_all_3 threshold.** The 60th percentile cutoff is arbitrary. Sensitivity
-   to this threshold has not been tested. Consider adding a section to the notebook
-   showing how the count of flagged schools changes with the threshold (50th, 60th, 70th).
-
-3. **Student intake composition vs teaching quality.** The metric measures outcomes,
-   not value added. Private/selective schools likely rank high due to student selection,
-   not better teaching. We have `czy publiczna` and `typ gminy` in the data — could
-   be used for a caveat analysis but not for score adjustment (no baseline ability data).
-
----
-
-## Uncertainty communication — design decisions
-
-- Schools with n_total < 20 across all years: show ⚠️ warning in popup
-- Do NOT show ranking positions (e.g. "#3 in district") — top-30 rankings shift
-  by 13+ positions when one year is removed. Show the score in pp above/below national.
-- Percentile colour saturates at ±1.5σ intentionally — the difference between
-  the #1 and #15 school is within statistical noise given the sample sizes
-- `good_in_all_3` flag is more conservative and reliable than composite score alone
-- Popup should show: school name, type (public/private), score per subject (pp),
-  n_students total per subject, n_years of data, composite percentile,
-  ⚠️ if low data
+Renders a DataFrame as an HTML table with the **minimum cell highlighted green**,
+using **inline `<td style="...">`** (not a `<style>` block). This is required
+because VS Code and nbconvert strip `<style>` blocks from notebook outputs, so
+pandas `Styler.highlight_min` / `.apply` colouring does not survive. `axis=1`
+highlights the min per row; `axis=0` per column.
 
 ---
 
-## Map architecture (Leaflet.js)
+## Export (Section 6)
 
-**Data pipeline:**
+### Views
+
+For each (school, subject, metric), four **views** are exported — each computed
+only over the **years the school actually has** (no meaningless folds):
+
+| view_kind | view_param | meaning |
+|-----------|-----------|---------|
+| `base` | — | score over all the school's years |
+| `loo` | excluded year | score with one year left out (only if ≥ 2 years) |
+| `single_year` | year | score from one year alone |
+| `last_k` | k | score over the most recent k years, k = 2 … (n_years − 1) |
+
+Each view carries `score`, `rank` (1 = best, among schools present in that view),
+and `pct` (percentile).
+
+### Output files
+
+- **`schools-base.json`** (~1.2 MB) — loaded on map open. Metadata + primary
+  (`unit_norm_diff_mean`) base score/rank/pct per subject + composite_min, plus
+  `lat`/`lon` (from the geocoding cache; `null` if missing). Also `metadata.sigma`
+  and `metadata.sigma_centre` for the colour scale.
+- **`schools-{metric}.json`** × 4 (~8 MB each) — all views for all schools,
+  loaded on demand when the user clicks a school or switches metric. `base` is a
+  flat `{score, rank, pct}`; other views are `{param: {score, rank, pct}}` with
+  integer-string param keys (`"2021"`, `"2"`).
+- **`schools-{metric}.xlsx`** × 4 (~7 MB each) — long format for analysts, one row
+  per (school, subject, view). Includes administrative metadata (powiat, gmina,
+  typ_gminy) for filtering and pivots. Columns:
+  `rspo, school_name, miejscowosc, ulica_nr, powiat, gmina, typ_gminy, is_public,
+  n_years, metric, subject, view_kind, view_param, score, rank_overall,
+  pct_overall, n_in_view`.
+
+Naming: **English** for technical fields, **Polish** for geographic fields
+(miejscowosc, ulica_nr, powiat, gmina, typ_gminy).
+
+### Idempotence
+
+`FORCE_REGENERATE = False` (top of Section 6). On each run the export compares
+new data with the existing file and **skips writing if unchanged**, so git stays
+clean on no-op runs:
+- JSON: compares parsed payloads, ignoring `metadata.generated_at`.
+- XLSX: reads the existing file (`dtype={'view_param': str}` to avoid `'2'`→`2.0`
+  drift) and compares with `dataframes_equal` (floats via `np.isclose`,
+  `rtol=1e-6`). `view_param` is written as text format so Excel doesn't coerce it.
+
+`FORCE_REGENERATE = True` rewrites everything. `created` timestamps reflect the
+real generation time when a file is actually written.
+
+---
+
+## Geocoding (`scripts/geocode_schools.py`)
+
+Coordinates are **not** in the OKE data, so they are geocoded separately:
+
+- **Input**: `output/schools-base.json` (rspo + address).
+- **Cache**: `data/school_coords.csv` with columns
+  `rspo, miejscowosc, ulica_nr, latitude, longitude`.
+- **Logic**: if an rspo is in the cache and its address is unchanged, keep the
+  cached row **in its original CSV position**; if the address changed, re-geocode
+  in place; new schools are **appended at the end**.
+- **Geocoder**: Nominatim (OpenStreetMap), 1.1 s between requests, tries
+  "street, town, Polska" then falls back to "town, Polska".
+- **Flags**: `--limit N` (cap new requests, for testing), `--force` (ignore cache).
+
+Run it after adding new schools, then re-run the notebook's export cells so the
+fresh coordinates land in `schools-base.json`.
+
+---
+
+## Global coding rules (apply everywhere)
+
+- **Exact column names** — never substring-match (`df[f'mean_{s}']`, not
+  `next(c for c in cols if 'mean' in c)`).
+- **`pd.to_numeric(errors='raise')`** by default; use `'coerce'` only when
+  non-numeric values are expected, and then assert/log how many were coerced.
+- **Log dropped rows** with counts; never silently filter.
+- **Assertions** for structural assumptions (e.g. RSPO unique per school name).
+- **No `try/except`** to suppress errors during data loading.
+- **Explore before analysing** — check shape/dtypes, `value_counts(dropna=False)`
+  on key columns, cross-check related columns (if `n_students > 0`, verify
+  mean/median are non-null); stop and report on unexpected nulls.
+
+### Polish characters
+
+Always preserve Polish characters literally in output: use
+`json.dump(..., ensure_ascii=False)` and write files with `encoding='utf-8'`.
+
+### Notebook outputs
+
+Always **execute the notebook and embed outputs** (charts, tables) so results are
+visible without re-running:
+
+```bash
+cd notebooks
+uv run jupyter nbconvert --to notebook --execute --inplace how_to_measure_school_quality.ipynb
 ```
-notebook → school_scores.csv → build_map.py → docs/schools.json
-```
 
-**schools.json structure per school:**
-```json
-{
-  "rspo": 12345,
-  "name": "SP nr 5 ...",
-  "lat": 52.23,
-  "lon": 21.01,
-  "is_public": true,
-  "n_years": 5,
-  "subjects": {
-    "polski":    {"score": 4.2, "pct": 68, "n_total": 95},
-    "matematyka": {"score": -2.1, "pct": 44, "n_total": 94},
-    "angielski": {"score": 8.7, "pct": 79, "n_total": 96}
-  },
-  "composite_pct": 64,
-  "good_in_all_3": false
-}
-```
-
-**UX behaviour:**
-- Default view: Warsaw, zoom 11, all schools as clusters
-- Subject switcher: [Polish] [Maths] [English] [Composite] — changes marker colours
-- Address search field: single Nominatim query → zoom to location → highlight 30 nearest
-- Min students slider (1–50, default 10): filters out unreliable small schools
-- Marker click: popup with full details
-- No rank numbers shown anywhere in the UI
-
----
-
-## Tech stack
-
-- Python 3.12, managed by `uv`
-- `pandas`, `numpy`, `scipy` — data processing
-- `matplotlib`, `seaborn` — notebook charts
-- `geopy` + Nominatim — geocoding
-  - Rate limit: 1 req/s (sleep 1.1s between requests)
-  - User-agent: `"analiza-e8-szkoly"`
-  - Cache: `data/geocode_cache.json` — commit to repo
-  - Address source: most recent year's `miejscowosc` + `ulica nr` per RSPO
-  - On geocoding failure: log to stderr, skip school (never invent coordinates)
-- Leaflet.js + Leaflet.markercluster (CDN) — interactive map
-- GitHub Pages (serves `docs/` directory) — hosting
-
-All variable names, function names, and code comments: English.
-Notebook markdown cells: English (GitHub audience).
+Run from the project root's `notebooks/` dir so the relative paths
+(`../data`, `../output`) resolve. Warn before executing if long-running cells
+changed (the export reads/writes several MB of xlsx).
