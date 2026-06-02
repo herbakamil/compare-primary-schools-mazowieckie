@@ -293,6 +293,71 @@ fresh coordinates land in `schools-base.json`.
 
 ---
 
+## Uncertainty communication (frontend guidance)
+
+The export carries `rank`, `pct`, and per-view `score` for every school. **How the
+frontend uses these matters — they communicate different levels of certainty.**
+
+### Map view
+
+- **Show colour only, not numeric ranks.** Rank position in the middle of the
+  distribution swings by ~10% of the ranking (100+ positions) when one year is
+  excluded — pure density effect, not a metric flaw. A numeric rank ("#234 in
+  the voivodeship") implies precision the data cannot support.
+- **Colour reflects score, not rank.** The score is well-estimated everywhere;
+  the rank is misleadingly precise in the middle. The diverging colour scale
+  saturates at ±1.5σ so the extremes are visually distinct while the middle
+  band is honestly muddy.
+- **Default view: `composite_min`.** The app should expose a subject toggle
+  (Polish / Maths / English / composite_min) — all four are exported.
+
+### Ranking tab (separate from the map)
+
+A search-by-name table (e.g. "Vizja", "STO", or unfiltered list) is fine to
+include — but with full uncertainty context. Per school, show:
+
+- **Base rank** — score over all years
+- **Best / worst LOO rank** — min and max rank across the LOO folds
+  (e.g. "base #234, LOO range #198–#267")
+- **Best / worst single-year rank** — min and max rank across single-year views
+  (e.g. "in any single year, ranged from #112 to #389")
+
+This is honest: the table shows where the school sits *and* how much that
+position depends on which year is included. All these numbers are already in
+`schools-{metric}.json` under `loo.{year}.rank` and `single_year.{year}.rank`
+— the frontend just computes min/max.
+
+### Warning badges in school popup
+
+Three independent signals; show ⚠️ if any fires (combine into one badge with
+hover-text listing which conditions triggered):
+
+| Condition | Meaning |
+|-----------|---------|
+| `n_years < 3` | Short history — limited certainty about the school's long-term level |
+| LOO range > 1σ AND `n_years ≥ 3` | Many years of data but large year-to-year volatility — score depends on which year is included |
+| (geocoding failed: no `lat`/`lon`) | The school isn't shown on the map at all; no popup |
+
+`n_total < 20` was considered but rejected — schools with low total student count
+almost always also trigger `n_years < 3` or have other low-quality signals, so a
+separate threshold would add complexity without catching additional cases.
+
+The LOO-range threshold is intentionally combined with `n_years ≥ 3`: schools
+with only 2 years would *always* have a wide LOO range (each fold uses only 1
+year), which is small-sample noise, not real volatility. Empirically with the
+current data, the combined rule flags ~6 schools out of ~1,400 with 3+ years —
+rare but real signals of true year-to-year instability.
+
+### Never invent coordinates
+
+If geocoding fails, the school's `lat`/`lon` stay `null` and it is omitted from
+the map. **Never substitute plausible-looking coordinates** (e.g. town centre,
+voivodeship centre) — they would misplace markers and undermine trust in the
+map. The user should be able to assume that every marker on the map is at the
+school's real location.
+
+---
+
 ## Global coding rules (apply everywhere)
 
 - **Exact column names** — never substring-match (`df[f'mean_{s}']`, not
