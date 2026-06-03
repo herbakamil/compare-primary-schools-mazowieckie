@@ -40,8 +40,14 @@ After a new year of results is published:
 
    ```bash
    cd notebooks
-   uv run jupyter nbconvert --to notebook --execute --inplace how_to_measure_school_quality.ipynb
+   uv run jupyter nbconvert \
+       --to notebook --execute --inplace \
+       --ExecutePreprocessor.record_timing=False \
+       how_to_measure_school_quality.ipynb
    ```
+
+   `record_timing=False` keeps the diff clean — without it nbconvert injects
+   per-cell execution timestamps that change every run.
 
    The export cells overwrite files in `output/` **only if the data changed**
    (so git shows no changes on a re-run with unchanged data). Set
