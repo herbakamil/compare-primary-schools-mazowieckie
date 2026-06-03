@@ -26,7 +26,7 @@ made parametric over the grouping level.
 ## Repository layout
 
 ```
-porownanie-podstawowek-mazowsze/
+compare-primary-schools-mazowieckie/
 ├── notebooks/
 │   └── how_to_measure_school_quality.ipynb   # the analysis + export (run end to end)
 ├── scripts/
@@ -379,13 +379,33 @@ Always preserve Polish characters literally in output: use
 ### Notebook outputs
 
 Always **execute the notebook and embed outputs** (charts, tables) so results are
-visible without re-running:
+visible without re-running. Use `--ExecutePreprocessor.record_timing=False` to
+keep the diff clean — without it nbconvert injects per-cell `execution` metadata
+(timestamps for `iopub.execute_input`, `iopub.status.busy`, etc.) that change
+every run:
 
 ```bash
 cd notebooks
-uv run jupyter nbconvert --to notebook --execute --inplace how_to_measure_school_quality.ipynb
+uv run jupyter nbconvert \
+    --to notebook --execute --inplace \
+    --ExecutePreprocessor.record_timing=False \
+    how_to_measure_school_quality.ipynb
 ```
 
 Run from the project root's `notebooks/` dir so the relative paths
 (`../data`, `../output`) resolve. Warn before executing if long-running cells
 changed (the export reads/writes several MB of xlsx).
+
+If you forgot the flag and want to clean an already-recorded notebook, this
+one-liner strips the metadata:
+
+```bash
+uv run python -c "
+import json, pathlib
+p = pathlib.Path('notebooks/how_to_measure_school_quality.ipynb')
+nb = json.loads(p.read_text())
+for c in nb['cells']:
+    c.get('metadata', {}).pop('execution', None)
+p.write_text(json.dumps(nb, indent=1, ensure_ascii=False) + '\n')
+"
+```
