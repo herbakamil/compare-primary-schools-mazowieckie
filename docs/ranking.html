@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ranking szkół podstawowych — Mazowieckie</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-ranking">
+  <header class="topnav">
+    <h1 data-i18n="rankingTitle">Ranking szkół — Mazowieckie</h1>
+    <nav>
+      <a href="index.html" data-i18n="navMap">Mapa</a>
+      <a href="ranking.html" class="active" data-i18n="navRanking">Ranking</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="ranking-controls">
+      <label class="field">
+        <span data-i18n="labelMetric">Metryka</span>
+        <select id="metric-select"></select>
+      </label>
+
+      <label class="field">
+        <span data-i18n="labelSubject">Przedmiot</span>
+        <select id="subject-select"></select>
+      </label>
+
+      <label class="field">
+        <span data-i18n="rankingView">Widok danych</span>
+        <select id="view-select">
+          <option value="base" data-i18n="rankingViewBase">wszystkie lata (base)</option>
+          <option value="last_k" data-i18n="rankingViewLastK">ostatnie k lat (last_k)</option>
+          <option value="single_year" data-i18n="rankingViewSingleYear">jeden rok (single_year)</option>
+          <option value="loo" data-i18n="rankingViewLOO">bez jednego roku (LOO)</option>
+        </select>
+      </label>
+
+      <label class="field" id="view-param-field" style="display:none;">
+        <span data-i18n="rankingViewParam">Parametr widoku</span>
+        <select id="view-param-select"></select>
+      </label>
+
+      <fieldset class="field radio-group">
+        <legend data-i18n="labelPublic">Typ szkoły</legend>
+        <label><input type="radio" name="public" value="all" checked> <span data-i18n="publicAll">Wszystkie</span></label>
+        <label><input type="radio" name="public" value="tak"> <span data-i18n="publicYes">Publiczne</span></label>
+        <label><input type="radio" name="public" value="nie"> <span data-i18n="publicNo">Niepubliczne</span></label>
+      </fieldset>
+
+      <label class="field">
+        <span data-i18n="rankingNameSearch">Szukaj po nazwie</span>
+        <input type="text" id="name-search" placeholder="np. STO, Vizja, Słupica">
+      </label>
+    </div>
+
+    <p id="ranking-info"></p>
+
+    <p class="muted small" id="history-optin-row" style="display:none;">
+      <label>
+        <input type="checkbox" id="history-optin-cb">
+        <span data-i18n="historyOptIn">Pokaż szczegółową historię (pobiera ~0.8 MB)</span>
+      </label>
+    </p>
+
+    <div class="ranking-table-wrap">
+      <table class="ranking-table" id="ranking-table"></table>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="ranking.js"></script>
+</body>
+</html>

@@ -2,3 +2,13 @@
 .venv/
 *lock*
 outputs/
+
+# Python bytecode caches
+__pycache__/
+*.pyc
+
+# Temporary backup of geocoding cache (created when re-running with new strategy)
+data/school_coords.csv.bak-*
+
+# Claude Code local-only settings (project settings.json IS tracked)
+.claude/settings.local.json

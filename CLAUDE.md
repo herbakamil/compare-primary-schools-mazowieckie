@@ -328,12 +328,42 @@ Coordinates are **not** in the OKE data, so they are geocoded separately:
 - **Logic**: if an rspo is in the cache and its address is unchanged, keep the
   cached row **in its original CSV position**; if the address changed, re-geocode
   in place; new schools are **appended at the end**.
-- **Geocoder**: Nominatim (OpenStreetMap), 1.1 s between requests, tries
-  "street, town, Polska" then falls back to "town, Polska".
+- **Geocoder**: Nominatim (OpenStreetMap), 1.1 s between requests, with a
+  Mazowieckie-biased multi-strategy lookup (see below).
 - **Flags**: `--limit N` (cap new requests, for testing), `--force` (ignore cache).
 
-Run it after adding new schools, then re-run the notebook's export cells so the
-fresh coordinates land in `schools-base.json`.
+### Lookup strategy (3 attempts, no centroid fallback)
+
+For each school the geocoder tries in order, and accepts the first result that
+falls inside the Mazowieckie bounding box (`lon 19.2–23.2`, `lat 51.0–53.6`):
+
+1. **Structured query** — `street=<clean street>`, `city=<miejscowosc>`,
+   `state=województwo mazowieckie`, `country=Polska`, `countrycodes=pl`.
+2. **Free-text with viewbox** — `q="<clean street>, <miejscowosc>, województwo
+   mazowieckie, Polska"`, `viewbox=` Mazowsza, `bounded=1`.
+3. **Free-text with original prefixed street** — same as (2) but keeping the
+   original `ul. X` form (some streets disambiguate better with the prefix).
+
+"Clean street" = the original `ulica_nr` with leading `ul./Ul./al./Al./pl./Pl./os./Os.`
+stripped. Results that land outside the Mazowieckie bbox are rejected even if
+returned (Nominatim's `state=` is sometimes a soft preference).
+
+**No town-only fallback.** If all three strategies fail, the geocoder writes an
+empty `latitude,longitude` row for that school. Such schools stay off the map
+(per the brief) but remain in the ranking. This is intentional — the previous
+version fell back to `"<town>, Polska"` and silently planted 773 of 1,720
+schools on their town's centroid (351 schools alone landed on Pałac Kultury
+in Warsaw).
+
+### Bbox-validation rule (applies to existing cache too)
+
+A row with `latitude/longitude` outside the Mazowieckie bbox is treated as
+invalid. If you spot any in `school_coords.csv` (e.g. due to a stale entry from
+an older geocoder), zero its lat/lon and re-run the script — the rule will hold
+on the rewrite.
+
+Run the script after adding new schools, then re-run the notebook's export
+cells so the fresh coordinates land in `schools-base.json`.
 
 ---
 

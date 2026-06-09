@@ -86,14 +86,14 @@ Key points:
 - `rank` is 1 = best. `pct` is 0–100, 100 = best. `score` scale depends on metric
   (see §4).
 - `lat`/`lon` may be `null` (geocoding failed). Such schools are **not placed on
-  the map** but still appear in the ranking tab (§6) marked "not on map".
+  the map** but still appear in the ranking page (§6) marked "not on map".
 
 ### 2b. `data/schools-{metric}.json` × 4 — loaded on demand (year-by-year history)
 
 One per metric: `schools-mean.json`, `schools-median.json`,
 `schools-diff_mean.json`, `schools-unit_norm_diff_mean.json`. ~7 MB raw / ~0.8 MB
 gzipped each. **Only needed for the per-school year-by-year history and for the
-ranking tab's LOO / single-year / last_k views.** Do not load on page open.
+ranking page's LOO / single-year / last_k views.** Do not load on page open.
 
 Here `schools` is an **object keyed by rspo (string)**:
 
@@ -139,6 +139,12 @@ not served by the site. Ignore them in the web app.
 `lat`/`lon` are already in `data/schools-base.json` (geocoded offline by a
 separate Python script). The app does **not** geocode schools.
 
+The offline geocoder (see `scripts/geocode_schools.py` and CLAUDE.md "Geocoding")
+**never plants a school on its town's centroid** as a fallback. If it can't
+find a street-level match inside the Mazowieckie bbox after multiple attempts,
+the school keeps `lat`/`lon` = null and stays off the map. So a missing-coords
+school is genuinely missing — not "approximately somewhere in town".
+
 The app may use a geocoding API for **one thing only**: the **address search box**
 (turning a user-typed address into a map location to pan/zoom to). Use Nominatim
 (OpenStreetMap), subject to its usage policy — and note these specifics, which
@@ -158,6 +164,11 @@ differ from the offline script:
   never one request per keystroke.
 - **One request per user action**, end-user-triggered only (which an address search
   is). Display OSM attribution as the policy requires.
+- **Bias results to Poland and Mazowieckie.** Pass `countrycodes=pl` so "Kraków"
+  doesn't lose to a Kraków in another country, and a `viewbox` covering Mazowieckie
+  (approximately `19.2,53.6,23.2,51.0` as `left,top,right,bottom`) with
+  `bounded=0` so the box prefers but does not require results inside it. This
+  keeps "Krakowska 5" inside Warszawa rather than the literal city of Kraków.
 - This is a **deliberate** choice to use the public Nominatim API, made here with
   knowledge of its policy — not a default to reach for automatically. If the app's
   search traffic ever grows beyond light/moderate, switch to a self-hosted
@@ -207,14 +218,26 @@ assuming 0.
 
 ---
 
-## 5. Map view (the main page)
+## 5. Map view (the main page — `index.html`)
 
 - **Layout:** full-screen map + a side panel (school search/list). On mobile the
   panel collapses to a drawer or bottom sheet. **Mobile must work well** — most
   users are on phones.
+- **Top nav:** link to the ranking page (`ranking.html`). Carry the current
+  metric/subject/language through the link as URL params (§9) so switching pages
+  preserves the user's selection.
+- **Initial view:** fit-to-bounds across all geocoded schools (`map.fitBounds`
+  on the lat/lon array). This covers Mazowieckie naturally and adapts if the
+  dataset is ever extended. No hard-coded centre/zoom.
 - **Markers:** fixed-size coloured circles, colour from §4. Cluster at low zoom
   (Leaflet.markercluster) — ~1,400 plotted markers need it. Do **not** size
   markers by student count.
+- **Cluster colour:** the cluster's circle is coloured by the **mean of its
+  children's scores** for the currently-selected (metric, subject), mapped
+  through the same 5-class scale from §4. This lets the user see "this area is
+  broadly red / green" at low zoom without expanding the cluster. Note this is
+  intentionally a mean of `composite_min` values when that subject is selected —
+  conceptually a "mean of mins", which is fine for a quick area read.
 - **No numeric ranks on the map.** Colour only. (Rationale in §7.)
 - **Toggles:**
   - Subject: Polish / Maths / English / composite_min → recolours markers.
@@ -223,9 +246,14 @@ assuming 0.
 - **Filters:**
   - **Public / private** (`is_public` == "Tak" / "Nie"). Important — see §7.
   - **Score threshold:** "show only schools scoring above X" for the current
-    metric. Use `metadata.slider_ranges[metric]` for the slider: `min`/`max` as
-    hard bounds, `p1`/`p99` as sensible default handle positions, `step` as the
-    increment.
+    (metric, subject). Use `metadata.slider_ranges[metric]` for the slider:
+    `min`/`max` as hard bounds, `p1`/`p99` as sensible default handle positions,
+    `step` as the increment.
+    - **Reset the threshold when the user switches metric.** The scales differ
+      (`mean` is 10–87, `unit_norm_diff_mean` is −0.85…0.64), so a numeric value
+      that filtered out the bottom 1% on one metric is meaningless on another.
+      Snap back to the default handle position (`p1` of the new metric).
+      Subject changes do *not* reset the threshold — same metric, comparable scale.
   - **Minimum n_years:** hide schools with little history.
 - **Zoom + address search:** native Leaflet zoom, plus a search box that
   geocodes a typed address (Nominatim) and pans/zooms there so the user can see
@@ -235,13 +263,26 @@ assuming 0.
   name, public/private, town + street, n_years, and for the selected metric the
   per-subject score / rank / pct plus composite_min. Show a warning badge if
   applicable (§7).
-  - **Optionally**, a button inside the popup ("Pokaż historię roczną") triggers
-    the on-demand load (§8) and then shows the year-by-year breakdown
-    (single_year + last_k + loo views) for this school.
+  - **Year-by-year history:** a button inside the popup ("Pokaż historię
+    roczną") triggers the on-demand load (§8) and then shows, for this school
+    under the selected metric:
+    - a small **per-subject sparkline** (one line per subject including
+      composite_min, x = year, y = score) — quick visual of the trend.
+    - a small **table** below the sparkline with rows = years, columns =
+      subjects, values = single-year score; final row(s) summarise `last_k`
+      (k = 2 … n_years − 1) and `loo` ranges.
+    - If this layout reads poorly in practice, the spec will be revised — but
+      both forms exist by default so the user sees shape *and* numbers.
 
 ---
 
-## 6. Ranking tab (separate page/view from the map)
+## 6. Ranking page (separate `ranking.html`)
+
+A separate page — **not** a tab inside `index.html`. Reason: it must be
+deep-linkable in its own right (you can share a ranking-page URL with filters
+applied without the map's state mixed in). The two pages share styling and a
+top nav (Mapa / Ranking), and they pass state to each other via URL params and
+localStorage (§9).
 
 A sortable, filterable **table** — this is where numeric ranks are allowed (the
 map is not). Supports both browsing the full list and searching by name (e.g.
@@ -262,13 +303,13 @@ Controls:
   the exam-based part is comparable.)
 - Public/private filter, name search, column sorting.
 
-Data sources for the ranking tab:
+Data sources for the ranking page:
 - Base ranks: from `schools-base.json` (already loaded).
 - LOO / single-year / last_k ranges: from `schools-{metric}.json` — load on
-  demand when the user opens the ranking tab or picks a non-base view (§8).
+  demand when the user opens the ranking page or picks a non-base view (§8).
 
 **Schools without coordinates** (lat/lon null) are excluded from the map but
-**must still appear** in the ranking tab, marked e.g. "📍✗ brak lokalizacji",
+**must still appear** in the ranking page, marked e.g. "📍✗ brak lokalizacji",
 since they have valid scores.
 
 ---
@@ -282,7 +323,7 @@ The data has real uncertainty and the UI must not overstate precision.
   year is added or removed — a density artifact, not a real difference. A number
   like "#234" implies precision the data can't support. The colour scale
   saturates at ±1.5σ precisely so the muddy middle looks muddy. Numeric ranks live
-  only in the ranking tab, always shown *with* their LOO/single-year ranges.
+  only in the ranking page, always shown *with* their LOO/single-year ranges.
 
 - **Public/private filter matters.** Empirically the very top of every subject is
   dominated by private schools, so a parent looking for a strong *public* school
@@ -311,7 +352,7 @@ All data is under `data/` relative to `index.html` — fetch
 
 - **On page load:** fetch `data/schools-base.json` only (~0.4 MB gzipped). The map,
   both toggles, all three filters, popups' base stats, and base ranks in the
-  ranking tab all work from this.
+  ranking page all work from this.
 - **Year-by-year history** (single_year / last_k / loo) and **non-base ranking
   views** require the per-metric files (`data/schools-{metric}.json`, ~0.8 MB
   gzipped each, ~3 MB for all four). **Do not prefetch these automatically** — on
@@ -327,7 +368,78 @@ All data is under `data/` relative to `index.html` — fetch
 
 ---
 
-## 9. Internationalisation
+## 9. URL state and persistence
+
+The app's selections (metric, subject, filters, selected school) are shareable
+via URL. Visiting the same URL from another browser must reproduce the same view.
+
+### Parameters
+
+**`index.html`** (map):
+- `metric` — one of `mean`, `median`, `diff_mean`, `unit_norm_diff_mean`.
+- `subject` — one of `polski`, `matematyka`, `angielski`, `composite_min`.
+- `public` — `tak` (show only public), `nie` (show only private), or omitted (all).
+- `threshold` — number; minimum score for the current (metric, subject). Schools
+  with score below this are hidden.
+- `min_years` — integer; minimum `n_years` to show.
+- `school` — rspo (integer); if present, pan to the school, open its popup.
+- `lang` — `pl` or `en` (omitted = use stored default).
+
+**`ranking.html`** (table):
+- `metric`, `subject` — same as above.
+- `view` — `base`, `last_k`, `single_year`, or `loo`.
+- `view_param` — for non-base views: year (e.g. `2023`) or k (e.g. `3`).
+- `public` — same as above.
+- `q` — free-text name search query.
+- `sort` — column key (e.g. `base_rank`); `dir` — `asc` or `desc`.
+- `school` — rspo to highlight/scroll to.
+- `lang` — same.
+
+Unknown or out-of-range param values are ignored (fall back to defaults), not
+errors — be liberal in what you accept.
+
+### Resolution order (precedence)
+
+On page load, for each setting independently:
+
+1. **URL param wins** if present and valid. The tab is then "sealed" — see below.
+2. Otherwise **localStorage** value, if present.
+3. Otherwise the **built-in default** (`unit_norm_diff_mean`, `composite_min`,
+   no filters, `pl`).
+
+After load, the tab writes its resolved state into its URL immediately (via
+`history.replaceState`), so a reload of this tab preserves what the user is
+looking at — even if localStorage has since changed in another tab.
+
+### Writes
+
+When the user changes a setting:
+- Update the URL via `history.replaceState` (not `pushState` — we don't want
+  every slider tick to add a history entry).
+- Update localStorage with the new value.
+
+### Multi-tab behaviour
+
+- **localStorage is the "fresh visit default", not live shared state.**
+- **Do not listen to the `storage` event.** Each tab is sealed after load —
+  another tab changing its selection does *not* affect this tab.
+- Two tabs can hold different selections simultaneously without conflict
+  because each tab's state lives in its own URL.
+
+### What is persisted in localStorage
+
+- `metric`, `subject`, `lang` — the user's preferred view (carries across visits).
+- `history_optin` — boolean; if the user has clicked "Pokaż szczegółową historię"
+  before, remember the consent so they don't have to re-click on every visit.
+
+Filters (`public`, `threshold`, `min_years`, `q`, `sort`) and the selected
+school are *not* persisted across visits — they are URL-only. Visiting fresh
+should show the unfiltered set so the user isn't confused by an old filter
+hiding most schools.
+
+---
+
+## 10. Internationalisation
 
 - **Default language: Polish.** Provide a **toggle to English** (some users are
   English-speaking).
@@ -337,6 +449,9 @@ All data is under `data/` relative to `index.html` — fetch
   labels in both languages.
 - **Do not translate proper nouns:** school names, town names, addresses,
   administrative fields stay in Polish in both languages.
+- **Persistence:** the language choice follows the same URL > localStorage >
+  default rule as other settings (§9). A `?lang=en` link overrides storage;
+  toggling the language updates both URL and localStorage.
 - Suggested label mapping (PL / EN):
   - metrics: `mean` → "Średnia" / "Mean", `median` → "Mediana" / "Median",
     `diff_mean` → "Różnica od średniej" / "Difference from mean",
@@ -347,14 +462,15 @@ All data is under `data/` relative to `index.html` — fetch
 
 ---
 
-## 10. Repository placement
+## 11. Repository placement
 
 ```
 compare-primary-schools-mazowieckie/
 ├── docs/                       # GitHub Pages serves this
-│   ├── index.html              # the app (map + ranking views)
-│   ├── app.js                  # (or split as you like)
-│   ├── style.css
+│   ├── index.html              # the map page
+│   ├── ranking.html            # the ranking page
+│   ├── app.js                  # shared code (or split as you like)
+│   ├── style.css               # shared styles
 │   └── data/                   # the notebook writes these directly — do not edit by hand
 │       ├── schools-base.json
 │       ├── schools-mean.json
@@ -365,26 +481,33 @@ compare-primary-schools-mazowieckie/
 ```
 
 The notebook generates the JSON straight into `docs/data/`, so there is no copy
-step — the app fetches `data/schools-base.json` etc. relative to `index.html`.
-Put your `index.html`, JS, and CSS at the `docs/` root (alongside the `data/`
-folder).
+step — the app fetches `data/schools-base.json` etc. relative to `index.html`
+(and the same relative path works from `ranking.html` since they sit
+side-by-side). Put your two HTML files, JS, and CSS at the `docs/` root
+(alongside the `data/` folder). The HTML pages share `app.js` and `style.css`
+so common code (loading `schools-base.json`, colour mapping, URL state, i18n)
+lives in one place.
 
 ---
 
-## 11. Suggested build order
+## 12. Suggested build order
 
 1. Static page + Leaflet + Carto Positron tiles, load `data/schools-base.json`, plot
    markers coloured by the default (unit_norm_diff_mean, composite_min).
 2. Subject + metric toggles (recolour from base).
 3. Popup with base stats + warning badge for `n_years < 3`.
 4. Filters: public/private, score threshold (using slider_ranges), min n_years.
-5. Clustering + address search + zoom.
-6. Ranking tab from base ranks (sortable/filterable table, name search).
-7. On-demand loading (§8): opt-in fetch of per-metric files; add year-by-year
-   history to popups and LOO/single-year ranges + last_k view to the ranking tab.
-8. The LOO-range warning badge (needs a metric file loaded).
-9. Polish/English toggle.
-10. Mobile layout pass.
+5. Clustering (with cluster colour = mean of children) + address search + zoom.
+6. Ranking page (`ranking.html`) from base ranks (sortable/filterable table, name search).
+7. URL state & persistence (§9): wire up `history.replaceState` + localStorage
+   for both pages, plus the cross-page nav that carries metric/subject/language
+   through.
+8. On-demand loading (§8): opt-in fetch of per-metric files; add year-by-year
+   history (sparkline + table) to popups and LOO/single-year ranges + last_k
+   view to the ranking page.
+9. The LOO-range warning badge (needs a metric file loaded).
+10. Polish/English toggle.
+11. Mobile layout pass.
 
-Build incrementally; steps 1–6 give a fully useful map and ranking from a single
-0.4 MB download.
+Build incrementally; steps 1–7 give a fully useful, shareable map and ranking
+from a single 0.4 MB download.

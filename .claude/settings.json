@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sI http://localhost:*)",
+      "Bash(curl -s http://localhost:*)",
+      "Bash(node --check *)",
+      "Bash(google-chrome --headless *)",
+      "Bash(timeout * google-chrome --headless *)",
+      "Bash(tail -* /tmp/*)",
+      "Bash(grep -* /tmp/*)",
+      "Bash(wc -l /tmp/*)",
+      "Bash(ps -p *)",
+      "Bash(ps -ef)",
+      "Bash(ps aux)",
+      "Bash(cp data/* data/*)"
+    ]
+  }
+}

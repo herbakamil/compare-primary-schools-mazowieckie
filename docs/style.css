@@ -1,0 +1,247 @@
+:root {
+  --bg: #fff;
+  --bg-muted: #fafafa;
+  --bg-nav: #f5f5f5;
+  --border: #ddd;
+  --text: #222;
+  --text-muted: #666;
+  --accent: #2a6dbf;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body { display: flex; flex-direction: column; }
+
+/* Top nav */
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-nav);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.topnav h1 { margin: 0; font-size: 1.05rem; font-weight: 600; flex: 1; }
+.topnav nav { display: flex; gap: 0.25rem; }
+.topnav nav a {
+  text-decoration: none;
+  color: var(--text);
+  padding: 0.35rem 0.7rem;
+  border-radius: 3px;
+}
+.topnav nav a:hover { background: rgba(0,0,0,0.05); }
+.topnav nav a.active { background: var(--text); color: white; }
+
+/* Map page layout */
+.page-map main { flex: 1; display: flex; min-height: 0; }
+#map { flex: 1; min-width: 0; height: 100%; }
+
+#panel {
+  width: 320px;
+  background: var(--bg-muted);
+  border-left: 1px solid var(--border);
+  padding: 1rem;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.panel-section {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.panel-section:last-child { border-bottom: none; }
+
+.panel-section h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.6rem;
+}
+.field > span { font-size: 0.85rem; color: var(--text-muted); }
+
+.field select, .field input[type="text"], .field input[type="number"] {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font: inherit;
+  background: white;
+}
+
+.field input[type="range"] { width: 100%; }
+
+.radio-group {
+  border: none;
+  padding: 0;
+  margin: 0 0 0.6rem 0;
+}
+.radio-group legend { font-size: 0.85rem; color: var(--text-muted); padding: 0; margin-bottom: 0.25rem; }
+.radio-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-right: 0.75rem;
+  cursor: pointer;
+}
+
+#search-form { flex-direction: row; gap: 0.35rem; }
+#search-form input { flex: 1; }
+#search-form button {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+#search-form button:hover { background: #eee; }
+
+.muted { color: var(--text-muted); }
+.small { font-size: 0.8rem; }
+
+.legend { list-style: none; margin: 0; padding: 0; font-size: 0.8rem; }
+.legend li { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+.swatch {
+  display: inline-block;
+  width: 1rem; height: 1rem;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+/* Popups */
+.popup-school h3 { margin: 0 0 0.35rem 0; font-size: 1rem; }
+.popup-school .addr { color: var(--text-muted); font-size: 0.85rem; margin: 0 0 0.5rem 0; }
+.popup-school table { border-collapse: collapse; font-size: 0.85rem; width: 100%; }
+.popup-school th, .popup-school td { padding: 2px 6px; text-align: left; border-bottom: 1px solid #eee; }
+.popup-school th { font-weight: 600; }
+.popup-school td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.popup-school .warning {
+  display: inline-block;
+  background: #fff3cd;
+  border: 1px solid #ffe69c;
+  color: #8a6500;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  margin-top: 0.4rem;
+}
+.popup-school .composite-row td { background: #f5f5f5; font-weight: 600; }
+
+.popup-school .show-history-btn {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+}
+.popup-school .show-history-btn:hover { background: #eee; }
+.popup-school .show-history-btn[disabled] { opacity: 0.6; cursor: progress; }
+
+.popup-school .history { margin-top: 0.6rem; }
+.popup-school .sparkline { margin-bottom: 0.4rem; }
+.popup-school .sparkline svg {
+  display: block;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 2px;
+}
+.popup-school .spark-legend { margin-top: 0.15rem; }
+
+.popup-school .history-table { width: 100%; font-size: 0.8rem; }
+.popup-school .history-table th { font-weight: 600; }
+.popup-school .history-table tr.sep td {
+  padding: 0; border-bottom: 1px dashed #ccc; height: 4px;
+}
+
+/* Cluster icons (custom colouring done via inline style) */
+.school-cluster {
+  background: #aaa;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+/* Ranking page */
+.page-ranking main {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.ranking-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+.ranking-controls .field { flex: 0 0 auto; min-width: 140px; margin-bottom: 0; }
+.ranking-controls .field input[type="text"] { min-width: 200px; }
+
+#ranking-info { color: var(--text-muted); font-size: 0.85rem; }
+
+.ranking-table-wrap { overflow-x: auto; }
+table.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+table.ranking-table th, table.ranking-table td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  vertical-align: top;
+}
+table.ranking-table th {
+  background: var(--bg-nav);
+  position: sticky; top: 0;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+table.ranking-table th .sort-indicator { color: var(--text-muted); font-size: 0.8em; margin-left: 0.25rem; }
+table.ranking-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.ranking-table tr.highlight { background: #fff3cd; }
+
+.off-map { color: var(--text-muted); font-size: 0.85em; }
+
+/* Mobile */
+@media (max-width: 700px) {
+  .page-map main { flex-direction: column; }
+  #map { height: 60vh; flex: 0 0 60vh; }
+  #panel {
+    width: 100%;
+    max-height: 40vh;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+}

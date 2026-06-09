@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapa szkół podstawowych — Mazowieckie</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-map">
+  <header class="topnav">
+    <h1 data-i18n="appTitle">Mapa szkół — Mazowieckie</h1>
+    <nav>
+      <a href="index.html" class="active" data-i18n="navMap">Mapa</a>
+      <a href="ranking.html" data-i18n="navRanking">Ranking</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="map" aria-label="Mapa szkół"></div>
+
+    <aside id="panel">
+      <section class="panel-section">
+        <h2 data-i18n="sectionView">Widok</h2>
+
+        <label class="field">
+          <span data-i18n="labelSubject">Przedmiot</span>
+          <select id="subject-select"></select>
+        </label>
+
+        <label class="field">
+          <span data-i18n="labelMetric">Metryka</span>
+          <select id="metric-select"></select>
+        </label>
+      </section>
+
+      <section class="panel-section">
+        <h2 data-i18n="sectionFilters">Filtry</h2>
+
+        <fieldset class="field radio-group">
+          <legend data-i18n="labelPublic">Typ szkoły</legend>
+          <label><input type="radio" name="public" value="all" checked> <span data-i18n="publicAll">Wszystkie</span></label>
+          <label><input type="radio" name="public" value="tak"> <span data-i18n="publicYes">Publiczne</span></label>
+          <label><input type="radio" name="public" value="nie"> <span data-i18n="publicNo">Niepubliczne</span></label>
+        </fieldset>
+
+        <label class="field">
+          <span><span data-i18n="labelThreshold">Min. wynik</span>: <strong id="threshold-display">—</strong></span>
+          <input type="range" id="threshold-slider">
+        </label>
+
+        <label class="field">
+          <span><span data-i18n="labelMinYears">Min. liczba lat danych</span>: <strong id="min-years-display">1</strong></span>
+          <input type="range" id="min-years-slider" min="1" max="5" step="1" value="1">
+        </label>
+
+        <p class="muted" id="filter-summary"></p>
+      </section>
+
+      <section class="panel-section">
+        <h2 data-i18n="sectionSearch">Szukaj adresu</h2>
+        <form id="search-form" class="field">
+          <input type="text" id="search-input" placeholder="np. Marszałkowska 1, Warszawa" data-i18n-attr="placeholder|searchPlaceholder">
+          <button type="submit" data-i18n="searchButton">Szukaj</button>
+        </form>
+        <p class="muted small" data-i18n="searchHelp">Geokodowanie: OpenStreetMap Nominatim. Wyszukiwanie tylko po kliknięciu „Szukaj”.</p>
+      </section>
+
+      <section class="panel-section">
+        <h2 data-i18n="sectionLegend">Legenda</h2>
+        <ul class="legend">
+          <li><span class="swatch" style="background:#1a9850"></span> <span data-i18n="legendSatGreen">Bardzo dobry (≥ +1.5σ)</span></li>
+          <li><span class="swatch" style="background:#a6dba0"></span> <span data-i18n="legendGreen">Dobry (+0.33σ … +1.5σ)</span></li>
+          <li><span class="swatch" style="background:#fde08a"></span> <span data-i18n="legendYellow">Przeciętny (±0.33σ)</span></li>
+          <li><span class="swatch" style="background:#f4a582"></span> <span data-i18n="legendRed">Słaby (−1.5σ … −0.33σ)</span></li>
+          <li><span class="swatch" style="background:#d6604d"></span> <span data-i18n="legendSatRed">Bardzo słaby (≤ −1.5σ)</span></li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="app.js"></script>
+  <script src="map.js"></script>
+</body>
+</html>

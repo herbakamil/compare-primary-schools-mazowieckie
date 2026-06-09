@@ -52,6 +52,17 @@ COORDS_CSV = PROJECT_ROOT / "data" / "school_coords.csv"
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 REQUEST_DELAY_SECONDS = 1.1  # Nominatim usage policy: max 1 request/second
 
+# Mazowieckie voivodeship bounding box (lon_min, lat_min, lon_max, lat_max).
+# Source: rough envelope around the official borders.
+MAZ_LON_MIN, MAZ_LAT_MIN = 19.2, 51.0
+MAZ_LON_MAX, MAZ_LAT_MAX = 23.2, 53.6
+# Nominatim viewbox format: "left,top,right,bottom" (west_lon,north_lat,east_lon,south_lat).
+MAZ_VIEWBOX = f"{MAZ_LON_MIN},{MAZ_LAT_MAX},{MAZ_LON_MAX},{MAZ_LAT_MIN}"
+
+# Street prefixes the OKE data tacks on (e.g. "ul. Marszałkowska 1"). Nominatim
+# fares better when we either drop them or also try a stripped form.
+STREET_PREFIXES = ("ul.", "Ul.", "UL.", "al.", "Al.", "AL.", "pl.", "Pl.", "os.", "Os.")
+
 # Nominatim requires a User-Agent identifying the application AND a way to
 # contact whoever runs it (stock HTTP-library User-Agents are blocked). The app
 # id lives in source, but the contact must NOT be hardcoded — this repo is
@@ -88,35 +99,104 @@ def resolve_user_agent(cli_contact: str | None) -> str:
     return USER_AGENT_TEMPLATE.format(contact=contact)
 
 
-def geocode_address(miejscowosc: str | None, ulica_nr: str | None, user_agent: str) -> tuple[float, float] | None:
-    """Geocode a single address via Nominatim. Returns (lat, lon) or None."""
-    # Try the most specific query first (street + town), then fall back to town only.
-    queries = []
-    if ulica_nr and str(ulica_nr).strip():
-        queries.append(f"{ulica_nr}, {miejscowosc}, Polska")
-    queries.append(f"{miejscowosc}, Polska")
+def _strip_street_prefix(street: str) -> str:
+    """Drop the leading 'ul.'/'al.'/'pl.'/'os.' tag and collapse whitespace."""
+    s = street.strip()
+    for prefix in STREET_PREFIXES:
+        if s.startswith(prefix):
+            s = s[len(prefix):].strip()
+            break
+    return s
 
-    for query in queries:
-        params = {
-            "q": query,
+
+def _in_mazowieckie(lat: float, lon: float) -> bool:
+    return MAZ_LAT_MIN <= lat <= MAZ_LAT_MAX and MAZ_LON_MIN <= lon <= MAZ_LON_MAX
+
+
+def _nominatim_request(params: dict, user_agent: str) -> list:
+    """One Nominatim request. Returns the parsed JSON list (possibly empty)."""
+    url = f"{NOMINATIM_URL}?{urlencode(params)}"
+    request = Request(url, headers={"User-Agent": user_agent, "Accept-Language": "pl"})
+    try:
+        with urlopen(request, timeout=30) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except Exception as exc:
+        print(f"    request failed: {exc}", file=sys.stderr)
+        return []
+    finally:
+        time.sleep(REQUEST_DELAY_SECONDS)
+
+
+def geocode_address(miejscowosc: str | None, ulica_nr: str | None, user_agent: str) -> tuple[float, float] | None:
+    """Geocode a single address via Nominatim, biased to Mazowieckie.
+
+    Strategy (try in order, accept first result that lands inside Mazowieckie):
+      1. Structured query: street + city + state=Mazowieckie + country=Polska.
+      2. Free-text with viewbox-bounded Mazowieckie: "<street>, <city>, Mazowieckie".
+      3. Free-text with original prefixed street ("ul. X"), still viewbox-bounded.
+
+    There is **no** fallback to a town-only query. If no street-level match is
+    found within Mazowieckie, return None — the school will appear in the
+    ranking but stay off the map. Better than planting it on a city centroid
+    (the previous behaviour silently put 773 of 1,720 schools on top of each
+    other at the Pałac Kultury location and similar).
+    """
+    miejscowosc = (miejscowosc or "").strip()
+    ulica_raw = (ulica_nr or "").strip()
+    if not miejscowosc or not ulica_raw:
+        return None  # no street → no street-level match possible
+
+    street_clean = _strip_street_prefix(ulica_raw)
+    queries: list[dict] = []
+
+    # 1. Structured query — Nominatim prefers `street=<housenumber> <streetname>`
+    #    or `street=<streetname> <housenumber>`; both forms work in practice.
+    queries.append({
+        "street": street_clean,
+        "city": miejscowosc,
+        "state": "województwo mazowieckie",
+        "country": "Polska",
+        "countrycodes": "pl",
+        "format": "json",
+        "limit": "1",
+    })
+
+    # 2. Free-text, viewbox-bounded to Mazowieckie.
+    queries.append({
+        "q": f"{street_clean}, {miejscowosc}, województwo mazowieckie, Polska",
+        "format": "json",
+        "limit": "1",
+        "countrycodes": "pl",
+        "viewbox": MAZ_VIEWBOX,
+        "bounded": "1",
+    })
+
+    # 3. Original "ul. X" form — some streets disambiguate better with the tag.
+    if street_clean != ulica_raw:
+        queries.append({
+            "q": f"{ulica_raw}, {miejscowosc}, województwo mazowieckie, Polska",
             "format": "json",
             "limit": "1",
             "countrycodes": "pl",
-        }
-        url = f"{NOMINATIM_URL}?{urlencode(params)}"
-        request = Request(url, headers={"User-Agent": user_agent})
-        try:
-            with urlopen(request, timeout=30) as response:
-                data = json.loads(response.read().decode("utf-8"))
-        except Exception as exc:  # network error, timeout, JSON error
-            print(f"    request failed for '{query}': {exc}", file=sys.stderr)
-            time.sleep(REQUEST_DELAY_SECONDS)
+            "viewbox": MAZ_VIEWBOX,
+            "bounded": "1",
+        })
+
+    for params in queries:
+        data = _nominatim_request(params, user_agent)
+        if not data:
             continue
-
-        time.sleep(REQUEST_DELAY_SECONDS)  # respect rate limit between requests
-
-        if data:
-            return float(data[0]["lat"]), float(data[0]["lon"])
+        try:
+            lat = float(data[0]["lat"])
+            lon = float(data[0]["lon"])
+        except (KeyError, ValueError, TypeError):
+            continue
+        if not _in_mazowieckie(lat, lon):
+            # The query had a Mazowieckie hint but the chosen result drifted
+            # outside the bbox (this can happen with `state=` if Nominatim
+            # treats it as a soft preference). Reject and try next strategy.
+            continue
+        return lat, lon
 
     return None
 
