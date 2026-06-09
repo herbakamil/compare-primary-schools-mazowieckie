@@ -21,9 +21,14 @@ CSV columns: rspo, miejscowosc, ulica_nr, latitude, longitude
 
 Usage
 -----
-    uv run python scripts/geocode_schools.py
-    uv run python scripts/geocode_schools.py --limit 50      # only geocode 50 new ones (testing)
-    uv run python scripts/geocode_schools.py --force         # re-geocode everything
+Nominatim requires a contact (email or URL) in the User-Agent. Supply your own
+via the NOMINATIM_CONTACT env var (or the --contact flag); it is never stored in
+this repo. The script exits with an error if no contact is set.
+
+    NOMINATIM_CONTACT=you@example.com uv run python scripts/geocode_schools.py
+    NOMINATIM_CONTACT=you@example.com uv run python scripts/geocode_schools.py --limit 50  # only 50 new (testing)
+    NOMINATIM_CONTACT=you@example.com uv run python scripts/geocode_schools.py --force      # re-geocode everything
+    uv run python scripts/geocode_schools.py --contact you@example.com                      # contact via flag
 
 Requirements: requests (already a project dependency via jupyter stack, or add it).
 """
@@ -32,6 +37,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -44,8 +50,15 @@ SCHOOLS_BASE_JSON = PROJECT_ROOT / "docs" / "data" / "schools-base.json"
 COORDS_CSV = PROJECT_ROOT / "data" / "school_coords.csv"
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-USER_AGENT = "compare-primary-schools-mazowieckie/1.0 (school quality map; contact: herba.kamil@gmail.com)"
 REQUEST_DELAY_SECONDS = 1.1  # Nominatim usage policy: max 1 request/second
+
+# Nominatim requires a User-Agent identifying the application AND a way to
+# contact whoever runs it (stock HTTP-library User-Agents are blocked). The app
+# id lives in source, but the contact must NOT be hardcoded — this repo is
+# public. It is supplied at runtime via the NOMINATIM_CONTACT env var (or the
+# --contact flag), and slotted into this template. See README "Geocoding".
+CONTACT_ENV_VAR = "NOMINATIM_CONTACT"
+USER_AGENT_TEMPLATE = "compare-primary-schools-mazowieckie/1.0 (school quality map; contact: {contact})"
 
 CSV_COLUMNS = ["rspo", "miejscowosc", "ulica_nr", "latitude", "longitude"]
 
@@ -56,7 +69,26 @@ def normalize_address(miejscowosc: str | None, ulica_nr: str | None) -> str:
     return "|".join(p.lower() for p in parts)
 
 
-def geocode_address(miejscowosc: str | None, ulica_nr: str | None) -> tuple[float, float] | None:
+def resolve_user_agent(cli_contact: str | None) -> str:
+    """Build the Nominatim User-Agent from a runtime-supplied contact.
+
+    Contact precedence: --contact flag, then the NOMINATIM_CONTACT env var.
+    Exits with a clear message if neither is set, because Nominatim rejects
+    requests that lack a valid contact.
+    """
+    contact = (cli_contact or os.environ.get(CONTACT_ENV_VAR) or "").strip()
+    if not contact:
+        sys.exit(
+            f"ERROR: no Nominatim contact set. Nominatim requires a valid contact "
+            f"(email or URL) and rejects requests without one.\n"
+            f"  Pass it inline:   {CONTACT_ENV_VAR}=you@example.com uv run python scripts/geocode_schools.py\n"
+            f"  Or via the flag:  uv run python scripts/geocode_schools.py --contact you@example.com\n"
+            f"See the README \"Geocoding\" section for details."
+        )
+    return USER_AGENT_TEMPLATE.format(contact=contact)
+
+
+def geocode_address(miejscowosc: str | None, ulica_nr: str | None, user_agent: str) -> tuple[float, float] | None:
     """Geocode a single address via Nominatim. Returns (lat, lon) or None."""
     # Try the most specific query first (street + town), then fall back to town only.
     queries = []
@@ -72,7 +104,7 @@ def geocode_address(miejscowosc: str | None, ulica_nr: str | None) -> tuple[floa
             "countrycodes": "pl",
         }
         url = f"{NOMINATIM_URL}?{urlencode(params)}"
-        request = Request(url, headers={"User-Agent": USER_AGENT})
+        request = Request(url, headers={"User-Agent": user_agent})
         try:
             with urlopen(request, timeout=30) as response:
                 data = json.loads(response.read().decode("utf-8"))
@@ -129,7 +161,12 @@ def main() -> None:
                         help="Maximum number of NEW geocoding requests (for testing).")
     parser.add_argument("--force", action="store_true",
                         help="Re-geocode every school, ignoring the cache.")
+    parser.add_argument("--contact", default=None,
+                        help=f"Contact (email or URL) for the Nominatim User-Agent. "
+                             f"Overrides the {CONTACT_ENV_VAR} env var.")
     args = parser.parse_args()
+
+    user_agent = resolve_user_agent(args.contact)
 
     schools = load_schools(SCHOOLS_BASE_JSON)
     print(f"Loaded {len(schools):,} schools from {SCHOOLS_BASE_JSON.name}")
@@ -204,7 +241,7 @@ def main() -> None:
             f"  [{index:>4,}/{n_total:,} ({pct:5.1f}%)] {label} rspo={rspo}: "
             f"{school['miejscowosc']}, {school['ulica_nr']}"
         )
-        coords = geocode_address(school["miejscowosc"], school["ulica_nr"])
+        coords = geocode_address(school["miejscowosc"], school["ulica_nr"], user_agent)
         if action == "update":
             updated_count += 1
         else:

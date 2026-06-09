@@ -56,9 +56,23 @@ After a new year of results is published:
 
 3. **Geocode new school addresses** (coordinates are not in the OKE data):
 
+   Nominatim requires a User-Agent that identifies the application **and** a way to
+   contact whoever runs it — requests without a valid contact are rejected. The
+   contact is **not** stored in this repo; you supply your own at runtime via the
+   `NOMINATIM_CONTACT` environment variable (an email or a URL):
+
    ```bash
+   # Inline, for a one-off run:
+   NOMINATIM_CONTACT=you@example.com uv run python scripts/geocode_schools.py
+
+   # Or set it once for the shell session:
+   export NOMINATIM_CONTACT=you@example.com
    uv run python scripts/geocode_schools.py
    ```
+
+   You can also pass it as a flag (`--contact you@example.com`), which overrides the
+   env var. If neither is set, the script stops immediately with an explanatory
+   error before making any request.
 
    The script reads `docs/data/schools-base.json`, geocodes new or changed addresses
    via OpenStreetMap (Nominatim), and writes the result to
