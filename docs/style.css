@@ -230,6 +230,10 @@ table.ranking-table th {
 }
 table.ranking-table th .sort-indicator { color: var(--text-muted); font-size: 0.8em; margin-left: 0.25rem; }
 table.ranking-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.ranking-table td.num .dec {
+  font-size: 0.85em;
+  color: var(--text-muted);
+}
 table.ranking-table tr.highlight { background: #fff3cd; }
 
 .off-map { color: var(--text-muted); font-size: 0.85em; }

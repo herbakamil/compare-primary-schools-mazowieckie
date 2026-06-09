@@ -200,7 +200,7 @@
         <td>${escapeHTML(r.town || '')}</td>
         <td>${pubLabel}</td>
         <td class="num">${r.n_years}</td>
-        <td class="num">${fmtScore(r.score, state.metric)}</td>
+        <td class="num">${fmtScoreHTML(r.score, state.metric)}</td>
         <td class="num">${looCell}</td>
         <td class="num">${syCell}</td>
       </tr>`;

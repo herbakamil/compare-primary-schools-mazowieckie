@@ -312,4 +312,23 @@ function fmtScore(score, metric) {
   return (score >= 0 ? '+' : '') + score.toFixed(3);
 }
 
+// Same as fmtScore but renders the decimals in a muted/smaller span so the
+// ranking table can show 3 decimals without visually shouting them — the
+// integer part is the main read, the decimals are for breaking apparent ties.
+// Returns HTML; only use in trusted DOM (we control the score values).
+function fmtScoreHTML(score, metric) {
+  if (score == null || Number.isNaN(score)) return '—';
+  let formatted;
+  if (metric === 'mean' || metric === 'median') {
+    formatted = score.toFixed(3);
+  } else {
+    formatted = (score >= 0 ? '+' : '') + score.toFixed(3);
+  }
+  const dotIdx = formatted.indexOf('.');
+  if (dotIdx < 0) return formatted;
+  const integer = formatted.slice(0, dotIdx);
+  const decimal = formatted.slice(dotIdx);
+  return `${integer}<span class="dec">${decimal}</span>`;
+}
+
 function isPublic(s) { return s.is_public === 'Tak'; }
