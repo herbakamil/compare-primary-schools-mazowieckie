@@ -136,14 +136,35 @@ not served by the site. Ignore them in the web app.
 
 ## 3. Coordinates
 
-`lat`/`lon` are already in `data/schools-base.json` (geocoded offline). The app does
-**not** geocode schools. It may use a geocoding API only for the **address search
-box** (turning a user-typed address into a map location) — use Nominatim
-(OpenStreetMap) for that, one request per search, respecting their usage policy
-(no bulk, include a descriptive User-Agent).
+`lat`/`lon` are already in `data/schools-base.json` (geocoded offline by a
+separate Python script). The app does **not** geocode schools.
+
+The app may use a geocoding API for **one thing only**: the **address search box**
+(turning a user-typed address into a map location to pan/zoom to). Use Nominatim
+(OpenStreetMap), subject to its usage policy — and note these specifics, which
+differ from the offline script:
+
+- **Identification is automatic in the browser.** Nominatim requires *either* a
+  valid `Referer` *or* a `User-Agent`. JavaScript cannot set `User-Agent` (browsers
+  block it), but the browser automatically sends `Referer` (the page URL), which
+  satisfies the policy. **So the in-browser search needs no email, no API key, and
+  no User-Agent config** — do not hardcode any contact in the frontend. (The
+  offline `geocode_schools.py` script is different: it runs server-side, has no
+  Referer, so it sets a User-Agent with a contact from an env var. That is the
+  script's concern, not the app's.)
+- **No auto-complete / search-as-you-type.** Nominatim's policy explicitly forbids
+  client-side auto-complete against the public API. The search box must fire **only
+  on submit** (Enter key or a "Szukaj" button), exactly one request per submit —
+  never one request per keystroke.
+- **One request per user action**, end-user-triggered only (which an address search
+  is). Display OSM attribution as the policy requires.
+- This is a **deliberate** choice to use the public Nominatim API, made here with
+  knowledge of its policy — not a default to reach for automatically. If the app's
+  search traffic ever grows beyond light/moderate, switch to a self-hosted
+  Nominatim or a commercial geocoder.
 
 **Never invent or approximate a school's coordinates.** If `lat`/`lon` is null,
-the school is simply absent from the map.
+the school is simply absent from the map (see §7).
 
 ---
 
@@ -208,7 +229,8 @@ assuming 0.
   - **Minimum n_years:** hide schools with little history.
 - **Zoom + address search:** native Leaflet zoom, plus a search box that
   geocodes a typed address (Nominatim) and pans/zooms there so the user can see
-  nearby schools.
+  nearby schools. Fire the geocode **only on submit** (Enter / button), one
+  request per submit — no search-as-you-type (Nominatim policy; see §3).
 - **Popup (on marker click):** show the rich base stats this school has —
   name, public/private, town + street, n_years, and for the selected metric the
   per-subject score / rank / pct plus composite_min. Show a warning badge if
