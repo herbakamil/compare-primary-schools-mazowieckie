@@ -44,7 +44,7 @@ SCHOOLS_BASE_JSON = PROJECT_ROOT / "docs" / "data" / "schools-base.json"
 COORDS_CSV = PROJECT_ROOT / "data" / "school_coords.csv"
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-USER_AGENT = "porownanie-podstawowek-mazowsze/1.0 (school quality map; contact: herba.kamil@gmail.com)"
+USER_AGENT = "compare-primary-schools-mazowieckie/1.0 (school quality map; contact: herba.kamil@gmail.com)"
 REQUEST_DELAY_SECONDS = 1.1  # Nominatim usage policy: max 1 request/second
 
 CSV_COLUMNS = ["rspo", "miejscowosc", "ulica_nr", "latitude", "longitude"]
