@@ -37,13 +37,22 @@ compare-primary-schools-mazowieckie/
 │   │   ├── 2022_-_*.xlsx
 │   │   └── ...
 │   └── school_coords.csv                       # geocoding cache (rspo, address, lat, lon)
-├── output/                                     # OUTPUT (generated — singular, mirrors `data`)
-│   ├── schools-base.json
-│   ├── schools-{metric}.json   × 4
+├── output/                                     # OUTPUT for analysts (xlsx)
 │   └── schools-{metric}.xlsx   × 4
+├── docs/                                       # the map app (GitHub Pages serves this)
+│   ├── index.html, app.js, style.css           # the frontend (see MAP_APP_BRIEF.md)
+│   └── data/                                   # JSON consumed by the app (notebook writes here)
+│       ├── schools-base.json
+│       └── schools-{metric}.json   × 4
 ├── README.md
-└── CLAUDE.md
+├── CLAUDE.md
+└── MAP_APP_BRIEF.md                            # build spec for the map app (frontend)
 ```
+
+The notebook writes the **JSON** files (for the map) into `docs/data/` and the
+**xlsx** files (for analysts) into `output/`. This avoids a copy step: the data
+the app serves is generated straight into the directory GitHub Pages publishes.
+`school_coords.csv` (geocoding cache) stays in `data/`.
 
 `data/` and `output/` are both singular mass nouns (input data / output data),
 paralleling each other. `notebooks/` and `scripts/` are plural (countable files).
@@ -260,20 +269,20 @@ students the composite value came from).
 
 ### Output files
 
-- **`schools-base.json`** (~3.8 MB raw, ~0.4 MB gzipped — GitHub Pages serves
-  gzip) — loaded on map open. Per school: metadata (name, address, is_public,
+- **`docs/data/schools-base.json`** (~3.8 MB raw, ~0.4 MB gzipped — GitHub Pages
+  serves gzip) — loaded on map open. Per school: metadata (name, address, is_public,
   n_years, lat/lon) plus **base score/rank/pct for ALL four metrics × four
   subjects** under `scores[metric][subject]`. This lets the frontend switch
   metric and filter by value **without** downloading the big per-metric files.
   `lat`/`lon` come from the geocoding cache (`null` if missing). `metadata` holds:
   `default_metric`, `metrics`, `subjects`, `years_in_data`, `sigma[metric][subject]`,
   `sigma_centre[metric][subject]`, and `slider_ranges[metric]` (see below).
-- **`schools-{metric}.json`** × 4 (~7 MB each, ~0.8 MB gzipped) — all *views* for
+- **`docs/data/schools-{metric}.json`** × 4 (~7 MB each, ~0.8 MB gzipped) — all *views* for
   all schools, loaded on demand only when the user opens a school's year-by-year
   history (the map and value-filtering work from base alone). `base` is a flat
   `{score, rank, pct}`; other views are `{param: {score, rank, pct}}` with
   integer-string param keys (`"2021"`, `"2"`).
-- **`schools-{metric}.xlsx`** × 4 (~6.5 MB each) — long format for analysts, one
+- **`output/schools-{metric}.xlsx`** × 4 (~6.5 MB each) — long format for analysts, one
   row per (school, subject, view), in two sheets:
   - **`data`** sheet columns: `rspo, school_name, miejscowosc, ulica_nr, powiat,
     gmina, typ_gminy, is_public, n_years, metric, subject, view_kind, view_param,
@@ -313,7 +322,7 @@ real generation time when a file is actually written.
 
 Coordinates are **not** in the OKE data, so they are geocoded separately:
 
-- **Input**: `output/schools-base.json` (rspo + address).
+- **Input**: `docs/data/schools-base.json` (rspo + address).
 - **Cache**: `data/school_coords.csv` with columns
   `rspo, miejscowosc, ulica_nr, latitude, longitude`.
 - **Logic**: if an rspo is in the cache and its address is unchanged, keep the
@@ -328,127 +337,38 @@ fresh coordinates land in `schools-base.json`.
 
 ---
 
-## Uncertainty communication (frontend guidance)
+## Frontend / map app
 
-The export carries `rank`, `pct`, and per-view `score` for every school. **How the
-frontend uses these matters — they communicate different levels of certainty.**
+The map application is a **separate concern** from this notebook. Its complete
+build specification — UI, filters, popups, data-loading strategy, colour
+computation, internationalisation, build order — lives in **`MAP_APP_BRIEF.md`**
+(repo root). That is the single source of truth for the frontend; do not
+duplicate its UX decisions here.
 
-### Map view
+What this notebook guarantees the frontend can rely on (the export contract):
 
-- **Show colour only, not numeric ranks.** Rank position in the middle of the
-  distribution swings by ~10% of the ranking (100+ positions) when one year is
-  excluded — pure density effect, not a metric flaw. A numeric rank ("#234 in
-  the voivodeship") implies precision the data cannot support.
-- **Colour reflects score, not rank.** The score is well-estimated everywhere;
-  the rank is misleadingly precise in the middle. The diverging colour scale
-  saturates at ±1.5σ so the extremes are visually distinct while the middle
-  band is honestly muddy.
-- **Default view: `composite_min` under the primary metric.** The app exposes
-  two toggles: a **subject toggle** (Polish / Maths / English / composite_min)
-  and a **metric toggle** (mean / median / diff_mean / unit_norm_diff_mean). All
-  metric × subject combinations are in `schools-base.json`, so both toggles
-  recolour the map instantly with no extra download.
-- **Filters on the map:**
-  - **Public / private** (`is_public`: "Tak"/"Nie") — important. Empirically the
-    top of every subject is dominated by private schools, so a parent looking for
-    a strong *public* school needs to filter them out to see a useful map. Do not
-    annotate *why* private schools rank high — the data measures outcomes, not
-    value added, and we have no intake data to attribute the difference to any
-    cause.
-  - **Score threshold** — "show only schools scoring above X" for the selected
-    metric, using `metadata.slider_ranges[metric]` for the slider bounds. Lets a
-    user watch the map thin out as they raise the bar (e.g. only schools above
-    0.1 in `unit_norm_diff_mean`, or above 60 in `mean`).
-  - **Min n_years** — hide low-data schools.
-- **Zoom + address search.** Native Leaflet zoom plus an address search box
-  (one Nominatim query → zoom to location) so a user can see schools near a
-  specific area; 1,400 markers at full extent is not useful on its own.
-- **Markers**: fixed-size coloured circles (colour = the quality scale) with
-  clustering at low zoom (~1,400 plotted schools need it). Do **not** size markers
-  by student count — it would conflate "many students" with "good".
+- `schools-base.json` carries, per school: `rspo`, `name`, `is_public`
+  ("Tak"/"Nie"), `n_years`, `miejscowosc`, `ulica_nr`, `lat`/`lon` (nullable),
+  and `scores[metric][subject] = {score, rank, pct}` for all 4 metrics × 4
+  subjects. `metadata` carries `sigma[metric][subject]`,
+  `sigma_centre[metric][subject]`, and `slider_ranges[metric]`.
+- `schools-{metric}.json` carries, per school/subject, the `base`, `loo`,
+  `single_year`, and `last_k` views (see the Export section above).
+- These fields exist specifically to support the frontend's needs (metric/subject
+  toggles, value filtering, public/private filtering, per-metric colouring,
+  uncertainty ranges). If you change the export, keep them — or update
+  `MAP_APP_BRIEF.md` in lockstep.
 
-### Ranking tab (separate from the map)
+Two principles set here because they constrain the **data/metric**, not just the
+UI, and must survive any frontend rewrite:
 
-A search-by-name table (e.g. "Vizja", "STO", or unfiltered list) is fine to
-include — but with full uncertainty context. Per school, show:
-
-- **Base rank** — score over all years
-- **Best / worst LOO rank** — min and max rank across the LOO folds
-  (e.g. "base #234, LOO range #198–#267")
-- **Best / worst single-year rank** — min and max rank across single-year views
-  (e.g. "in any single year, ranged from #112 to #389")
-
-This is honest: the table shows where the school sits *and* how much that
-position depends on which year is included. All these numbers are already in
-`schools-{metric}.json` under `loo.{year}.rank` and `single_year.{year}.rank`
-— the frontend just computes min/max.
-
-The ranking tab should also let the user:
-- **Filter public / private** (same `is_public` field).
-- **Pick the metric** (mean / median / diff_mean / unit_norm_diff_mean) and a
-  **view** — in particular `last_k`. This enables comparison with external
-  rankings: e.g. rankingedukacji.pl uses the arithmetic mean of the last 3 years,
-  which corresponds to `metric=mean, view=last_k, view_param=3`. (Their ranking
-  also folds in non-exam factors, so positions won't match exactly, but the
-  exam-based part is comparable.) The base `rank`/`pct` for all metrics are in
-  `schools-base.json`; the `last_k` and other views come from the per-metric
-  files, loaded on demand (see below).
-
-### Warning badges in school popup
-
-Three independent signals; show ⚠️ if any fires (combine into one badge with
-hover-text listing which conditions triggered):
-
-| Condition | Meaning |
-|-----------|---------|
-| `n_years < 3` | Short history — limited certainty about the school's long-term level |
-| LOO range > 1σ AND `n_years ≥ 3` | Many years of data but large year-to-year volatility — score depends on which year is included |
-| (geocoding failed: no `lat`/`lon`) | The school isn't shown on the map at all; no popup |
-
-`n_total < 20` was considered but rejected — schools with low total student count
-almost always also trigger `n_years < 3` or have other low-quality signals, so a
-separate threshold would add complexity without catching additional cases.
-
-The LOO-range threshold is intentionally combined with `n_years ≥ 3`: schools
-with only 2 years would *always* have a wide LOO range (each fold uses only 1
-year), which is small-sample noise, not real volatility. Empirically with the
-current data, the combined rule flags ~6 schools out of ~1,400 with 3+ years —
-rare but real signals of true year-to-year instability.
-
-### Data loading strategy
-
-- **On map open:** load `schools-base.json` only (~0.4 MB gzipped). This is
-  enough for the map, all metric/subject toggles, value filtering, public/private
-  filtering, and base ranks in the ranking tab.
-- **Year-by-year history** (LOO / single-year / last_k views) lives in the four
-  `schools-{metric}.json` files (~0.8 MB gzipped each, ~3 MB for all four). These
-  are **not** prefetched automatically — fetching ~3 MB on every fresh visit
-  would burn mobile data (browser HTTP caching via ETag covers repeat visits from
-  the same browser, but not incognito or a different browser/device). Instead,
-  gate the richer history behind a **visible checkbox / button**: "Show detailed
-  year-by-year history (downloads ~3 MB)". Fetch all four files once on demand,
-  keep them in memory for the session.
-- Computing colour classes client-side from `metadata.sigma` + `sigma_centre`
-  needs only base — no per-metric file required for the map.
-
-### Internationalisation
-
-Default UI language **Polish**, with a toggle to **English** (some users may be
-English-speaking). Translate only interface labels (buttons, headers, metric
-names, warning text). Leave proper nouns in Polish: school names, town names,
-addresses, administrative fields. The data files use English technical field
-names (`mean`, `view_kind`, etc.); the UI maps them to localized labels. The
-methodology notebook stays English-only (GitHub / technical audience).
-
-### Never invent coordinates
-
-If geocoding fails, the school's `lat`/`lon` stay `null` and it is omitted from
-the map. **Never substitute plausible-looking coordinates** (e.g. town centre,
-voivodeship centre) — they would misplace markers and undermine trust in the
-map. The user should be able to assume that every marker on the map is at the
-school's real location.
-
----
+- **Outcome, not value-added** (a specific instance of the global "Causal claims
+  — only what the data can support" rule). The metric measures exam outcomes. We
+  have no student-intake data, so the data cannot establish *why* schools or
+  groups differ. Describe the pattern (e.g. in the public/private filter) without
+  naming a cause.
+- **Never invent coordinates.** If geocoding fails, `lat`/`lon` stay `null` and
+  the school is omitted from the map. Never substitute approximate coordinates.
 
 ## Global coding rules (apply everywhere)
 

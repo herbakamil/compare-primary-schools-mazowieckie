@@ -7,7 +7,7 @@ and the result is stable, so it is cached in a CSV that the notebook reads.
 
 Workflow
 --------
-1. Reads the schools and their addresses from output/schools-base.json
+1. Reads the schools and their addresses from docs/data/schools-base.json
    (which the analysis notebook produces).
 2. Reads the existing cache data/school_coords.csv (if present).
 3. For each school:
@@ -40,7 +40,7 @@ from urllib.request import Request, urlopen
 
 # ── Paths (relative to project root; script lives in scripts/) ──────────────
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SCHOOLS_BASE_JSON = PROJECT_ROOT / "output" / "schools-base.json"
+SCHOOLS_BASE_JSON = PROJECT_ROOT / "docs" / "data" / "schools-base.json"
 COORDS_CSV = PROJECT_ROOT / "data" / "school_coords.csv"
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"

@@ -27,7 +27,8 @@ other projects.
 notebooks/   analysis (how_to_measure_school_quality.ipynb)
 scripts/     geocode_schools.py — geocode school addresses
 data/        input data (OKE xlsx files) + coordinate cache
-output/      generated files for the map (JSON) and for analysts (XLSX)
+output/      xlsx files for analysts
+docs/        the map app (GitHub Pages); docs/data/ holds the JSON the app loads
 ```
 
 ## How to regenerate the map data
@@ -59,7 +60,7 @@ After a new year of results is published:
    uv run python scripts/geocode_schools.py
    ```
 
-   The script reads `output/schools-base.json`, geocodes new or changed addresses
+   The script reads `docs/data/schools-base.json`, geocodes new or changed addresses
    via OpenStreetMap (Nominatim), and writes the result to
    `data/school_coords.csv`. Unchanged addresses keep their cached coordinates.
    Geocoding is slow (~1 request/second), so run it only when new schools appear.
@@ -67,22 +68,24 @@ After a new year of results is published:
 4. **Re-run the export cells** (or the whole notebook) so the fresh coordinates
    are merged into `schools-base.json`.
 
-5. **Commit** the contents of `output/` and `data/school_coords.csv`.
+5. **Commit** the generated files in `docs/data/` and `output/`, plus
+   `data/school_coords.csv`.
 
 ## Output files
 
-For the map (JSON):
+For the map (JSON, written to `docs/data/` so GitHub Pages serves them directly):
 
-- `output/schools-base.json` — metadata + each school's primary score (loaded
-  immediately when the map opens, ~1 MB)
-- `output/schools-{metric}.json` × 4 — all score views for a given metric (loaded
-  on demand, ~8 MB each)
+- `docs/data/schools-base.json` — metadata + every school's base score/rank/pct
+  for all metrics and subjects (loaded immediately when the map opens; ~0.4 MB
+  gzipped)
+- `docs/data/schools-{metric}.json` × 4 — all score views (base, leave-one-out,
+  single-year, last-k) for a given metric (loaded on demand; ~0.8 MB gzipped each)
 
-For analysts (Excel):
+For analysts (Excel, in `output/`):
 
 - `output/schools-{metric}.xlsx` × 4 — long format (one row = one data point),
-  with administrative metadata (powiat, gmina, typ_gminy) for filtering and pivot
-  tables
+  with a `legend` sheet and administrative metadata (powiat, gmina, typ_gminy)
+  for filtering and pivot tables
 
 Metrics: `mean`, `median`, `diff_mean`, `unit_norm_diff_mean` (default).
 
