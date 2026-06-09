@@ -179,19 +179,30 @@ Diverging green–yellow–red gradient, 5 classes, computed **per (metric, subj
 | Green | centre + 0.33σ < score < centre + 1.5σ |
 | Saturated green | score ≥ centre + 1.5σ |
 
-- **Per-subject scores**: centre = 0, σ = standard deviation across all schools.
-- **`composite_min`**: centre = the empirical *mean* of composite_min (≈ −0.059),
-  σ = its own standard deviation (≈ 0.245). This is **Option 1** from the
-  methodology discussion — composite_min's distribution is shifted left (minimum
-  of 3 draws is systematically below each draw), so 63.7% of schools have
-  composite_min ≤ 0. Centring on the empirical mean gives a usable map where
-  ~8.5% of schools reach saturated green, instead of <1% if centred at zero.
+σ and centre are computed **per metric and per subject**, because the metrics
+live on different scales (`mean`/`median` are 0–100; `diff_mean` and
+`unit_norm_diff_mean` are difference scales). The rules:
 
-Empirical σ values (recomputed each run; these are indicative):
-- polski ≈ 0.192, matematyka ≈ 0.284, angielski ≈ 0.361, composite_min ≈ 0.245
+- **`mean` and `median`** (raw 0–100 scale): centre = the mean of school scores
+  for that subject (the voivodeship average, ≈ 54–69 depending on subject), σ =
+  std across schools. Centring at 0 would make no sense — no school scores 0%.
+- **`diff_mean` and `unit_norm_diff_mean`** (difference scales): centre = 0 for
+  the three subjects (already centred by construction), σ = std across schools.
+- **`composite_min`** (any metric): centre = the empirical *mean* of composite_min
+  for that metric. composite_min's distribution is shifted left (the minimum of 3
+  draws is systematically below each draw), so centring on its own mean gives a
+  usable map instead of one where almost everything is red.
 
-The **app defaults to `composite_min`** but exports all four views (3 subjects +
-composite) so the user can toggle which subject colours the map.
+All of these (`sigma[metric][subject]`, `sigma_centre[metric][subject]`) are
+written into `schools-base.json` → `metadata`, so the frontend can colour the
+map for **any** selected metric, not just the primary one.
+
+Indicative `unit_norm_diff_mean` σ (recomputed each run):
+polski ≈ 0.192, matematyka ≈ 0.284, angielski ≈ 0.361, composite_min ≈ 0.245.
+
+The **app defaults to `composite_min`** under the primary metric, but all four
+metrics × four subjects are exported, so the user can toggle both the metric and
+the subject that colours the map.
 
 ---
 
@@ -237,24 +248,48 @@ only over the **years the school actually has** (no meaningless folds):
 | `last_k` | k | score over the most recent k years, k = 2 … (n_years − 1) |
 
 Each view carries `score`, `rank` (1 = best, among schools present in that view),
-and `pct` (percentile).
+`pct` (percentile), and `n_students` (the **median** number of students per year
+in that view — the school's typical cohort size, rounded. Median rather than sum
+or mean: summing across overlapping views is meaningless and would drift up as
+years accumulate; the median is robust to anomalous years — e.g. a
+home-schooling-linked school that grew from 5 to 1200 students should report its
+typical size, not a mean dragged by the extremes (~16% of schools have mean and
+median diverging by >5 students). For `composite_min`, the cohort of the subject
+that produced the minimum — so a validator knows which subject and how many
+students the composite value came from).
 
 ### Output files
 
-- **`schools-base.json`** (~1.2 MB) — loaded on map open. Metadata + primary
-  (`unit_norm_diff_mean`) base score/rank/pct per subject + composite_min, plus
-  `lat`/`lon` (from the geocoding cache; `null` if missing). Also `metadata.sigma`
-  and `metadata.sigma_centre` for the colour scale.
-- **`schools-{metric}.json`** × 4 (~8 MB each) — all views for all schools,
-  loaded on demand when the user clicks a school or switches metric. `base` is a
-  flat `{score, rank, pct}`; other views are `{param: {score, rank, pct}}` with
+- **`schools-base.json`** (~3.8 MB raw, ~0.4 MB gzipped — GitHub Pages serves
+  gzip) — loaded on map open. Per school: metadata (name, address, is_public,
+  n_years, lat/lon) plus **base score/rank/pct for ALL four metrics × four
+  subjects** under `scores[metric][subject]`. This lets the frontend switch
+  metric and filter by value **without** downloading the big per-metric files.
+  `lat`/`lon` come from the geocoding cache (`null` if missing). `metadata` holds:
+  `default_metric`, `metrics`, `subjects`, `years_in_data`, `sigma[metric][subject]`,
+  `sigma_centre[metric][subject]`, and `slider_ranges[metric]` (see below).
+- **`schools-{metric}.json`** × 4 (~7 MB each, ~0.8 MB gzipped) — all *views* for
+  all schools, loaded on demand only when the user opens a school's year-by-year
+  history (the map and value-filtering work from base alone). `base` is a flat
+  `{score, rank, pct}`; other views are `{param: {score, rank, pct}}` with
   integer-string param keys (`"2021"`, `"2"`).
-- **`schools-{metric}.xlsx`** × 4 (~7 MB each) — long format for analysts, one row
-  per (school, subject, view). Includes administrative metadata (powiat, gmina,
-  typ_gminy) for filtering and pivots. Columns:
-  `rspo, school_name, miejscowosc, ulica_nr, powiat, gmina, typ_gminy, is_public,
-  n_years, metric, subject, view_kind, view_param, score, rank_overall,
-  pct_overall, n_in_view`.
+- **`schools-{metric}.xlsx`** × 4 (~6.5 MB each) — long format for analysts, one
+  row per (school, subject, view), in two sheets:
+  - **`data`** sheet columns: `rspo, school_name, miejscowosc, ulica_nr, powiat,
+    gmina, typ_gminy, is_public, n_years, metric, subject, view_kind, view_param,
+    score, rank_overall, pct_overall, n_in_view, n_students`.
+  - **`legend`** sheet: a human-readable description of the metric, the
+    across-years aggregation method, and every column / view_kind / subject — so
+    someone validating a school's number knows exactly how it was computed.
+
+### Slider ranges (value filter config)
+
+`metadata.slider_ranges[metric] = {min, max, p1, p99, step}` gives the frontend
+the range for the map's "show schools with score above X" filter, per metric
+(the scale differs: `mean` is 0–100, `unit_norm_diff_mean` is ≈ −0.85…+0.64).
+`p1`/`p99` are robust default slider ends; `min`/`max` are hard limits. The
+config is computed at export time (data and config generated together, so they
+can't drift) rather than recomputed in the browser.
 
 Naming: **English** for technical fields, **Polish** for geographic fields
 (miejscowosc, ulica_nr, powiat, gmina, typ_gminy).
@@ -308,8 +343,29 @@ frontend uses these matters — they communicate different levels of certainty.*
   the rank is misleadingly precise in the middle. The diverging colour scale
   saturates at ±1.5σ so the extremes are visually distinct while the middle
   band is honestly muddy.
-- **Default view: `composite_min`.** The app should expose a subject toggle
-  (Polish / Maths / English / composite_min) — all four are exported.
+- **Default view: `composite_min` under the primary metric.** The app exposes
+  two toggles: a **subject toggle** (Polish / Maths / English / composite_min)
+  and a **metric toggle** (mean / median / diff_mean / unit_norm_diff_mean). All
+  metric × subject combinations are in `schools-base.json`, so both toggles
+  recolour the map instantly with no extra download.
+- **Filters on the map:**
+  - **Public / private** (`is_public`: "Tak"/"Nie") — important. Empirically the
+    top of every subject is dominated by private schools, so a parent looking for
+    a strong *public* school needs to filter them out to see a useful map. Do not
+    annotate *why* private schools rank high — the data measures outcomes, not
+    value added, and we have no intake data to attribute the difference to any
+    cause.
+  - **Score threshold** — "show only schools scoring above X" for the selected
+    metric, using `metadata.slider_ranges[metric]` for the slider bounds. Lets a
+    user watch the map thin out as they raise the bar (e.g. only schools above
+    0.1 in `unit_norm_diff_mean`, or above 60 in `mean`).
+  - **Min n_years** — hide low-data schools.
+- **Zoom + address search.** Native Leaflet zoom plus an address search box
+  (one Nominatim query → zoom to location) so a user can see schools near a
+  specific area; 1,400 markers at full extent is not useful on its own.
+- **Markers**: fixed-size coloured circles (colour = the quality scale) with
+  clustering at low zoom (~1,400 plotted schools need it). Do **not** size markers
+  by student count — it would conflate "many students" with "good".
 
 ### Ranking tab (separate from the map)
 
@@ -326,6 +382,17 @@ This is honest: the table shows where the school sits *and* how much that
 position depends on which year is included. All these numbers are already in
 `schools-{metric}.json` under `loo.{year}.rank` and `single_year.{year}.rank`
 — the frontend just computes min/max.
+
+The ranking tab should also let the user:
+- **Filter public / private** (same `is_public` field).
+- **Pick the metric** (mean / median / diff_mean / unit_norm_diff_mean) and a
+  **view** — in particular `last_k`. This enables comparison with external
+  rankings: e.g. rankingedukacji.pl uses the arithmetic mean of the last 3 years,
+  which corresponds to `metric=mean, view=last_k, view_param=3`. (Their ranking
+  also folds in non-exam factors, so positions won't match exactly, but the
+  exam-based part is comparable.) The base `rank`/`pct` for all metrics are in
+  `schools-base.json`; the `last_k` and other views come from the per-metric
+  files, loaded on demand (see below).
 
 ### Warning badges in school popup
 
@@ -347,6 +414,31 @@ with only 2 years would *always* have a wide LOO range (each fold uses only 1
 year), which is small-sample noise, not real volatility. Empirically with the
 current data, the combined rule flags ~6 schools out of ~1,400 with 3+ years —
 rare but real signals of true year-to-year instability.
+
+### Data loading strategy
+
+- **On map open:** load `schools-base.json` only (~0.4 MB gzipped). This is
+  enough for the map, all metric/subject toggles, value filtering, public/private
+  filtering, and base ranks in the ranking tab.
+- **Year-by-year history** (LOO / single-year / last_k views) lives in the four
+  `schools-{metric}.json` files (~0.8 MB gzipped each, ~3 MB for all four). These
+  are **not** prefetched automatically — fetching ~3 MB on every fresh visit
+  would burn mobile data (browser HTTP caching via ETag covers repeat visits from
+  the same browser, but not incognito or a different browser/device). Instead,
+  gate the richer history behind a **visible checkbox / button**: "Show detailed
+  year-by-year history (downloads ~3 MB)". Fetch all four files once on demand,
+  keep them in memory for the session.
+- Computing colour classes client-side from `metadata.sigma` + `sigma_centre`
+  needs only base — no per-metric file required for the map.
+
+### Internationalisation
+
+Default UI language **Polish**, with a toggle to **English** (some users may be
+English-speaking). Translate only interface labels (buttons, headers, metric
+names, warning text). Leave proper nouns in Polish: school names, town names,
+addresses, administrative fields. The data files use English technical field
+names (`mean`, `view_kind`, etc.); the UI maps them to localized labels. The
+methodology notebook stays English-only (GitHub / technical audience).
 
 ### Never invent coordinates
 
