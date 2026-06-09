@@ -48,6 +48,13 @@ from urllib.request import Request, urlopen
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SCHOOLS_BASE_JSON = PROJECT_ROOT / "docs" / "data" / "schools-base.json"
 COORDS_CSV = PROJECT_ROOT / "data" / "school_coords.csv"
+UNMAPPED_CSV = PROJECT_ROOT / "data" / "school_coords_unmapped.csv"
+
+# Threshold for "suspicious shared-coordinate group". With the new strategy
+# we expect no shared coords at all — except for genuine cases (a school
+# complex at one address). 3+ at the same point is unlikely to be that and
+# should be eyeballed.
+SHARED_COORD_WARN_THRESHOLD = 3
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 REQUEST_DELAY_SECONDS = 1.1  # Nominatim usage policy: max 1 request/second
@@ -235,6 +242,69 @@ def write_cache(path: Path, rows: list[dict]) -> None:
             writer.writerow({col: row.get(col, "") for col in CSV_COLUMNS})
 
 
+def _gmaps_url(miejscowosc: str, ulica_nr: str) -> str:
+    """A Google Maps search URL for the school address — clickable in the CSV."""
+    from urllib.parse import quote_plus
+    parts = [p for p in [ulica_nr, miejscowosc, "województwo mazowieckie", "Polska"] if p]
+    q = quote_plus(", ".join(parts))
+    return f"https://www.google.com/maps/search/?api=1&query={q}"
+
+
+def write_unmapped_report(rows: list[dict], path: Path) -> int:
+    """Write a CSV listing every school the geocoder couldn't pin to a street.
+
+    Columns: rspo, miejscowosc, ulica_nr, google_maps_search.
+    The Google Maps URL is meant for manual triage: open it, find the school,
+    eyeball the coordinates, and paste them into school_coords.csv by hand.
+
+    Returns the count of unmapped schools (so the caller can summarise).
+    """
+    unmapped = [r for r in rows if not (r.get("latitude") and r.get("longitude"))]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=["rspo", "miejscowosc", "ulica_nr", "google_maps_search"],
+        )
+        writer.writeheader()
+        for r in unmapped:
+            writer.writerow({
+                "rspo": r.get("rspo", ""),
+                "miejscowosc": r.get("miejscowosc", ""),
+                "ulica_nr": r.get("ulica_nr", ""),
+                "google_maps_search": _gmaps_url(
+                    str(r.get("miejscowosc", "")),
+                    str(r.get("ulica_nr", "")),
+                ),
+            })
+    return len(unmapped)
+
+
+def report_shared_coords(rows: list[dict], warn_threshold: int) -> list[tuple]:
+    """Find groups of schools sharing the same (lat, lon).
+
+    With the no-centroid-fallback rule, large groups should not exist —
+    they would imply a leftover centroid match or some other systematic
+    error. Small groups (2 schools) can be real (school complex). The
+    warn_threshold sets where we flag the issue.
+
+    Returns a list of (count, coord, [rspos]) for groups at or above the
+    threshold, sorted by count descending.
+    """
+    from collections import defaultdict
+    by_coord: dict[tuple, list[str]] = defaultdict(list)
+    for r in rows:
+        lat = r.get("latitude")
+        lon = r.get("longitude")
+        if lat and lon:
+            by_coord[(lat, lon)].append(str(r.get("rspo", "")))
+
+    groups = [(len(rspos), coord, rspos) for coord, rspos in by_coord.items()
+              if len(rspos) >= warn_threshold]
+    groups.sort(reverse=True)
+    return groups
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--limit", type=int, default=None,
@@ -244,7 +314,23 @@ def main() -> None:
     parser.add_argument("--contact", default=None,
                         help=f"Contact (email or URL) for the Nominatim User-Agent. "
                              f"Overrides the {CONTACT_ENV_VAR} env var.")
+    parser.add_argument("--report-only", action="store_true",
+                        help="Skip geocoding entirely. Re-emit the unmapped CSV "
+                             "and shared-coords report from the current cache.")
     args = parser.parse_args()
+
+    if args.report_only:
+        rows = load_existing_cache(COORDS_CSV)
+        n_unmapped = write_unmapped_report(rows, UNMAPPED_CSV)
+        print(f"{n_unmapped:,} unmapped schools written to {UNMAPPED_CSV}")
+        shared = report_shared_coords(rows, SHARED_COORD_WARN_THRESHOLD)
+        if shared:
+            print(f"⚠ {len(shared)} group(s) of ≥{SHARED_COORD_WARN_THRESHOLD} at identical coords:")
+            for count, coord, rspos in shared[:10]:
+                print(f"    {count:>3} at {coord}: rspo={', '.join(rspos[:5])}")
+        else:
+            print(f"✓ No group of ≥{SHARED_COORD_WARN_THRESHOLD} at identical coords.")
+        return
 
     user_agent = resolve_user_agent(args.contact)
 
@@ -351,6 +437,31 @@ def main() -> None:
     print(f"  new (appended):     {new_count:,}")
     print(f"  total rows:         {len(final_rows):,}")
     print(f"  still missing coords: {missing:,}")
+
+    # Reports — unmapped schools (for manual triage) and shared-coord groups
+    # (a warning if any group is suspiciously large).
+    n_unmapped = write_unmapped_report(final_rows, UNMAPPED_CSV)
+    print()
+    if n_unmapped:
+        print(f"⚠ {n_unmapped:,} school(s) without coordinates — wrote {UNMAPPED_CSV}")
+        print(f"  Each row in that file has a Google Maps search URL. Open it,")
+        print(f"  find the school, copy the lat/lon, paste into {COORDS_CSV.name} by hand.")
+    else:
+        print(f"✓ All schools mapped. {UNMAPPED_CSV.name} is empty.")
+
+    shared = report_shared_coords(final_rows, SHARED_COORD_WARN_THRESHOLD)
+    print()
+    if shared:
+        print(f"⚠ {len(shared)} group(s) of ≥{SHARED_COORD_WARN_THRESHOLD} schools at identical coordinates:")
+        for count, coord, rspos in shared[:10]:
+            preview = ", ".join(rspos[:5]) + (f", … (+{len(rspos)-5})" if len(rspos) > 5 else "")
+            print(f"    {count:>3} schools at {coord}: rspo={preview}")
+        if len(shared) > 10:
+            print(f"    … and {len(shared)-10} more groups")
+        print(f"  Either these are genuine multi-school complexes, or the geocoder")
+        print(f"  is finding the same node for differing addresses — eyeball them.")
+    else:
+        print(f"✓ No group of ≥{SHARED_COORD_WARN_THRESHOLD} schools at identical coordinates.")
 
 
 if __name__ == "__main__":

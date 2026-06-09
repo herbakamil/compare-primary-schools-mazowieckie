@@ -365,6 +365,25 @@ on the rewrite.
 Run the script after adding new schools, then re-run the notebook's export
 cells so the fresh coordinates land in `schools-base.json`.
 
+### Post-run reports (always emitted)
+
+After every run (including `--report-only`, which skips geocoding), the
+script writes / refreshes:
+
+- **`data/school_coords_unmapped.csv`** — one row per school the geocoder
+  could not pin to a street, with `rspo, miejscowosc, ulica_nr` and a
+  ready-made `google_maps_search` URL. The file is the manual-triage list:
+  open the URL, find the school, paste the coords into `school_coords.csv`
+  by hand. If everything mapped, the file has only a header.
+- **Shared-coord warning** to stdout. Lists any group of `SHARED_COORD_WARN_THRESHOLD`
+  (default 3) or more schools sitting on the same `(lat, lon)`. With the
+  no-centroid-fallback rule, this should never happen except for genuine
+  multi-school complexes (rare). A flagged group means either a real
+  campus or a regression in the geocoder — eyeball it.
+
+Run `uv run python scripts/geocode_schools.py --report-only` to regenerate
+these reports against the existing cache without doing any geocoding.
+
 ---
 
 ## Frontend / map app
