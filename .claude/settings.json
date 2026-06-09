@@ -12,7 +12,13 @@
       "Bash(ps -p *)",
       "Bash(ps -ef)",
       "Bash(ps aux)",
-      "Bash(cp data/* data/*)"
+      "Bash(cp data/* data/*)",
+      "Bash(grep * notebooks/*)",
+      "Bash(grep -* * notebooks/*)",
+      "Bash(git add *)",
+      "Bash(git diff --cached*)",
+      "Bash(git restore --staged *)",
+      "Bash(git checkout HEAD -- *)"
     ]
   }
 }
