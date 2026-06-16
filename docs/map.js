@@ -107,6 +107,13 @@
       // without needing to pan. Desktop keeps autoPan — the bug is touch-only
       // and autoPan is genuinely useful there.
       autoPan: !L.Browser.mobile,
+      // On touch, dragging to scroll a tall popup ends with a tap that lands on
+      // the map, and the map's default closePopupOnClick then shuts the popup.
+      // Since reading a long history requires that drag, disable click-to-close
+      // on touch: the popup closes only via its × button (enlarged for touch in
+      // style.css). Switching schools by tapping another marker still works —
+      // that's a marker tap, not an empty-map tap. Desktop keeps click-to-close.
+      closeOnClick: !L.Browser.mobile,
     });
     return marker;
   }

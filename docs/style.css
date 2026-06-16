@@ -257,4 +257,14 @@ table.ranking-table tr.highlight { background: #fff3cd; }
     border-left: none;
     border-top: 1px solid var(--border);
   }
+  /* On touch the × is the only way to close a popup (click-to-close is off —
+     see map.js), so make it a comfortable tap target. Matches Leaflet's own
+     selector specificity (.leaflet-container a.…) so no !important is needed. */
+  .leaflet-container a.leaflet-popup-close-button {
+    width: 32px;
+    height: 32px;
+    font-size: 26px;
+    line-height: 26px;
+    padding: 4px 6px 0 0;
+  }
 }
