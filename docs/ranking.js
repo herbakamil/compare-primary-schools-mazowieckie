@@ -187,6 +187,77 @@
     { key: 'singleMinR',  i18n: 'colSingleRange', num: true },
   ];
 
+  // A small "score + class badge" cell, bucketed against the base distribution.
+  function detailScoreCell(cell, subject) {
+    if (!cell || cell.score == null) return '<td class="num">—</td>';
+    const centre = baseData.metadata.sigma_centre[state.metric][subject];
+    const sigma  = baseData.metadata.sigma[state.metric][subject];
+    const ci = classIndexFor(cell.score, centre, sigma);
+    return `<td class="num">${fmtScore(cell.score, state.metric)} ${classBadge(ci)}</td>`;
+  }
+
+  function classBadge(ci, label) {
+    if (ci == null) return '<span class="class-badge class-badge-sm">—</span>';
+    const text = (label != null) ? label : CLASS_LETTERS[ci];
+    return `<span class="class-badge class-badge-sm" style="background:${CLASS_COLOURS[ci]};color:${CLASS_TEXT_COLOURS[ci]}">${text}</span>`;
+  }
+
+  // The expandable detail panel for one school: per-year × per-subject scores
+  // with class badges (spot the bad year/subject), plus the composite_min class
+  // trajectory and how often it lands in each class (border schools wander).
+  // Needs the per-metric history file; if absent, offers to load it.
+  function renderDetailRow(row) {
+    const colspan = COLUMNS.length;
+    const hist = histByMetric[state.metric]?.schools?.[String(row.rspo)];
+    if (!hist) {
+      return `<tr class="detail-row"><td colspan="${colspan}">
+        <button type="button" class="detail-load-btn">${t('detailLoadHistory')}</button>
+      </td></tr>`;
+    }
+
+    const subjects = ['polski', 'matematyka', 'angielski', 'composite_min'];
+    const years = baseData.metadata.years_in_data;
+    const yearsPresent = years.filter(y =>
+      subjects.some(s => hist[s]?.single_year?.[String(y)] != null));
+
+    const header = `<tr><th></th>${subjects.map(s => `<th>${t('subject_' + s)}</th>`).join('')}</tr>`;
+    const yearRows = yearsPresent.map(y =>
+      `<tr><th>${y}</th>${subjects.map(s => detailScoreCell(hist[s]?.single_year?.[String(y)], s)).join('')}</tr>`
+    ).join('');
+    const ks = Object.keys(hist[subjects[0]]?.last_k || {}).sort((a, b) => +a - +b);
+    const lastKRows = ks.map(k =>
+      `<tr><th>${t('lastKRow', k)}</th>${subjects.map(s => detailScoreCell(hist[s]?.last_k?.[k], s)).join('')}</tr>`
+    ).join('');
+
+    // composite_min class trajectory + per-class counts
+    const cCentre = baseData.metadata.sigma_centre[state.metric].composite_min;
+    const cSigma  = baseData.metadata.sigma[state.metric].composite_min;
+    const counts = [0, 0, 0, 0, 0];
+    const trajBadges = yearsPresent.map(y => {
+      const cell = hist.composite_min?.single_year?.[String(y)];
+      const ci = cell ? classIndexFor(cell.score, cCentre, cSigma) : null;
+      if (ci != null) counts[ci]++;
+      return `<span class="traj-item">${y}&nbsp;${classBadge(ci)}</span>`;
+    }).join(' ');
+    const countSummary = [4, 3, 2, 1, 0]
+      .filter(i => counts[i] > 0)
+      .map(i => `${CLASS_LETTERS[i]}×${counts[i]}`)
+      .join('  ');
+
+    return `<tr class="detail-row"><td colspan="${colspan}">
+      <div class="detail-panel">
+        <div class="detail-traj">
+          <strong>${t('detailTrajectory')}:</strong> ${trajBadges}
+          <span class="detail-counts">(${countSummary})</span>
+        </div>
+        <table class="detail-table">
+          <thead>${header}</thead>
+          <tbody>${yearRows}${lastKRows ? `<tr class="sep"><td colspan="5"></td></tr>${lastKRows}` : ''}</tbody>
+        </table>
+      </div>
+    </td></tr>`;
+  }
+
   function renderTable(rows) {
     const table = document.getElementById('ranking-table');
     const head = `<thead><tr>${COLUMNS.map(col => {
@@ -204,8 +275,8 @@
       const classCell = (r.classLetter)
         ? `<span class="class-badge" style="background:${CLASS_COLOURS[r.classIndex]};color:${CLASS_TEXT_COLOURS[r.classIndex]}">${r.classLetter}</span>`
         : '—';
-      const highlight = (r.rspo === state.selectedSchool) ? ' class="highlight"' : '';
-      return `<tr data-rspo="${r.rspo}"${highlight}>
+      const selected = (r.rspo === state.selectedSchool);
+      const mainRow = `<tr data-rspo="${r.rspo}"${selected ? ' class="highlight"' : ''}>
         <td class="num">${r.rank ?? '—'}</td>
         <td>${escapeHTML(r.name)}${offMap}</td>
         <td>${escapeHTML(r.street || '')}</td>
@@ -217,6 +288,8 @@
         <td class="num">${looCell}</td>
         <td class="num">${syCell}</td>
       </tr>`;
+      // A selected row expands an inline detail panel below it.
+      return mainRow + (selected ? renderDetailRow(r) : '');
     }).join('')}</tbody>`;
 
     table.innerHTML = head + body;
@@ -225,12 +298,26 @@
     for (const th of table.querySelectorAll('thead th')) {
       th.addEventListener('click', () => onSortClick(th.getAttribute('data-col')));
     }
-    // Wire row click → selectedSchool (deep link).
-    for (const tr of table.querySelectorAll('tbody tr')) {
+    // Wire main-row click → toggle selected (expands detail + deep link). Scoped
+    // to [data-rspo] so clicks inside the detail row don't collapse it.
+    for (const tr of table.querySelectorAll('tbody tr[data-rspo]')) {
       tr.addEventListener('click', () => {
         const rspo = parseInt(tr.getAttribute('data-rspo'), 10);
         state.selectedSchool = (state.selectedSchool === rspo) ? null : rspo;
         syncURL();
+        renderAll();
+      });
+    }
+    // The detail panel's "load year-by-year data" button (shown when the
+    // per-metric file isn't loaded yet).
+    const loadBtn = table.querySelector('.detail-load-btn');
+    if (loadBtn) {
+      loadBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        loadBtn.disabled = true;
+        loadBtn.textContent = t('historyLoading');
+        await ensureMetricLoaded();
+        maybeShowHistoryOptIn();
         renderAll();
       });
     }
