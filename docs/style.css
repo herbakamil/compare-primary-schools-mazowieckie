@@ -43,6 +43,15 @@ body { display: flex; flex-direction: column; }
 .topnav nav a:hover { background: rgba(0,0,0,0.05); }
 .topnav nav a.active { background: var(--text); color: white; }
 
+/* Methodology page layout */
+.page-methodology main {
+  flex: 1;
+  padding: 1.25rem;
+  max-width: 720px;
+  overflow-y: auto;
+  line-height: 1.5;
+}
+
 /* Map page layout */
 .page-map main { flex: 1; display: flex; min-height: 0; }
 #map { flex: 1; min-width: 0; height: 100%; }
