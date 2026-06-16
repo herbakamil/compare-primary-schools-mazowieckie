@@ -414,7 +414,7 @@
     display.textContent = (v === range.min) ? '—' : fmtScore(v, state.metric);
   }
 
-  function onMetricChange(newMetric) {
+  async function onMetricChange(newMetric) {
     state.metric = newMetric;
     // Reset threshold when metric changes (scales differ; §5).
     state.threshold = baseData.metadata.slider_ranges[newMetric].min;
@@ -423,7 +423,15 @@
     syncThresholdSlider();
     recolourAll();
     refreshFilters();
-    if (state.selectedSchool != null) reopenSelectedPopup();
+    if (state.selectedSchool != null) {
+      // History (sparkline + table) comes from the per-metric file. If the user
+      // already opted into history, load the NEW metric's file before reopening
+      // so the popup shows the new metric's history — otherwise it would fall
+      // back to the "Pokaż historię" button and the user couldn't read the new
+      // metric's year-by-year data without clicking again.
+      if (state.historyOptIn) await ensureHistoryLoaded();
+      reopenSelectedPopup();
+    }
   }
 
   function onSubjectChange(newSubject) {
