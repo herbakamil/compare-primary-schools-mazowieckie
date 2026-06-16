@@ -2,6 +2,12 @@
 // clustering, filters, address search, popups, URL state + persistence.
 
 (function () {
+  // Touch-primary device? `matchMedia('(pointer: coarse)')` reflects whether
+  // the main input is a finger, which is more reliable than UA sniffing
+  // (L.Browser.mobile). Used to relax popup behaviour on touch (no autoPan,
+  // no click-to-close — see createMarker).
+  const IS_TOUCH = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
   // ---------------------------------------------------------------------------
   // State (single source of truth for the page)
 
@@ -106,14 +112,14 @@
       // (see .leaflet-popup-content in style.css) keeps a tall popup usable
       // without needing to pan. Desktop keeps autoPan — the bug is touch-only
       // and autoPan is genuinely useful there.
-      autoPan: !L.Browser.mobile,
+      autoPan: !IS_TOUCH,
       // On touch, dragging to scroll a tall popup ends with a tap that lands on
       // the map, and the map's default closePopupOnClick then shuts the popup.
       // Since reading a long history requires that drag, disable click-to-close
       // on touch: the popup closes only via its × button (enlarged for touch in
       // style.css). Switching schools by tapping another marker still works —
       // that's a marker tap, not an empty-map tap. Desktop keeps click-to-close.
-      closeOnClick: !L.Browser.mobile,
+      closeOnClick: !IS_TOUCH,
     });
     return marker;
   }
@@ -164,6 +170,12 @@
       // patterns, so clustering only obscures.
       disableClusteringAtZoom: 14,
       spiderfyOnMaxZoom: false,
+      // Keep all markers in the layer even when off-screen. By default
+      // markercluster removes markers outside the (buffered) viewport for
+      // performance — but removing a marker closes its open popup, so panning
+      // the map to read a popup was closing that popup. With canvas rendering
+      // (preferCanvas) ~1,700 circle markers cost little, so we keep them all.
+      removeOutsideVisibleBounds: false,
       iconCreateFunction: clusterIcon,
     });
     map.addLayer(clusterGroup);
