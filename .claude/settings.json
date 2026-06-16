@@ -20,7 +20,6 @@
       "Bash(git restore --staged *)",
       "Bash(git checkout HEAD -- *)",
       "Bash(git commit *)",
-      "Bash(git push origin main)",
       "Bash(grep * docs/*)",
       "Bash(grep -* * docs/*)"
     ]
