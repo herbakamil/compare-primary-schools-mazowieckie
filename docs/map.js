@@ -338,7 +338,7 @@
         const v = hist[subj]?.last_k?.[k]?.score;
         return `<td class="num">${fmtScore(v, state.metric)}</td>`;
       }).join('');
-      return `<tr><th>ostatnie ${k}</th>${cells}</tr>`;
+      return `<tr><th>${t('lastKRow', k)}</th>${cells}</tr>`;
     }).join('');
 
     const header = `<tr><th></th>${subjects.map(s => `<th>${t('subject_' + s)}</th>`).join('')}</tr>`;

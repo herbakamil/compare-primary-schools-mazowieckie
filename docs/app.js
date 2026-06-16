@@ -164,6 +164,7 @@ const I18N = {
     rankingTitle: 'Ranking szkół — Mazowieckie',
     rankingNameSearch: 'Szukaj po nazwie',
     rankingSearchPlaceholder: 'np. STO, Vizja, Słupica',
+    lastKRow: (k) => `ostatnie ${k}`,
     rankingView: 'Widok danych',
     rankingViewParam: 'Parametr widoku',
     rankingViewBase: 'wszystkie lata (base)',
@@ -240,6 +241,7 @@ const I18N = {
     rankingTitle: 'School ranking — Mazowieckie',
     rankingNameSearch: 'Search by name',
     rankingSearchPlaceholder: 'e.g. STO, Vizja, Słupica',
+    lastKRow: (k) => `last ${k}`,
     rankingView: 'View',
     rankingViewParam: 'View parameter',
     rankingViewBase: 'all years (base)',
@@ -299,7 +301,8 @@ function setLang(lang) {
 function wireLangToggle(onAfterChange) {
   const btn = document.getElementById('lang-toggle');
   if (!btn) return;
-  const relabel = () => { btn.textContent = (currentLang === 'pl') ? 'EN' : 'PL'; };
+  // Show the CURRENT language (PL while on Polish), not the target.
+  const relabel = () => { btn.textContent = (currentLang === 'pl') ? 'PL' : 'EN'; };
   relabel();
   btn.addEventListener('click', () => {
     setLang(currentLang === 'pl' ? 'en' : 'pl');
