@@ -31,16 +31,30 @@ const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org/search';
 const MAZ_VIEWBOX = '19.2,53.6,23.2,51.0';
 
 // -----------------------------------------------------------------------------
-// Colour mapping
+// Colour / class mapping
+//
+// One set of z-score thresholds drives both the map colours and the ranking
+// A–E class, so they always agree. Index 0..4 runs worst → best:
+//   0 = E (≤ −1.5σ), 1 = D, 2 = C (±0.33σ), 3 = B, 4 = A (≥ +1.5σ).
+
+const CLASS_LETTERS = ['E', 'D', 'C', 'B', 'A'];
+const CLASS_COLOURS = [COLOURS.satRed, COLOURS.red, COLOURS.yellow, COLOURS.green, COLOURS.satGreen];
+// Text colour that reads on each class colour (white on the saturated ends).
+const CLASS_TEXT_COLOURS = ['#fff', '#222', '#222', '#222', '#fff'];
+
+function classIndexFor(score, centre, sigma) {
+  if (score == null || sigma == null || sigma === 0) return null;
+  const z = (score - centre) / sigma;
+  if (z <= -1.5)   return 0;  // E
+  if (z <  -0.33)  return 1;  // D
+  if (z <=  0.33)  return 2;  // C
+  if (z <   1.5)   return 3;  // B
+  return 4;                   // A
+}
 
 function colourFor(score, centre, sigma) {
-  if (score == null || sigma == null || sigma === 0) return COLOURS.missing;
-  const z = (score - centre) / sigma;
-  if (z <= -1.5)   return COLOURS.satRed;
-  if (z <  -0.33)  return COLOURS.red;
-  if (z <=  0.33)  return COLOURS.yellow;
-  if (z <   1.5)   return COLOURS.green;
-  return COLOURS.satGreen;
+  const i = classIndexFor(score, centre, sigma);
+  return i == null ? COLOURS.missing : CLASS_COLOURS[i];
 }
 
 // -----------------------------------------------------------------------------
@@ -180,6 +194,7 @@ const I18N = {
     colLOORange: 'Zakres LOO',
     colSingleRange: 'Zakres pojedynczych lat',
     colScore: 'Wynik',
+    colClass: 'Klasa',
     offMap: 'brak lokalizacji',
     rowsShown: (n, total) => `${n} z ${total} szkół`,
     historyOptIn: 'Wczytaj zakresy rankingu (LOO, pojedyncze lata) i widoki — ~0.8 MB',
@@ -257,6 +272,7 @@ const I18N = {
     colLOORange: 'LOO range',
     colSingleRange: 'Single-year range',
     colScore: 'Score',
+    colClass: 'Class',
     offMap: 'no location',
     rowsShown: (n, total) => `${n} of ${total} schools`,
     historyOptIn: 'Load rank ranges (LOO, single years) and views — ~0.8 MB',

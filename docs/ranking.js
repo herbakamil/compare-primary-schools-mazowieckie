@@ -113,6 +113,12 @@
       viewRank  = base?.rank  ?? null;
     }
 
+    // A–E class for the displayed score, bucketed against the base
+    // distribution (same sigma/centre the map uses), so map and ranking agree.
+    const centre = baseData.metadata.sigma_centre[metric][subject];
+    const sigma  = baseData.metadata.sigma[metric][subject];
+    const classIndex = classIndexFor(viewScore, centre, sigma);
+
     return {
       rspo: school.rspo,
       school,
@@ -124,6 +130,8 @@
       hasCoords: school.lat != null && school.lon != null,
       score: viewScore,
       rank: viewRank,
+      classIndex,
+      classLetter: classIndex == null ? null : CLASS_LETTERS[classIndex],
       looMinR, looMaxR,
       singleMinR, singleMaxR,
     };
@@ -173,9 +181,10 @@
     { key: 'town',       i18n: 'colTown',        num: false },
     { key: 'pub',        i18n: 'colPublic',      num: false, width: '5rem' },
     { key: 'n_years',    i18n: 'colNYears',      num: true,  width: '4rem' },
-    { key: 'score',      i18n: 'colScore',       num: true },
-    { key: 'looMinR',    i18n: 'colLOORange',    num: true },
-    { key: 'singleMinR', i18n: 'colSingleRange', num: true },
+    { key: 'score',       i18n: 'colScore',       num: true },
+    { key: 'classLetter', i18n: 'colClass',       num: true,  width: '4rem' },
+    { key: 'looMinR',     i18n: 'colLOORange',    num: true },
+    { key: 'singleMinR',  i18n: 'colSingleRange', num: true },
   ];
 
   function renderTable(rows) {
@@ -192,6 +201,9 @@
       const looCell = (r.looMinR != null) ? `${r.looMinR}–${r.looMaxR}` : '—';
       const syCell  = (r.singleMinR != null) ? `${r.singleMinR}–${r.singleMaxR}` : '—';
       const pubLabel = r.pub ? t('publicYesShort') : t('publicNoShort');
+      const classCell = (r.classLetter)
+        ? `<span class="class-badge" style="background:${CLASS_COLOURS[r.classIndex]};color:${CLASS_TEXT_COLOURS[r.classIndex]}">${r.classLetter}</span>`
+        : '—';
       const highlight = (r.rspo === state.selectedSchool) ? ' class="highlight"' : '';
       return `<tr data-rspo="${r.rspo}"${highlight}>
         <td class="num">${r.rank ?? '—'}</td>
@@ -201,6 +213,7 @@
         <td>${pubLabel}</td>
         <td class="num">${r.n_years}</td>
         <td class="num">${fmtScoreHTML(r.score, state.metric)}</td>
+        <td class="num class-cell">${classCell}</td>
         <td class="num">${looCell}</td>
         <td class="num">${syCell}</td>
       </tr>`;

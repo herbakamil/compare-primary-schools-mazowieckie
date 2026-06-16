@@ -264,6 +264,16 @@ table.ranking-table td.num .dec {
   color: var(--text-muted);
 }
 table.ranking-table tr.highlight { background: #fff3cd; }
+table.ranking-table td.class-cell { text-align: center; }
+.class-badge {
+  display: inline-block;
+  min-width: 1.4rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid rgba(0,0,0,0.15);
+}
 
 .off-map { color: var(--text-muted); font-size: 0.85em; }
 
