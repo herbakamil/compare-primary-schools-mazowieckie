@@ -183,8 +183,8 @@
     { key: 'n_years',    i18n: 'colNYears',      num: true,  width: '4rem' },
     { key: 'score',       i18n: 'colScore',       num: true },
     { key: 'classLetter', i18n: 'colClass',       num: true,  width: '4rem' },
-    { key: 'looMinR',     i18n: 'colLOORange',    num: true },
-    { key: 'singleMinR',  i18n: 'colSingleRange', num: true },
+    { key: 'looMinR',     i18n: 'colLOORange',    num: true,  help: 'helpLOORange' },
+    { key: 'singleMinR',  i18n: 'colSingleRange', num: true,  help: 'helpSingleRange' },
   ];
 
   // A small "score + class badge" cell, bucketed against the base distribution.
@@ -264,7 +264,10 @@
       const indicator = (state.sortKey === col.key)
         ? `<span class="sort-indicator">${state.sortDir === 'asc' ? '▲' : '▼'}</span>` : '';
       const style = col.width ? ` style="width:${col.width};"` : '';
-      return `<th data-col="${col.key}" class="${col.num ? 'num' : ''}"${style}>${t(col.i18n)}${indicator}</th>`;
+      const help = col.help
+        ? ` <span class="help-icon" tabindex="0" role="button" aria-label="?" data-help="${escapeHTML(t(col.help))}">i</span>`
+        : '';
+      return `<th data-col="${col.key}" class="${col.num ? 'num' : ''}"${style}>${t(col.i18n)}${help}${indicator}</th>`;
     }).join('')}</tr></thead>`;
 
     const body = `<tbody>${rows.map(r => {
@@ -294,9 +297,13 @@
 
     table.innerHTML = head + body;
 
-    // Wire header sort.
+    // Wire header sort. Ignore clicks on the help icon (it shows a tooltip on
+    // hover/focus; tapping it must not also re-sort the column).
     for (const th of table.querySelectorAll('thead th')) {
-      th.addEventListener('click', () => onSortClick(th.getAttribute('data-col')));
+      th.addEventListener('click', (e) => {
+        if (e.target.closest('.help-icon')) return;
+        onSortClick(th.getAttribute('data-col'));
+      });
     }
     // Wire main-row click → toggle selected (expands detail + deep link). Scoped
     // to [data-rspo] so clicks inside the detail row don't collapse it.

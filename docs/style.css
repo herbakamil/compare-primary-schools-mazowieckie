@@ -258,6 +258,42 @@ table.ranking-table th {
   white-space: nowrap;
 }
 table.ranking-table th .sort-indicator { color: var(--text-muted); font-size: 0.8em; margin-left: 0.25rem; }
+
+/* Help icon + CSS-only tooltip (hover on desktop, tap-to-focus on mobile) */
+.help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15em;
+  height: 1.15em;
+  border: 1px solid var(--text-muted);
+  border-radius: 50%;
+  font-size: 0.78em;
+  font-style: italic;
+  font-weight: 700;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--text-muted);
+  cursor: help;
+  position: relative;
+  vertical-align: middle;
+}
+.help-icon:hover, .help-icon:focus { background: var(--text-muted); color: #fff; outline: none; }
+.help-icon:hover::after, .help-icon:focus::after {
+  content: attr(data-help);
+  position: absolute;
+  top: 150%;
+  right: 0;
+  width: 240px;
+  background: #333;
+  color: #fff;
+  padding: 0.5rem 0.6rem;
+  border-radius: 4px;
+  font: 400 0.78rem/1.4 system-ui, sans-serif;
+  white-space: normal;
+  text-align: left;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
 table.ranking-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 table.ranking-table td.num .dec {
   font-size: 0.85em;
