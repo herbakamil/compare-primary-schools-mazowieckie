@@ -196,6 +196,7 @@ body { display: flex; flex-direction: column; }
   border-radius: 2px;
 }
 .popup-school .spark-legend { margin-top: 0.15rem; }
+.legend-item { margin-right: 0.6em; font-size: 0.75em; white-space: nowrap; }
 
 .popup-school .history-table { width: 100%; font-size: 0.8rem; }
 .popup-school .history-table th { font-weight: 600; }
@@ -337,6 +338,45 @@ table.ranking-table tr.detail-row > td {
 }
 .detail-load-btn:hover { background: #eee; }
 .detail-load-btn[disabled] { opacity: 0.6; cursor: progress; }
+
+/* Detail panel: chart grid (rows = LOO / single-year, cols = score/rank/pct) */
+.chart-grid {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr;
+  align-items: center;
+  gap: 0.2rem 0.4rem;
+  margin: 0.3rem 0 0.4rem;
+}
+.cg-colhead { text-align: center; font-weight: 600; font-size: 0.85rem; }
+.cg-rowhead { font-weight: 600; font-size: 0.8rem; color: var(--text-muted); padding-right: 0.3rem; }
+.cg-cell { min-width: 0; }
+.cg-cell svg { display: block; max-width: 100%; height: auto; }
+.chart-legend { margin-bottom: 0.5rem; }
+
+.detail-tables-toggle {
+  border: 1px solid var(--border);
+  background: white;
+  padding: 0.35rem 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+}
+.detail-tables-toggle:hover { background: #eee; }
+.detail-dim-switch { margin: 0.5rem 0; display: flex; gap: 0.25rem; }
+.detail-dim-btn {
+  border: 1px solid var(--border);
+  background: white;
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+}
+.detail-dim-btn.active { background: var(--text); color: white; border-color: var(--text); }
+.detail-tables { display: flex; flex-wrap: wrap; gap: 1.2rem; }
+.detail-sec-title { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.2rem; }
+.detail-table td.weakest { font-weight: 700; }
 
 .off-map { color: var(--text-muted); font-size: 0.85em; }
 

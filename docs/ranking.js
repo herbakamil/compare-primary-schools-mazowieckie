@@ -15,6 +15,9 @@
     selectedSchool: null,
     lang: DEFAULTS.lang,
     historyOptIn: false,
+    // Detail-panel UI (ephemeral, not in the URL):
+    detailTablesOpen: false,        // numeric tables hidden until asked for
+    detailTableDim: 'score',        // 'score' | 'rank' | 'pct'
   };
 
   const ALLOWED_VIEWS = ['base', 'last_k', 'single_year', 'loo'];
@@ -187,25 +190,73 @@
     { key: 'singleMinR',  i18n: 'colSingleRange', num: true,  help: 'helpSingleRange' },
   ];
 
-  // A small "score + class badge" cell, bucketed against the base distribution.
-  function detailScoreCell(cell, subject) {
-    if (!cell || cell.score == null) return '<td class="num">—</td>';
-    const centre = baseData.metadata.sigma_centre[state.metric][subject];
-    const sigma  = baseData.metadata.sigma[state.metric][subject];
-    const ci = classIndexFor(cell.score, centre, sigma);
-    return `<td class="num">${fmtScore(cell.score, state.metric)} ${classBadge(ci)}</td>`;
-  }
-
   function classBadge(ci, label) {
     if (ci == null) return '<span class="class-badge class-badge-sm">—</span>';
     const text = (label != null) ? label : CLASS_LETTERS[ci];
     return `<span class="class-badge class-badge-sm" style="background:${CLASS_COLOURS[ci]};color:${CLASS_TEXT_COLOURS[ci]}">${text}</span>`;
   }
 
-  // The expandable detail panel for one school: per-year × per-subject scores
-  // with class badges (spot the bad year/subject), plus the composite_min class
-  // trajectory and how often it lands in each class (border schools wander).
-  // Needs the per-metric history file; if absent, offers to load it.
+  const DETAIL_SUBJECTS = ['polski', 'matematyka', 'angielski', 'composite_min'];
+
+  // Short formatter per dimension shown on a chart axis / in a table cell.
+  function dimFmt(dim) {
+    if (dim === 'rank') return (v) => '#' + Math.round(v);
+    if (dim === 'pct')  return (v) => Math.round(v) + '%';
+    return (v) => fmtScore(v, state.metric);
+  }
+
+  // One chart for a (view, dimension): a line per subject over the years.
+  function detailChart(hist, years, view, dim) {
+    const series = DETAIL_SUBJECTS.map(subj => ({
+      colour: SUBJECT_COLOURS[subj],
+      markers: subj === 'composite_min',
+      points: Object.fromEntries(years.map(y => {
+        const cell = hist[subj]?.[view]?.[String(y)];
+        return [y, cell ? cell[dim] : null];
+      })),
+    }));
+    return lineChartSVG({
+      years, series,
+      invertY: dim === 'rank',          // rank 1 = best, at the top
+      fmtY: dimFmt(dim),
+      width: 210, height: 124,
+    });
+  }
+
+  // A numeric table for one view (single_year / loo / last_k) and the current
+  // table dimension. Bolds the weakest of the 3 core subjects per row (the one
+  // that drives composite_min — by score, regardless of the dimension shown).
+  function detailTable(hist, keys, view, dim) {
+    if (!keys.length) return '';
+    const fmt = dimFmt(dim);
+    const core = ['polski', 'matematyka', 'angielski'];
+    const bodyRows = keys.map(key => {
+      let weakest = null, weakestScore = Infinity;
+      for (const s of core) {
+        const sc = hist[s]?.[view]?.[String(key)]?.score;
+        if (sc != null && sc < weakestScore) { weakestScore = sc; weakest = s; }
+      }
+      const cells = DETAIL_SUBJECTS.map(s => {
+        const cell = hist[s]?.[view]?.[String(key)];
+        const val = (cell && cell[dim] != null) ? fmt(cell[dim]) : '—';
+        return `<td class="num${s === weakest ? ' weakest' : ''}">${val}</td>`;
+      }).join('');
+      const label = (view === 'last_k') ? t('lastKRow', key) : key;
+      return `<tr><th>${label}</th>${cells}</tr>`;
+    }).join('');
+    const header = `<tr><th></th>${DETAIL_SUBJECTS.map(s => `<th>${t('subject_' + s)}</th>`).join('')}</tr>`;
+    const title = view === 'single_year' ? t('detailSecSingle')
+                : view === 'loo' ? t('detailSecLOO') : t('detailSecLastK');
+    return `<div class="detail-sec-title">${title}</div>
+      <table class="detail-table">
+        <thead>${header}</thead><tbody>${bodyRows}</tbody>
+      </table>`;
+  }
+
+  // The expandable detail panel: class trajectory for the selected subject, a
+  // 2×3 grid of charts (LOO / single-year × score / rank / percentile) showing
+  // all subjects, and numeric tables behind a toggle. Needs the per-metric
+  // history file; offers to load it if absent.
   function renderDetailRow(row) {
     const colspan = COLUMNS.length;
     const hist = histByMetric[state.metric]?.schools?.[String(row.rspo)];
@@ -215,45 +266,69 @@
       </td></tr>`;
     }
 
-    const subjects = ['polski', 'matematyka', 'angielski', 'composite_min'];
     const years = baseData.metadata.years_in_data;
     const yearsPresent = years.filter(y =>
-      subjects.some(s => hist[s]?.single_year?.[String(y)] != null));
+      DETAIL_SUBJECTS.some(s => hist[s]?.single_year?.[String(y)] != null));
 
-    const header = `<tr><th></th>${subjects.map(s => `<th>${t('subject_' + s)}</th>`).join('')}</tr>`;
-    const yearRows = yearsPresent.map(y =>
-      `<tr><th>${y}</th>${subjects.map(s => detailScoreCell(hist[s]?.single_year?.[String(y)], s)).join('')}</tr>`
-    ).join('');
-    const ks = Object.keys(hist[subjects[0]]?.last_k || {}).sort((a, b) => +a - +b);
-    const lastKRows = ks.map(k =>
-      `<tr><th>${t('lastKRow', k)}</th>${subjects.map(s => detailScoreCell(hist[s]?.last_k?.[k], s)).join('')}</tr>`
-    ).join('');
-
-    // composite_min class trajectory + per-class counts
-    const cCentre = baseData.metadata.sigma_centre[state.metric].composite_min;
-    const cSigma  = baseData.metadata.sigma[state.metric].composite_min;
+    // Class trajectory for the SELECTED subject (composite_min when that's the
+    // chosen subject), plus how often the school lands in each class.
+    const subj = state.subject;
+    const cCentre = baseData.metadata.sigma_centre[state.metric][subj];
+    const cSigma  = baseData.metadata.sigma[state.metric][subj];
     const counts = [0, 0, 0, 0, 0];
     const trajBadges = yearsPresent.map(y => {
-      const cell = hist.composite_min?.single_year?.[String(y)];
+      const cell = hist[subj]?.single_year?.[String(y)];
       const ci = cell ? classIndexFor(cell.score, cCentre, cSigma) : null;
       if (ci != null) counts[ci]++;
       return `<span class="traj-item">${y}&nbsp;${classBadge(ci)}</span>`;
     }).join(' ');
     const countSummary = [4, 3, 2, 1, 0]
-      .filter(i => counts[i] > 0)
-      .map(i => `${CLASS_LETTERS[i]}×${counts[i]}`)
-      .join('  ');
+      .filter(i => counts[i] > 0).map(i => `${CLASS_LETTERS[i]}×${counts[i]}`).join('  ');
+
+    // 2×3 chart grid: rows = LOO / single-year, cols = score / rank / percentile.
+    const dims = [
+      { dim: 'score', label: t('popupScore') },
+      { dim: 'rank',  label: t('popupRank') },
+      { dim: 'pct',   label: t('popupPct') },
+    ];
+    const chartGrid = `
+      <div class="chart-grid">
+        <div class="cg-corner"></div>
+        ${dims.map(d => `<div class="cg-colhead">${d.label}</div>`).join('')}
+        <div class="cg-rowhead">${t('detailViewLOO')}</div>
+        ${dims.map(d => `<div class="cg-cell">${detailChart(hist, yearsPresent, 'loo', d.dim)}</div>`).join('')}
+        <div class="cg-rowhead">${t('detailViewSingle')}</div>
+        ${dims.map(d => `<div class="cg-cell">${detailChart(hist, yearsPresent, 'single_year', d.dim)}</div>`).join('')}
+      </div>
+      <div class="chart-legend">${subjectLegendHTML(DETAIL_SUBJECTS)}</div>`;
+
+    // Numeric tables, behind a toggle (lots of data; charts usually suffice).
+    let tablesBlock;
+    if (!state.detailTablesOpen) {
+      tablesBlock = `<button type="button" class="detail-tables-toggle">${t('detailShowTables')}</button>`;
+    } else {
+      const ks = Object.keys(hist[DETAIL_SUBJECTS[0]]?.last_k || {}).sort((a, b) => +a - +b);
+      const dimSwitch = dims.map(d =>
+        `<button type="button" class="detail-dim-btn${state.detailTableDim === d.dim ? ' active' : ''}" data-dim="${d.dim}">${d.label}</button>`
+      ).join('');
+      tablesBlock = `
+        <button type="button" class="detail-tables-toggle">${t('detailHideTables')}</button>
+        <div class="detail-dim-switch">${dimSwitch}</div>
+        <div class="detail-tables">
+          ${detailTable(hist, yearsPresent, 'single_year', state.detailTableDim)}
+          ${detailTable(hist, yearsPresent, 'loo', state.detailTableDim)}
+          ${detailTable(hist, ks, 'last_k', state.detailTableDim)}
+        </div>`;
+    }
 
     return `<tr class="detail-row"><td colspan="${colspan}">
       <div class="detail-panel">
         <div class="detail-traj">
-          <strong>${t('detailTrajectory')}:</strong> ${trajBadges}
+          <strong>${t('detailClassByYear', t('subject_' + subj))}:</strong> ${trajBadges}
           <span class="detail-counts">(${countSummary})</span>
         </div>
-        <table class="detail-table">
-          <thead>${header}</thead>
-          <tbody>${yearRows}${lastKRows ? `<tr class="sep"><td colspan="5"></td></tr>${lastKRows}` : ''}</tbody>
-        </table>
+        ${chartGrid}
+        ${tablesBlock}
       </div>
     </td></tr>`;
   }
@@ -311,6 +386,7 @@
       tr.addEventListener('click', () => {
         const rspo = parseInt(tr.getAttribute('data-rspo'), 10);
         state.selectedSchool = (state.selectedSchool === rspo) ? null : rspo;
+        state.detailTablesOpen = false;   // each newly opened school starts collapsed
         syncURL();
         renderAll();
       });
@@ -325,6 +401,22 @@
         loadBtn.textContent = t('historyLoading');
         await ensureMetricLoaded();
         maybeShowHistoryOptIn();
+        renderAll();
+      });
+    }
+    // Detail panel: toggle the numeric tables, and switch their dimension.
+    const tablesToggle = table.querySelector('.detail-tables-toggle');
+    if (tablesToggle) {
+      tablesToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.detailTablesOpen = !state.detailTablesOpen;
+        renderAll();
+      });
+    }
+    for (const db of table.querySelectorAll('.detail-dim-btn')) {
+      db.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.detailTableDim = db.getAttribute('data-dim');
         renderAll();
       });
     }

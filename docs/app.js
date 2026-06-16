@@ -57,6 +57,98 @@ function colourFor(score, centre, sigma) {
   return i == null ? COLOURS.missing : CLASS_COLOURS[i];
 }
 
+// Per-subject line colours, shared by the map popup sparkline and the ranking
+// detail charts so a subject reads the same everywhere.
+const SUBJECT_COLOURS = {
+  polski: '#1f77b4',
+  matematyka: '#d62728',
+  angielski: '#2ca02c',
+  composite_min: '#7f7f7f',
+};
+
+// -----------------------------------------------------------------------------
+// Small multi-line chart with labelled axes (shared: map popup + ranking detail)
+//
+// opts:
+//   years:   [2021, 2022, …]  — x positions, in order
+//   series:  [{ colour, points: {<year>: value|null}, markers?: bool }]
+//   invertY: true for rank charts (1 = best, drawn at the top)
+//   fmtY:    (value) => short string, used for the two Y-axis labels
+//   width/height: optional pixel size
+// Points keyed by year; missing years are gaps (line skips them).
+
+function lineChartSVG(opts) {
+  const W = opts.width || 210;
+  const H = opts.height || 132;
+  const mL = 38, mR = 16, mT = 8, mB = 18;      // margins for axis labels
+  const years = opts.years;
+  const plotW = W - mL - mR, plotH = H - mT - mB;
+
+  const allY = [];
+  for (const s of opts.series) {
+    for (const y of years) {
+      const v = s.points[y];
+      if (v != null) allY.push(v);
+    }
+  }
+  if (!allY.length) return `<svg width="${W}" height="${H}"></svg>`;
+
+  let lo = Math.min(...allY), hi = Math.max(...allY);
+  const dataLo = lo, dataHi = hi;   // real range, for the axis labels
+  if (lo === hi) { lo -= 1; hi += 1; }
+  const padv = (hi - lo) * 0.1;     // padded range, for plotting (breathing room)
+  lo -= padv; hi += padv;
+
+  const xOf = (year) => {
+    const i = years.indexOf(year);
+    return mL + (years.length === 1 ? plotW / 2 : (i / (years.length - 1)) * plotW);
+  };
+  // invertY: low value (rank 1) at the top; normal: high value at the top.
+  const yOf = (v) => {
+    const t = (v - lo) / (hi - lo);
+    return opts.invertY ? (mT + t * plotH) : (mT + (1 - t) * plotH);
+  };
+
+  const axes =
+    `<line x1="${mL}" y1="${mT}" x2="${mL}" y2="${mT + plotH}" stroke="#ccc"/>` +
+    `<line x1="${mL}" y1="${mT + plotH}" x2="${mL + plotW}" y2="${mT + plotH}" stroke="#ccc"/>`;
+
+  // Top/bottom Y labels — actual data extremes; for invertY the top is the
+  // best (lowest) value.
+  const topVal = opts.invertY ? dataLo : dataHi;
+  const botVal = opts.invertY ? dataHi : dataLo;
+  const fmtY = opts.fmtY || ((v) => String(Math.round(v)));
+  const yLabels =
+    `<text x="${mL - 4}" y="${mT + 7}" text-anchor="end" font-size="9" fill="#666">${fmtY(topVal)}</text>` +
+    `<text x="${mL - 4}" y="${mT + plotH}" text-anchor="end" font-size="9" fill="#666">${fmtY(botVal)}</text>`;
+
+  const xLabels = years.map(y =>
+    `<text x="${xOf(y).toFixed(1)}" y="${H - 5}" text-anchor="middle" font-size="9" fill="#666">${y}</text>`
+  ).join('');
+
+  const lines = opts.series.map(s => {
+    const coords = years
+      .map(y => (s.points[y] == null) ? null : `${xOf(y).toFixed(1)},${yOf(s.points[y]).toFixed(1)}`)
+      .filter(Boolean);
+    if (!coords.length) return '';
+    const poly = `<polyline fill="none" stroke="${s.colour}" stroke-width="${s.markers ? 2 : 1.4}" points="${coords.join(' ')}"/>`;
+    const dots = s.markers
+      ? years.map(y => (s.points[y] == null) ? '' :
+          `<circle cx="${xOf(y).toFixed(1)}" cy="${yOf(s.points[y]).toFixed(1)}" r="2.3" fill="${s.colour}"/>`).join('')
+      : '';
+    return poly + dots;
+  }).join('');
+
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${axes}${yLabels}${xLabels}${lines}</svg>`;
+}
+
+// Shared subject legend (coloured dots + names), used under chart groups.
+function subjectLegendHTML(subjects) {
+  return subjects.map(s =>
+    `<span class="legend-item" style="color:${SUBJECT_COLOURS[s]}">●&nbsp;${t('subject_' + s)}</span>`
+  ).join(' ');
+}
+
 // -----------------------------------------------------------------------------
 // Data loading
 
@@ -199,7 +291,14 @@ const I18N = {
     colClass: 'Klasa',
     clickHint: 'Kliknij wiersz, aby rozwinąć szczegóły szkoły.',
     detailLoadHistory: 'Wczytaj dane roczne (~0.8 MB)',
-    detailTrajectory: 'Klasa najsłabszego przedmiotu po latach',
+    detailClassByYear: (s) => `Klasa (${s}) po latach`,
+    detailViewLOO: 'LOO',
+    detailViewSingle: 'pojedyncze lata',
+    detailShowTables: 'Pokaż tabele liczbowe',
+    detailHideTables: 'Ukryj tabele liczbowe',
+    detailSecSingle: 'Pojedyncze lata',
+    detailSecLOO: 'LOO (z pominięciem roku)',
+    detailSecLastK: 'Ostatnie k lat',
     offMap: 'brak lokalizacji',
     rowsShown: (n, total) => `${n} z ${total} szkół`,
     historyOptIn: 'Wczytaj zakresy rankingu (LOO, pojedyncze lata) i widoki — ~0.8 MB',
@@ -282,7 +381,14 @@ const I18N = {
     colClass: 'Class',
     clickHint: 'Click a row to expand school details.',
     detailLoadHistory: 'Load year-by-year data (~0.8 MB)',
-    detailTrajectory: 'Weakest-subject class by year',
+    detailClassByYear: (s) => `Class (${s}) by year`,
+    detailViewLOO: 'LOO',
+    detailViewSingle: 'single years',
+    detailShowTables: 'Show numeric tables',
+    detailHideTables: 'Hide numeric tables',
+    detailSecSingle: 'Single years',
+    detailSecLOO: 'LOO (year left out)',
+    detailSecLastK: 'Last k years',
     offMap: 'no location',
     rowsShown: (n, total) => `${n} of ${total} schools`,
     historyOptIn: 'Load rank ranges (LOO, single years) and views — ~0.8 MB',

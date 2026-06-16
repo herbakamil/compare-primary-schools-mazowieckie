@@ -358,41 +358,23 @@
   function sparklineSVG(school, hist, yearsPresent) {
     if (yearsPresent.length < 2) return '';
     const subjects = ['polski', 'matematyka', 'angielski', 'composite_min'];
-    const colours = { polski: '#1f77b4', matematyka: '#d62728', angielski: '#2ca02c', composite_min: '#7f7f7f' };
-
-    const W = 260, H = 70, P = 8;
-    const xs = yearsPresent;
-    const allValues = [];
-    for (const subj of subjects) {
-      for (const y of xs) {
-        const v = hist[subj]?.single_year?.[String(y)]?.score;
-        if (v != null) allValues.push(v);
-      }
-    }
-    if (!allValues.length) return '';
-    let lo = Math.min(...allValues), hi = Math.max(...allValues);
-    if (lo === hi) { lo -= 1; hi += 1; }
-    const xScale = i => P + (i / Math.max(1, xs.length - 1)) * (W - 2 * P);
-    const yScale = v => H - P - ((v - lo) / (hi - lo)) * (H - 2 * P);
-
-    const lines = subjects.map(subj => {
-      const pts = xs.map((y, i) => {
-        const v = hist[subj]?.single_year?.[String(y)]?.score;
-        return v == null ? null : `${xScale(i).toFixed(1)},${yScale(v).toFixed(1)}`;
-      }).filter(Boolean).join(' ');
-      return pts
-        ? `<polyline fill="none" stroke="${colours[subj]}" stroke-width="1.5" points="${pts}"/>`
-        : '';
-    }).join('');
-
-    const legend = subjects.map(s =>
-      `<span style="color:${colours[s]};margin-right:0.5em;font-size:0.75em;">●&nbsp;${t('subject_' + s)}</span>`
-    ).join('');
-
-    return `<div class="sparkline">
-      <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${lines}</svg>
-      <div class="spark-legend">${legend}</div>
-    </div>`;
+    const series = subjects.map(subj => ({
+      colour: SUBJECT_COLOURS[subj],
+      // composite_min equals the weakest subject each year, so its line sits
+      // exactly on that subject's line — markers keep it visible when they coincide.
+      markers: subj === 'composite_min',
+      points: Object.fromEntries(
+        yearsPresent.map(y => [y, hist[subj]?.single_year?.[String(y)]?.score ?? null])),
+    }));
+    const svg = lineChartSVG({
+      years: yearsPresent,
+      series,
+      invertY: false,
+      fmtY: (v) => fmtScore(v, state.metric),
+      width: 260,
+      height: 120,
+    });
+    return `<div class="sparkline">${svg}<div class="spark-legend">${subjectLegendHTML(subjects)}</div></div>`;
   }
 
   // ---------------------------------------------------------------------------
