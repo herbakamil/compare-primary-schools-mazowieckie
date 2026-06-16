@@ -94,7 +94,20 @@
     });
     // Function-form: re-rendered each time the popup opens, so it reflects the
     // current metric/subject/history without an empty-flash on first open.
-    marker.bindPopup(() => renderPopup(school), { maxWidth: 360, minWidth: 280 });
+    marker.bindPopup(() => renderPopup(school), {
+      maxWidth: 360,
+      minWidth: 280,
+      // Mobile bug fix: when the user taps "Pokaż historię roczną", the popup
+      // grows tall after the async load. With autoPan on, Leaflet then pans the
+      // map to fit the taller popup — on touch that map movement, landing under
+      // the just-tapped finger, was closing the popup right after it opened
+      // (worse the longer the school's history, because taller popup = bigger
+      // pan). Disable autoPan on touch devices; the max-height + internal scroll
+      // (see .leaflet-popup-content in style.css) keeps a tall popup usable
+      // without needing to pan. Desktop keeps autoPan — the bug is touch-only
+      // and autoPan is genuinely useful there.
+      autoPan: !L.Browser.mobile,
+    });
     return marker;
   }
 

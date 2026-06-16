@@ -127,6 +127,15 @@ body { display: flex; flex-direction: column; }
 }
 
 /* Popups */
+/* Bound the popup height so the year-by-year history scrolls inside the popup
+   instead of growing past the screen. Paired with autoPan:false on touch
+   (see map.js): a tall popup no longer forces the map to pan, which was
+   closing the popup on mobile right after it opened. */
+.leaflet-popup-content {
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 .popup-school h3 { margin: 0 0 0.35rem 0; font-size: 1rem; }
 .popup-school .addr { color: var(--text-muted); font-size: 0.85rem; margin: 0 0 0.5rem 0; }
 .popup-school table { border-collapse: collapse; font-size: 0.85rem; width: 100%; }
