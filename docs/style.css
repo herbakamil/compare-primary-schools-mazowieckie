@@ -258,6 +258,21 @@ table.ranking-table tr.highlight { background: #fff3cd; }
 
 /* Mobile */
 @media (max-width: 700px) {
+  /* Keep the nav links visible. The title is flex:1 but min-width:auto stops
+     a flex item shrinking below its text width, so a long title pushed the nav
+     (now 3 links) off the right edge. min-width:0 + ellipsis lets the title
+     shrink; the nav never shrinks. */
+  .topnav { gap: 0.5rem; padding: 0.5rem 0.6rem; }
+  .topnav h1 {
+    font-size: 0.9rem;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .topnav nav { flex-shrink: 0; }
+  .topnav nav a { padding: 0.35rem 0.5rem; }
+
   .page-map main { flex-direction: column; }
   #map { height: 60vh; flex: 0 0 60vh; }
   #panel {
