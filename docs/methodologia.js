@@ -5,9 +5,7 @@
 
 (function () {
   setLang(resolvePref('lang', ['pl', 'en']));
-  if (typeof wireLangToggle === 'function') {
-    wireLangToggle(() => {
-      writePref('lang', currentLang);
-    });
-  }
+  // Static page: setLang already re-translates the labels, so no extra
+  // re-render is needed after a language switch.
+  wireLangToggle();
 }());

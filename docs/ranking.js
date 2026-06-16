@@ -385,6 +385,17 @@
     });
 
     wireNavLinks();
+
+    // Language toggle: re-translate JS-built content (metric/subject selects
+    // and the whole table, whose headers/labels come from t()). The view-select
+    // options carry data-i18n, so setLang's applyI18N already handles them.
+    wireLangToggle(() => {
+      state.lang = currentLang;
+      syncURL();
+      fillMetricSelect(metricSel, state.metric);
+      fillSubjectSelect(subjectSel, state.subject);
+      renderAll();
+    });
   }
 
   function wireNavLinks() {

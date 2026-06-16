@@ -163,6 +163,7 @@ const I18N = {
     loadingHistory: 'Ładowanie historii…',
     rankingTitle: 'Ranking szkół — Mazowieckie',
     rankingNameSearch: 'Szukaj po nazwie',
+    rankingSearchPlaceholder: 'np. STO, Vizja, Słupica',
     rankingView: 'Widok danych',
     rankingViewParam: 'Parametr widoku',
     rankingViewBase: 'wszystkie lata (base)',
@@ -238,6 +239,7 @@ const I18N = {
     loadingHistory: 'Loading history…',
     rankingTitle: 'School ranking — Mazowieckie',
     rankingNameSearch: 'Search by name',
+    rankingSearchPlaceholder: 'e.g. STO, Vizja, Słupica',
     rankingView: 'View',
     rankingViewParam: 'View parameter',
     rankingViewBase: 'all years (base)',
@@ -286,6 +288,25 @@ function setLang(lang) {
   currentLang = (lang === 'en') ? 'en' : 'pl';
   document.documentElement.lang = currentLang;
   applyI18N();
+}
+
+// Wire the #lang-toggle button (present in every page's nav). The button shows
+// the language you'd switch TO (EN while on PL, PL while on EN). On click it
+// flips the language, re-translates static [data-i18n] labels (via setLang),
+// persists the choice, then calls onAfterChange so the page can re-render its
+// dynamic, language-dependent content (select options, table, popups) — that
+// part differs per page, so each passes its own callback.
+function wireLangToggle(onAfterChange) {
+  const btn = document.getElementById('lang-toggle');
+  if (!btn) return;
+  const relabel = () => { btn.textContent = (currentLang === 'pl') ? 'EN' : 'PL'; };
+  relabel();
+  btn.addEventListener('click', () => {
+    setLang(currentLang === 'pl' ? 'en' : 'pl');
+    writePref('lang', currentLang);
+    relabel();
+    if (onAfterChange) onAfterChange();
+  });
 }
 
 // -----------------------------------------------------------------------------

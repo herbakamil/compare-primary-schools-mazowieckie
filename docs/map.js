@@ -560,6 +560,18 @@
     wireSearch();
     wireHistoryButtons();
     wireNavLinks();
+
+    // Language toggle: re-translate the dynamic, JS-built content that
+    // applyI18N (static [data-i18n] only) can't reach — the metric/subject
+    // selects, the filter-count summary, and any open popup.
+    wireLangToggle(() => {
+      state.lang = currentLang;
+      syncURL();
+      fillSubjectSelect(subjectSel, state.subject);
+      fillMetricSelect(metricSel, state.metric);
+      refreshFilters();
+      if (state.selectedSchool != null) reopenSelectedPopup();
+    });
   }
 
   function wireNavLinks() {
