@@ -273,6 +273,27 @@ assuming 0.
       (k = 2 … n_years − 1) and `loo` ranges.
     - If this layout reads poorly in practice, the spec will be revised — but
       both forms exist by default so the user sees shape *and* numbers.
+  - **Touch popup behaviour (do not regress).** The year-by-year history makes
+    the popup tall, which surfaced three mobile bugs — each fix below is load-
+    bearing on touch and must survive any rewrite. "Touch" is detected with
+    `matchMedia('(pointer: coarse)')`, **not** UA sniffing (`L.Browser.mobile`
+    proved unreliable):
+    - **`autoPan: false` on touch.** With autoPan on, the popup growing after
+      the async history load made Leaflet pan the map under the user's finger,
+      which closed the popup right after it opened. Desktop keeps autoPan.
+    - **`max-height: 60vh` + internal scroll on `.leaflet-popup-content`.** So a
+      tall popup scrolls inside itself instead of running off-screen (needed
+      because autoPan is off on touch).
+    - **`closeOnClick: false` on touch.** Dragging to scroll a tall popup ends
+      in a tap that lands on the map; the map's default close-on-click then shut
+      the popup. On touch the popup closes only via its × button (enlarged to a
+      32 px tap target on ≤700 px). Switching schools by tapping another marker
+      still works. Desktop keeps click-to-close.
+    - **`removeOutsideVisibleBounds: false` on the markercluster group.** By
+      default markercluster removes markers outside the buffered viewport;
+      removing a marker closes its open popup, so panning the map to read a
+      popup closed it. With canvas rendering the ~1,700 markers are cheap to
+      keep, so we keep them all and the popup survives a pan.
 
 ---
 
