@@ -294,10 +294,13 @@
   // Non-base views need a metric file
 
   function maybeShowHistoryOptIn() {
+    // The LOO-range and single-year-range columns are always in the table (and
+    // non-base views also need the per-metric file), so offer the opt-in
+    // whenever the current metric's file isn't loaded — not only for non-base
+    // views. Previously it was hidden on the default base view, leaving those
+    // two columns showing "—" with no visible way to fill them.
     const row = document.getElementById('history-optin-row');
-    const needsHistory = state.view !== 'base';
-    const haveHistory = !!histByMetric[state.metric];
-    row.style.display = (needsHistory && !haveHistory) ? '' : 'none';
+    row.style.display = histByMetric[state.metric] ? 'none' : '';
   }
 
   async function ensureMetricLoaded() {
@@ -328,9 +331,9 @@
       writePref('metric', state.metric);
       syncURL();
       maybeShowHistoryOptIn();
-      if (state.view !== 'base' && state.historyOptIn) {
-        await ensureMetricLoaded();
-      }
+      // Auto-load if the user has already consented — the range columns need
+      // the new metric's file even on the base view.
+      if (state.historyOptIn) await ensureMetricLoaded();
       renderAll();
     });
 
@@ -346,9 +349,7 @@
       updateViewParamField();
       syncURL();
       maybeShowHistoryOptIn();
-      if (state.view !== 'base' && state.historyOptIn) {
-        await ensureMetricLoaded();
-      }
+      if (state.historyOptIn) await ensureMetricLoaded();
       renderAll();
     });
 
@@ -431,9 +432,9 @@
     updateViewParamField();
     maybeShowHistoryOptIn();
 
-    if (state.view !== 'base' && state.historyOptIn) {
-      await ensureMetricLoaded();
-    }
+    // Returning users who already consented get the per-metric file loaded up
+    // front so the range columns are populated without re-checking the box.
+    if (state.historyOptIn) await ensureMetricLoaded();
     renderAll();
     syncURL();
   }
