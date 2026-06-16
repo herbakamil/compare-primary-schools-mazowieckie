@@ -40,6 +40,7 @@ import json
 import os
 import sys
 import time
+from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -305,102 +306,120 @@ def report_shared_coords(rows: list[dict], warn_threshold: int) -> list[tuple]:
     return groups
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--limit", type=int, default=None,
-                        help="Maximum number of NEW geocoding requests (for testing).")
-    parser.add_argument("--force", action="store_true",
-                        help="Re-geocode every school, ignoring the cache.")
-    parser.add_argument("--contact", default=None,
-                        help=f"Contact (email or URL) for the Nominatim User-Agent. "
-                             f"Overrides the {CONTACT_ENV_VAR} env var.")
-    parser.add_argument("--report-only", action="store_true",
-                        help="Skip geocoding entirely. Re-emit the unmapped CSV "
-                             "and shared-coords report from the current cache.")
-    args = parser.parse_args()
+# ── Refactored pipeline: plan → run → summary → reports ─────────────────────
 
-    if args.report_only:
-        rows = load_existing_cache(COORDS_CSV)
-        n_unmapped = write_unmapped_report(rows, UNMAPPED_CSV)
-        print(f"{n_unmapped:,} unmapped schools written to {UNMAPPED_CSV}")
-        shared = report_shared_coords(rows, SHARED_COORD_WARN_THRESHOLD)
-        if shared:
-            print(f"⚠ {len(shared)} group(s) of ≥{SHARED_COORD_WARN_THRESHOLD} at identical coords:")
-            for count, coord, rspos in shared[:10]:
-                print(f"    {count:>3} at {coord}: rspo={', '.join(rspos[:5])}")
-        else:
-            print(f"✓ No group of ≥{SHARED_COORD_WARN_THRESHOLD} at identical coords.")
-        return
+@dataclass
+class GeocodingPlan:
+    """Everything `run_geocoding_loop` needs to do its job, decided up front."""
+    schools_by_rspo: dict[int, dict]
+    cache_by_rspo: dict[int, dict]
+    # CSV order — preserved through the run, extended for newly-appended rspos.
+    ordered_rspo: list[int]
+    # Schools we will actually re-geocode this run.
+    to_geocode: list[tuple[int, dict, str]] = field(default_factory=list)
+    # Schools dropped by --limit and skipped this run (their cached row falls
+    # through unchanged).
+    deferred: list[tuple[int, dict, str]] = field(default_factory=list)
+    # Rows we won't touch (address unchanged and a coord is on file).
+    kept_count: int = 0
 
-    user_agent = resolve_user_agent(args.contact)
 
-    schools = load_schools(SCHOOLS_BASE_JSON)
-    print(f"Loaded {len(schools):,} schools from {SCHOOLS_BASE_JSON.name}")
+@dataclass
+class GeocodingResult:
+    """Output of `run_geocoding_loop`."""
+    rows: list[dict]
+    updated_count: int
+    new_count: int
 
-    existing_rows = [] if args.force else load_existing_cache(COORDS_CSV)
-    print(f"Existing cache: {len(existing_rows):,} rows"
-          + (" (ignored due to --force)" if args.force else ""))
 
-    # Index existing rows by rspo, preserving their original order/position.
+def plan_geocoding(schools: list[dict],
+                   existing_rows: list[dict],
+                   limit: int | None) -> GeocodingPlan:
+    """Decide which schools to re-geocode, which to skip, and which to defer.
+
+    A school is queued when its address changed since the cached row OR the
+    cached row has no coordinates. New schools (rspo not in cache) are
+    appended. `limit`, if set, caps the queue and moves the rest to deferred.
+    """
     cache_by_rspo = {int(row["rspo"]): row for row in existing_rows}
-    # Ordered list of rspo as they currently appear in the CSV (to preserve position).
     ordered_rspo = [int(row["rspo"]) for row in existing_rows]
-
     schools_by_rspo = {s["rspo"]: s for s in schools}
 
-    kept_count = 0
-    updated_count = 0
-    new_count = 0
+    plan = GeocodingPlan(
+        schools_by_rspo=schools_by_rspo,
+        cache_by_rspo=cache_by_rspo,
+        ordered_rspo=list(ordered_rspo),  # the loop may extend this; keep a copy
+    )
 
-    # 1. Plan: collect every school that needs geocoding (changed address or new).
-    all_to_geocode: list[tuple[int, dict, str]] = []  # (rspo, school, action)
+    # Rows currently in cache: keep if address unchanged + coords present,
+    # otherwise queue for re-geocoding.
+    queue: list[tuple[int, dict, str]] = []
     for rspo in ordered_rspo:
         cached = cache_by_rspo[rspo]
         school = schools_by_rspo.get(rspo)
         if school is None:
-            continue
+            continue  # cached row for a school that's no longer in the source
         old_addr = normalize_address(cached.get("miejscowosc"), cached.get("ulica_nr"))
         new_addr = normalize_address(school["miejscowosc"], school["ulica_nr"])
         has_coords = bool(cached.get("latitude")) and bool(cached.get("longitude"))
-        if not (old_addr == new_addr and has_coords):
-            all_to_geocode.append((rspo, school, "update"))
+        if old_addr == new_addr and has_coords:
+            plan.kept_count += 1
+        else:
+            queue.append((rspo, school, "update"))
 
+    # New schools (rspo not in cache) get appended at the end.
     for school in schools:
         if school["rspo"] not in cache_by_rspo:
-            all_to_geocode.append((school["rspo"], school, "new"))
+            queue.append((school["rspo"], school, "new"))
 
-    to_geocode = all_to_geocode if args.limit is None else all_to_geocode[: args.limit]
-    n_total = len(to_geocode)
-    to_geocode_rspos = {rspo for rspo, _, _ in to_geocode}
-    deferred_count = len(all_to_geocode) - n_total
+    if limit is None or limit >= len(queue):
+        plan.to_geocode = queue
+        plan.deferred = []
+    else:
+        plan.to_geocode = queue[:limit]
+        plan.deferred = queue[limit:]
 
-    # 2. Pre-populate result_by_rspo with rows that will NOT be re-geocoded
-    #    (kept rows + deferred updates fall through with their cached values).
-    deferred_rspos = {rspo for rspo, _, _ in all_to_geocode[n_total:]}
+    return plan
+
+
+def _assemble_rows(result_by_rspo: dict[int, dict],
+                   ordered_rspo: list[int]) -> list[dict]:
+    """Lay out the final CSV in `ordered_rspo` order; tail any extras."""
+    rows = [result_by_rspo[r] for r in ordered_rspo if r in result_by_rspo]
+    ordered_set = set(ordered_rspo)
+    for r, row in result_by_rspo.items():
+        if r not in ordered_set:
+            rows.append(row)
+    return rows
+
+
+def run_geocoding_loop(plan: GeocodingPlan,
+                       user_agent: str,
+                       save_path: Path,
+                       save_every: int = 50) -> GeocodingResult:
+    """Geocode every row in `plan.to_geocode`, saving the CSV periodically.
+
+    Rows in `plan.cache_by_rspo` that aren't being re-geocoded pass through
+    unchanged. Deferred rows are also left untouched.
+    """
+    # Seed result with every row we are NOT re-geocoding (kept + deferred).
+    to_geocode_rspos = {rspo for rspo, _, _ in plan.to_geocode}
     result_by_rspo: dict[int, dict] = {}
-    for rspo in ordered_rspo:
-        if rspo in to_geocode_rspos:
-            continue
-        result_by_rspo[rspo] = cache_by_rspo[rspo]
-        if rspo not in deferred_rspos:
-            kept_count += 1
+    for rspo in plan.ordered_rspo:
+        if rspo not in to_geocode_rspos:
+            result_by_rspo[rspo] = plan.cache_by_rspo[rspo]
 
-    # 3. Geocode with progress, saving every SAVE_EVERY processed schools.
-    SAVE_EVERY = 50
-
-    def assemble_rows() -> list[dict]:
-        rows = [result_by_rspo[r] for r in ordered_rspo if r in result_by_rspo]
-        for r in result_by_rspo:
-            if r not in ordered_rspo:
-                rows.append(result_by_rspo[r])
-        return rows
-
+    n_total = len(plan.to_geocode)
     print(
         f"\nGeocoding {n_total:,} schools"
-        + (f" ({deferred_count:,} deferred due to --limit)" if deferred_count else "")
+        + (f" ({len(plan.deferred):,} deferred due to --limit)" if plan.deferred else "")
     )
 
-    for index, (rspo, school, action) in enumerate(to_geocode, start=1):
+    updated_count = 0
+    new_count = 0
+    ordered_rspo = list(plan.ordered_rspo)  # may grow when new schools land
+
+    for index, (rspo, school, action) in enumerate(plan.to_geocode, start=1):
         pct = index / n_total * 100 if n_total else 100.0
         label = "re-geocoding" if action == "update" else "geocoding NEW"
         print(
@@ -421,38 +440,43 @@ def main() -> None:
             "longitude": coords[1] if coords else "",
         }
 
-        if index % SAVE_EVERY == 0 and index < n_total:
-            write_cache(COORDS_CSV, assemble_rows())
+        if index % save_every == 0 and index < n_total:
+            write_cache(save_path, _assemble_rows(result_by_rspo, ordered_rspo))
             print(f"    [partial cache saved — {index:,}/{n_total:,} done]")
 
-    # 4. Final save.
-    final_rows = assemble_rows()
-    write_cache(COORDS_CSV, final_rows)
+    final_rows = _assemble_rows(result_by_rspo, ordered_rspo)
+    write_cache(save_path, final_rows)
+    return GeocodingResult(rows=final_rows, updated_count=updated_count, new_count=new_count)
 
-    missing = sum(1 for r in final_rows if not r.get("latitude"))
+
+def print_run_summary(plan: GeocodingPlan, result: GeocodingResult, csv_path: Path) -> None:
+    missing = sum(1 for r in result.rows if not r.get("latitude"))
     print()
-    print(f"Done. Cache written to {COORDS_CSV}")
-    print(f"  kept (unchanged):   {kept_count:,}")
-    print(f"  updated (changed):  {updated_count:,}")
-    print(f"  new (appended):     {new_count:,}")
-    print(f"  total rows:         {len(final_rows):,}")
+    print(f"Done. Cache written to {csv_path}")
+    print(f"  kept (unchanged):   {plan.kept_count:,}")
+    print(f"  updated (changed):  {result.updated_count:,}")
+    print(f"  new (appended):     {result.new_count:,}")
+    print(f"  total rows:         {len(result.rows):,}")
     print(f"  still missing coords: {missing:,}")
 
-    # Reports — unmapped schools (for manual triage) and shared-coord groups
-    # (a warning if any group is suspiciously large).
-    n_unmapped = write_unmapped_report(final_rows, UNMAPPED_CSV)
+
+def emit_post_run_reports(rows: list[dict],
+                          unmapped_path: Path,
+                          warn_threshold: int) -> None:
+    """Refresh the unmapped CSV and print the shared-coords warning."""
+    n_unmapped = write_unmapped_report(rows, unmapped_path)
     print()
     if n_unmapped:
-        print(f"⚠ {n_unmapped:,} school(s) without coordinates — wrote {UNMAPPED_CSV}")
+        print(f"⚠ {n_unmapped:,} school(s) without coordinates — wrote {unmapped_path}")
         print(f"  Each row in that file has a Google Maps search URL. Open it,")
-        print(f"  find the school, copy the lat/lon, paste into {COORDS_CSV.name} by hand.")
+        print(f"  find the school, copy the lat/lon, paste into the cache by hand.")
     else:
-        print(f"✓ All schools mapped. {UNMAPPED_CSV.name} is empty.")
+        print(f"✓ All schools mapped. {unmapped_path.name} is empty.")
 
-    shared = report_shared_coords(final_rows, SHARED_COORD_WARN_THRESHOLD)
+    shared = report_shared_coords(rows, warn_threshold)
     print()
     if shared:
-        print(f"⚠ {len(shared)} group(s) of ≥{SHARED_COORD_WARN_THRESHOLD} schools at identical coordinates:")
+        print(f"⚠ {len(shared)} group(s) of ≥{warn_threshold} schools at identical coordinates:")
         for count, coord, rspos in shared[:10]:
             preview = ", ".join(rspos[:5]) + (f", … (+{len(rspos)-5})" if len(rspos) > 5 else "")
             print(f"    {count:>3} schools at {coord}: rspo={preview}")
@@ -461,7 +485,48 @@ def main() -> None:
         print(f"  Either these are genuine multi-school complexes, or the geocoder")
         print(f"  is finding the same node for differing addresses — eyeball them.")
     else:
-        print(f"✓ No group of ≥{SHARED_COORD_WARN_THRESHOLD} schools at identical coordinates.")
+        print(f"✓ No group of ≥{warn_threshold} schools at identical coordinates.")
+
+
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--limit", type=int, default=None,
+                        help="Maximum number of NEW geocoding requests (for testing).")
+    parser.add_argument("--force", action="store_true",
+                        help="Re-geocode every school, ignoring the cache.")
+    parser.add_argument("--contact", default=None,
+                        help=f"Contact (email or URL) for the Nominatim User-Agent. "
+                             f"Overrides the {CONTACT_ENV_VAR} env var.")
+    parser.add_argument("--report-only", action="store_true",
+                        help="Skip geocoding entirely. Re-emit the unmapped CSV "
+                             "and shared-coords report from the current cache.")
+    return parser.parse_args(argv)
+
+
+def main() -> None:
+    args = _parse_args()
+
+    if args.report_only:
+        emit_post_run_reports(
+            load_existing_cache(COORDS_CSV),
+            UNMAPPED_CSV,
+            SHARED_COORD_WARN_THRESHOLD,
+        )
+        return
+
+    user_agent = resolve_user_agent(args.contact)
+
+    schools = load_schools(SCHOOLS_BASE_JSON)
+    print(f"Loaded {len(schools):,} schools from {SCHOOLS_BASE_JSON.name}")
+
+    existing_rows = [] if args.force else load_existing_cache(COORDS_CSV)
+    print(f"Existing cache: {len(existing_rows):,} rows"
+          + (" (ignored due to --force)" if args.force else ""))
+
+    plan = plan_geocoding(schools, existing_rows, args.limit)
+    result = run_geocoding_loop(plan, user_agent, COORDS_CSV)
+    print_run_summary(plan, result, COORDS_CSV)
+    emit_post_run_reports(result.rows, UNMAPPED_CSV, SHARED_COORD_WARN_THRESHOLD)
 
 
 if __name__ == "__main__":
