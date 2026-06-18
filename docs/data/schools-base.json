@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-06-09T10:23:17",
+    "generated_at": "2026-06-18T14:38:26",
     "default_metric": "unit_norm_diff_mean",
     "metrics": [
       "mean",
@@ -289,7 +289,7 @@
           },
           "matematyka": {
             "score": 0.1759,
-            "rank": 434,
+            "rank": 435,
             "pct": 74.8
           },
           "angielski": {
@@ -499,7 +499,7 @@
           },
           "composite_min": {
             "score": -0.2155,
-            "rank": 1259,
+            "rank": 1260,
             "pct": 26.8
           }
         }
@@ -999,7 +999,7 @@
           },
           "composite_min": {
             "score": -0.1352,
-            "rank": 1023,
+            "rank": 1024,
             "pct": 40.5
           }
         }
@@ -1484,7 +1484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1613,
-            "rank": 403,
+            "rank": 404,
             "pct": 76.6
           },
           "matematyka": {
@@ -1499,7 +1499,7 @@
           },
           "composite_min": {
             "score": 0.1613,
-            "rank": 337,
+            "rank": 338,
             "pct": 80.4
           }
         }
@@ -1584,7 +1584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1042,
-            "rank": 1387,
+            "rank": 1388,
             "pct": 19.4
           },
           "matematyka": {
@@ -1689,7 +1689,7 @@
           },
           "matematyka": {
             "score": -0.2878,
-            "rank": 1536,
+            "rank": 1537,
             "pct": 10.7
           },
           "angielski": {
@@ -2889,7 +2889,7 @@
           },
           "matematyka": {
             "score": -0.172,
-            "rank": 1268,
+            "rank": 1269,
             "pct": 26.3
           },
           "angielski": {
@@ -3184,7 +3184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.2252,
-            "rank": 277,
+            "rank": 278,
             "pct": 83.9
           },
           "matematyka": {
@@ -3494,7 +3494,7 @@
           },
           "angielski": {
             "score": 0.0877,
-            "rank": 712,
+            "rank": 714,
             "pct": 58.5
           },
           "composite_min": {
@@ -3599,7 +3599,7 @@
           },
           "composite_min": {
             "score": 0.0416,
-            "rank": 537,
+            "rank": 538,
             "pct": 68.8
           }
         }
@@ -3689,7 +3689,7 @@
           },
           "matematyka": {
             "score": -0.1151,
-            "rank": 1122,
+            "rank": 1123,
             "pct": 34.8
           },
           "angielski": {
@@ -3884,7 +3884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1209,
-            "rank": 1440,
+            "rank": 1441,
             "pct": 16.3
           },
           "matematyka": {
@@ -4294,7 +4294,7 @@
           },
           "angielski": {
             "score": -0.0482,
-            "rank": 968,
+            "rank": 969,
             "pct": 43.7
           },
           "composite_min": {
@@ -4384,7 +4384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1147,
-            "rank": 524,
+            "rank": 525,
             "pct": 69.5
           },
           "matematyka": {
@@ -4889,7 +4889,7 @@
           },
           "matematyka": {
             "score": 0.2311,
-            "rank": 356,
+            "rank": 357,
             "pct": 79.3
           },
           "angielski": {
@@ -4899,7 +4899,7 @@
           },
           "composite_min": {
             "score": 0.2311,
-            "rank": 234,
+            "rank": 235,
             "pct": 86.4
           }
         }
@@ -5184,7 +5184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0547,
-            "rank": 1186,
+            "rank": 1187,
             "pct": 31.0
           },
           "matematyka": {
@@ -5389,7 +5389,7 @@
           },
           "matematyka": {
             "score": -0.0883,
-            "rank": 1035,
+            "rank": 1036,
             "pct": 39.8
           },
           "angielski": {
@@ -5794,7 +5794,7 @@
           },
           "angielski": {
             "score": -0.1241,
-            "rank": 1168,
+            "rank": 1169,
             "pct": 32.1
           },
           "composite_min": {
@@ -5884,7 +5884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1922,
-            "rank": 328,
+            "rank": 329,
             "pct": 80.9
           },
           "matematyka": {
@@ -5894,12 +5894,12 @@
           },
           "angielski": {
             "score": 0.2914,
-            "rank": 472,
+            "rank": 473,
             "pct": 72.6
           },
           "composite_min": {
             "score": 0.1922,
-            "rank": 287,
+            "rank": 288,
             "pct": 83.3
           }
         }
@@ -6189,7 +6189,7 @@
           },
           "matematyka": {
             "score": -0.1963,
-            "rank": 1348,
+            "rank": 1349,
             "pct": 21.6
           },
           "angielski": {
@@ -6399,7 +6399,7 @@
           },
           "composite_min": {
             "score": -0.2242,
-            "rank": 1289,
+            "rank": 1290,
             "pct": 25.1
           }
         }
@@ -7018,7 +7018,7 @@
         "mean": {
           "polski": {
             "score": 63.6333,
-            "rank": 903,
+            "rank": 904,
             "pct": 47.5
           },
           "matematyka": {
@@ -7089,7 +7089,7 @@
           },
           "matematyka": {
             "score": -0.0004,
-            "rank": 795,
+            "rank": 796,
             "pct": 53.8
           },
           "angielski": {
@@ -7194,7 +7194,7 @@
           },
           "angielski": {
             "score": -0.1881,
-            "rank": 1315,
+            "rank": 1316,
             "pct": 23.5
           },
           "composite_min": {
@@ -7489,7 +7489,7 @@
           },
           "matematyka": {
             "score": -0.1922,
-            "rank": 1332,
+            "rank": 1333,
             "pct": 22.6
           },
           "angielski": {
@@ -7499,7 +7499,7 @@
           },
           "composite_min": {
             "score": -0.1922,
-            "rank": 1189,
+            "rank": 1190,
             "pct": 30.9
           }
         }
@@ -7994,7 +7994,7 @@
           },
           "angielski": {
             "score": -0.1142,
-            "rank": 1139,
+            "rank": 1140,
             "pct": 33.8
           },
           "composite_min": {
@@ -8484,7 +8484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.185,
-            "rank": 340,
+            "rank": 341,
             "pct": 80.2
           },
           "matematyka": {
@@ -8594,12 +8594,12 @@
           },
           "angielski": {
             "score": -0.3055,
-            "rank": 1573,
+            "rank": 1574,
             "pct": 8.5
           },
           "composite_min": {
             "score": -0.3055,
-            "rank": 1507,
+            "rank": 1508,
             "pct": 12.4
           }
         }
@@ -8884,7 +8884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0862,
-            "rank": 1317,
+            "rank": 1319,
             "pct": 23.4
           },
           "matematyka": {
@@ -8989,7 +8989,7 @@
           },
           "matematyka": {
             "score": -0.3143,
-            "rank": 1579,
+            "rank": 1580,
             "pct": 8.2
           },
           "angielski": {
@@ -8999,7 +8999,7 @@
           },
           "composite_min": {
             "score": -0.3143,
-            "rank": 1526,
+            "rank": 1527,
             "pct": 11.3
           }
         }
@@ -9284,7 +9284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1246,
-            "rank": 492,
+            "rank": 493,
             "pct": 71.4
           },
           "matematyka": {
@@ -9889,17 +9889,17 @@
           },
           "matematyka": {
             "score": -0.0749,
-            "rank": 1004,
+            "rank": 1005,
             "pct": 41.6
           },
           "angielski": {
             "score": -0.2497,
-            "rank": 1473,
+            "rank": 1475,
             "pct": 14.3
           },
           "composite_min": {
             "score": -0.2497,
-            "rank": 1369,
+            "rank": 1370,
             "pct": 20.4
           }
         }
@@ -10789,7 +10789,7 @@
           },
           "matematyka": {
             "score": -0.1066,
-            "rank": 1101,
+            "rank": 1102,
             "pct": 36.0
           },
           "angielski": {
@@ -10884,7 +10884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0795,
-            "rank": 1287,
+            "rank": 1288,
             "pct": 25.2
           },
           "matematyka": {
@@ -10994,7 +10994,7 @@
           },
           "angielski": {
             "score": -0.1508,
-            "rank": 1231,
+            "rank": 1232,
             "pct": 28.4
           },
           "composite_min": {
@@ -11094,7 +11094,7 @@
           },
           "angielski": {
             "score": 0.1935,
-            "rank": 575,
+            "rank": 576,
             "pct": 66.6
           },
           "composite_min": {
@@ -11194,7 +11194,7 @@
           },
           "angielski": {
             "score": 0.22,
-            "rank": 547,
+            "rank": 548,
             "pct": 68.2
           },
           "composite_min": {
@@ -11589,12 +11589,12 @@
           },
           "matematyka": {
             "score": -0.1682,
-            "rank": 1260,
+            "rank": 1261,
             "pct": 26.7
           },
           "angielski": {
             "score": -0.1027,
-            "rank": 1112,
+            "rank": 1113,
             "pct": 35.3
           },
           "composite_min": {
@@ -11689,7 +11689,7 @@
           },
           "matematyka": {
             "score": -0.1809,
-            "rank": 1296,
+            "rank": 1297,
             "pct": 24.7
           },
           "angielski": {
@@ -11789,7 +11789,7 @@
           },
           "matematyka": {
             "score": 0.0233,
-            "rank": 738,
+            "rank": 739,
             "pct": 57.1
           },
           "angielski": {
@@ -11884,7 +11884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.138,
-            "rank": 1496,
+            "rank": 1497,
             "pct": 13.0
           },
           "matematyka": {
@@ -12189,12 +12189,12 @@
           },
           "matematyka": {
             "score": -0.1095,
-            "rank": 1111,
+            "rank": 1112,
             "pct": 35.4
           },
           "angielski": {
             "score": -0.2003,
-            "rank": 1347,
+            "rank": 1348,
             "pct": 21.7
           },
           "composite_min": {
@@ -12284,12 +12284,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0633,
-            "rank": 1221,
+            "rank": 1222,
             "pct": 29.0
           },
           "matematyka": {
             "score": -0.0061,
-            "rank": 810,
+            "rank": 811,
             "pct": 52.9
           },
           "angielski": {
@@ -12618,7 +12618,7 @@
         "mean": {
           "polski": {
             "score": 63.8312,
-            "rank": 883,
+            "rank": 884,
             "pct": 48.7
           },
           "matematyka": {
@@ -12718,7 +12718,7 @@
         "mean": {
           "polski": {
             "score": 65.6832,
-            "rank": 714,
+            "rank": 715,
             "pct": 58.5
           },
           "matematyka": {
@@ -12984,7 +12984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.073,
-            "rank": 1253,
+            "rank": 1254,
             "pct": 27.2
           },
           "matematyka": {
@@ -13294,12 +13294,12 @@
           },
           "angielski": {
             "score": 0.0148,
-            "rank": 835,
+            "rank": 836,
             "pct": 51.5
           },
           "composite_min": {
             "score": 0.0148,
-            "rank": 593,
+            "rank": 594,
             "pct": 65.5
           }
         }
@@ -13384,7 +13384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1836,
-            "rank": 343,
+            "rank": 344,
             "pct": 80.1
           },
           "matematyka": {
@@ -13467,7 +13467,7 @@
           },
           "matematyka": {
             "score": -1.4753,
-            "rank": 851,
+            "rank": 852,
             "pct": 50.5
           },
           "angielski": {
@@ -13477,7 +13477,7 @@
           },
           "composite_min": {
             "score": -1.4753,
-            "rank": 663,
+            "rank": 664,
             "pct": 61.5
           }
         },
@@ -14294,7 +14294,7 @@
           },
           "angielski": {
             "score": -0.1165,
-            "rank": 1146,
+            "rank": 1147,
             "pct": 33.4
           },
           "composite_min": {
@@ -14484,7 +14484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0552,
-            "rank": 725,
+            "rank": 726,
             "pct": 57.8
           },
           "matematyka": {
@@ -14589,7 +14589,7 @@
           },
           "matematyka": {
             "score": -0.0748,
-            "rank": 1002,
+            "rank": 1003,
             "pct": 41.7
           },
           "angielski": {
@@ -14684,7 +14684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0752,
-            "rank": 1265,
+            "rank": 1266,
             "pct": 26.5
           },
           "matematyka": {
@@ -14884,7 +14884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0774,
-            "rank": 652,
+            "rank": 653,
             "pct": 62.1
           },
           "matematyka": {
@@ -14984,7 +14984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0332,
-            "rank": 1110,
+            "rank": 1111,
             "pct": 35.5
           },
           "matematyka": {
@@ -15589,17 +15589,17 @@
           },
           "matematyka": {
             "score": -0.2203,
-            "rank": 1410,
+            "rank": 1411,
             "pct": 18.0
           },
           "angielski": {
             "score": -0.2051,
-            "rank": 1362,
+            "rank": 1363,
             "pct": 20.8
           },
           "composite_min": {
             "score": -0.2203,
-            "rank": 1274,
+            "rank": 1275,
             "pct": 25.9
           }
         }
@@ -15684,12 +15684,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.029,
-            "rank": 1098,
+            "rank": 1099,
             "pct": 36.2
           },
           "matematyka": {
             "score": -0.1711,
-            "rank": 1265,
+            "rank": 1266,
             "pct": 26.5
           },
           "angielski": {
@@ -15799,7 +15799,7 @@
           },
           "composite_min": {
             "score": -0.2298,
-            "rank": 1309,
+            "rank": 1310,
             "pct": 23.9
           }
         }
@@ -16123,7 +16123,7 @@
           },
           "matematyka": {
             "score": 40.3333,
-            "rank": 1483,
+            "rank": 1484,
             "pct": 13.8
           },
           "angielski": {
@@ -16133,7 +16133,7 @@
           },
           "composite_min": {
             "score": 40.3333,
-            "rank": 1474,
+            "rank": 1476,
             "pct": 14.2
           }
         },
@@ -16284,7 +16284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.122,
-            "rank": 500,
+            "rank": 501,
             "pct": 70.9
           },
           "matematyka": {
@@ -16762,7 +16762,7 @@
         "diff_mean": {
           "polski": {
             "score": 2.935,
-            "rank": 601,
+            "rank": 602,
             "pct": 65.1
           },
           "matematyka": {
@@ -16889,7 +16889,7 @@
           },
           "matematyka": {
             "score": 0.0305,
-            "rank": 719,
+            "rank": 720,
             "pct": 58.2
           },
           "angielski": {
@@ -17084,7 +17084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0043,
-            "rank": 984,
+            "rank": 985,
             "pct": 42.8
           },
           "matematyka": {
@@ -17099,7 +17099,7 @@
           },
           "composite_min": {
             "score": -0.0901,
-            "rank": 879,
+            "rank": 880,
             "pct": 48.9
           }
         }
@@ -17262,7 +17262,7 @@
         "diff_mean": {
           "polski": {
             "score": -4.8894,
-            "rank": 1247,
+            "rank": 1248,
             "pct": 27.5
           },
           "matematyka": {
@@ -17284,7 +17284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0759,
-            "rank": 1270,
+            "rank": 1271,
             "pct": 26.2
           },
           "matematyka": {
@@ -17584,7 +17584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0121,
-            "rank": 912,
+            "rank": 913,
             "pct": 47.0
           },
           "matematyka": {
@@ -18094,7 +18094,7 @@
           },
           "angielski": {
             "score": 0.0079,
-            "rank": 848,
+            "rank": 849,
             "pct": 50.7
           },
           "composite_min": {
@@ -18194,12 +18194,12 @@
           },
           "angielski": {
             "score": -0.3616,
-            "rank": 1631,
+            "rank": 1632,
             "pct": 5.2
           },
           "composite_min": {
             "score": -0.3616,
-            "rank": 1590,
+            "rank": 1591,
             "pct": 7.6
           }
         }
@@ -18284,7 +18284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0444,
-            "rank": 773,
+            "rank": 774,
             "pct": 55.1
           },
           "matematyka": {
@@ -18299,7 +18299,7 @@
           },
           "composite_min": {
             "score": 0.0444,
-            "rank": 531,
+            "rank": 533,
             "pct": 69.1
           }
         }
@@ -18389,7 +18389,7 @@
           },
           "matematyka": {
             "score": -0.3451,
-            "rank": 1612,
+            "rank": 1613,
             "pct": 6.3
           },
           "angielski": {
@@ -18399,7 +18399,7 @@
           },
           "composite_min": {
             "score": -0.3451,
-            "rank": 1574,
+            "rank": 1575,
             "pct": 8.5
           }
         }
@@ -18484,7 +18484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0746,
-            "rank": 663,
+            "rank": 664,
             "pct": 61.5
           },
           "matematyka": {
@@ -18689,7 +18689,7 @@
           },
           "matematyka": {
             "score": 0.1657,
-            "rank": 450,
+            "rank": 451,
             "pct": 73.8
           },
           "angielski": {
@@ -18699,7 +18699,7 @@
           },
           "composite_min": {
             "score": 0.1657,
-            "rank": 327,
+            "rank": 328,
             "pct": 81.0
           }
         }
@@ -19294,7 +19294,7 @@
           },
           "angielski": {
             "score": -0.0485,
-            "rank": 970,
+            "rank": 971,
             "pct": 43.6
           },
           "composite_min": {
@@ -19484,7 +19484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0167,
-            "rank": 887,
+            "rank": 888,
             "pct": 48.4
           },
           "matematyka": {
@@ -19499,7 +19499,7 @@
           },
           "composite_min": {
             "score": 0.0167,
-            "rank": 589,
+            "rank": 590,
             "pct": 65.8
           }
         }
@@ -19784,7 +19784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1469,
-            "rank": 432,
+            "rank": 433,
             "pct": 74.9
           },
           "matematyka": {
@@ -20584,7 +20584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.2397,
-            "rank": 1645,
+            "rank": 1647,
             "pct": 4.3
           },
           "matematyka": {
@@ -20794,12 +20794,12 @@
           },
           "angielski": {
             "score": 0.0301,
-            "rank": 809,
+            "rank": 810,
             "pct": 53.0
           },
           "composite_min": {
             "score": 0.0173,
-            "rank": 586,
+            "rank": 587,
             "pct": 65.9
           }
         }
@@ -20899,7 +20899,7 @@
           },
           "composite_min": {
             "score": -0.0451,
-            "rank": 745,
+            "rank": 746,
             "pct": 56.7
           }
         }
@@ -20984,7 +20984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1309,
-            "rank": 472,
+            "rank": 473,
             "pct": 72.6
           },
           "matematyka": {
@@ -20994,12 +20994,12 @@
           },
           "angielski": {
             "score": -0.1634,
-            "rank": 1257,
+            "rank": 1258,
             "pct": 26.9
           },
           "composite_min": {
             "score": -0.1634,
-            "rank": 1102,
+            "rank": 1103,
             "pct": 35.9
           }
         }
@@ -21284,12 +21284,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0292,
-            "rank": 834,
+            "rank": 835,
             "pct": 51.5
           },
           "matematyka": {
             "score": 0.0493,
-            "rank": 666,
+            "rank": 667,
             "pct": 61.3
           },
           "angielski": {
@@ -21384,7 +21384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1177,
-            "rank": 510,
+            "rank": 511,
             "pct": 70.3
           },
           "matematyka": {
@@ -21489,7 +21489,7 @@
           },
           "matematyka": {
             "score": 0.3389,
-            "rank": 236,
+            "rank": 237,
             "pct": 86.3
           },
           "angielski": {
@@ -21723,7 +21723,7 @@
           },
           "matematyka": {
             "score": 59.8,
-            "rank": 515,
+            "rank": 516,
             "pct": 70.1
           },
           "angielski": {
@@ -21884,7 +21884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0038,
-            "rank": 979,
+            "rank": 980,
             "pct": 43.1
           },
           "matematyka": {
@@ -21989,7 +21989,7 @@
           },
           "matematyka": {
             "score": -0.1344,
-            "rank": 1160,
+            "rank": 1161,
             "pct": 32.6
           },
           "angielski": {
@@ -21999,7 +21999,7 @@
           },
           "composite_min": {
             "score": -0.1344,
-            "rank": 1019,
+            "rank": 1020,
             "pct": 40.8
           }
         }
@@ -22689,7 +22689,7 @@
           },
           "matematyka": {
             "score": -0.0582,
-            "rank": 953,
+            "rank": 954,
             "pct": 44.6
           },
           "angielski": {
@@ -23494,7 +23494,7 @@
           },
           "angielski": {
             "score": -0.2497,
-            "rank": 1473,
+            "rank": 1474,
             "pct": 14.4
           },
           "composite_min": {
@@ -23723,7 +23723,7 @@
           },
           "matematyka": {
             "score": 55.374,
-            "rank": 715,
+            "rank": 716,
             "pct": 58.4
           },
           "angielski": {
@@ -23789,17 +23789,17 @@
           },
           "matematyka": {
             "score": 0.0321,
-            "rank": 714,
+            "rank": 715,
             "pct": 58.5
           },
           "angielski": {
             "score": -0.1521,
-            "rank": 1235,
+            "rank": 1236,
             "pct": 28.2
           },
           "composite_min": {
             "score": -0.1521,
-            "rank": 1071,
+            "rank": 1072,
             "pct": 37.7
           }
         }
@@ -23889,7 +23889,7 @@
           },
           "matematyka": {
             "score": -0.1601,
-            "rank": 1233,
+            "rank": 1234,
             "pct": 28.3
           },
           "angielski": {
@@ -24084,7 +24084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1447,
-            "rank": 1516,
+            "rank": 1517,
             "pct": 11.9
           },
           "matematyka": {
@@ -24094,7 +24094,7 @@
           },
           "angielski": {
             "score": 0.0058,
-            "rank": 855,
+            "rank": 856,
             "pct": 50.3
           },
           "composite_min": {
@@ -24289,7 +24289,7 @@
           },
           "matematyka": {
             "score": 0.0142,
-            "rank": 753,
+            "rank": 754,
             "pct": 56.2
           },
           "angielski": {
@@ -24884,12 +24884,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0643,
-            "rank": 696,
+            "rank": 697,
             "pct": 59.5
           },
           "matematyka": {
             "score": 0.1996,
-            "rank": 403,
+            "rank": 404,
             "pct": 76.6
           },
           "angielski": {
@@ -25084,12 +25084,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1157,
-            "rank": 1425,
+            "rank": 1426,
             "pct": 17.2
           },
           "matematyka": {
             "score": -0.2162,
-            "rank": 1402,
+            "rank": 1403,
             "pct": 18.5
           },
           "angielski": {
@@ -25199,7 +25199,7 @@
           },
           "composite_min": {
             "score": 0.16,
-            "rank": 342,
+            "rank": 343,
             "pct": 80.1
           }
         }
@@ -25299,7 +25299,7 @@
           },
           "composite_min": {
             "score": 0.0821,
-            "rank": 460,
+            "rank": 461,
             "pct": 73.3
           }
         }
@@ -25399,7 +25399,7 @@
           },
           "composite_min": {
             "score": 0.2417,
-            "rank": 220,
+            "rank": 221,
             "pct": 87.2
           }
         }
@@ -26399,7 +26399,7 @@
           },
           "composite_min": {
             "score": 0.0444,
-            "rank": 531,
+            "rank": 532,
             "pct": 69.1
           }
         }
@@ -26589,7 +26589,7 @@
           },
           "matematyka": {
             "score": 0.1949,
-            "rank": 411,
+            "rank": 412,
             "pct": 76.1
           },
           "angielski": {
@@ -26884,7 +26884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.107,
-            "rank": 549,
+            "rank": 550,
             "pct": 68.1
           },
           "matematyka": {
@@ -26984,7 +26984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0336,
-            "rank": 1113,
+            "rank": 1114,
             "pct": 35.3
           },
           "matematyka": {
@@ -27089,7 +27089,7 @@
           },
           "matematyka": {
             "score": 0.2108,
-            "rank": 387,
+            "rank": 388,
             "pct": 77.5
           },
           "angielski": {
@@ -27684,7 +27684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.151,
-            "rank": 1532,
+            "rank": 1533,
             "pct": 10.9
           },
           "matematyka": {
@@ -28384,7 +28384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.048,
-            "rank": 758,
+            "rank": 759,
             "pct": 55.9
           },
           "matematyka": {
@@ -28589,17 +28589,17 @@
           },
           "matematyka": {
             "score": -0.2592,
-            "rank": 1491,
+            "rank": 1492,
             "pct": 13.3
           },
           "angielski": {
             "score": -0.263,
-            "rank": 1496,
+            "rank": 1497,
             "pct": 13.0
           },
           "composite_min": {
             "score": -0.263,
-            "rank": 1401,
+            "rank": 1402,
             "pct": 18.5
           }
         }
@@ -28828,7 +28828,7 @@
           },
           "angielski": {
             "score": 57.3768,
-            "rank": 1181,
+            "rank": 1182,
             "pct": 31.3
           },
           "composite_min": {
@@ -28884,7 +28884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0862,
-            "rank": 1317,
+            "rank": 1318,
             "pct": 23.4
           },
           "matematyka": {
@@ -29128,7 +29128,7 @@
           },
           "angielski": {
             "score": 62.4451,
-            "rank": 977,
+            "rank": 978,
             "pct": 43.2
           },
           "composite_min": {
@@ -29184,7 +29184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0174,
-            "rank": 1046,
+            "rank": 1048,
             "pct": 39.1
           },
           "matematyka": {
@@ -29494,7 +29494,7 @@
           },
           "angielski": {
             "score": 0.5536,
-            "rank": 246,
+            "rank": 247,
             "pct": 85.7
           },
           "composite_min": {
@@ -29684,7 +29684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0988,
-            "rank": 582,
+            "rank": 583,
             "pct": 66.2
           },
           "matematyka": {
@@ -29999,7 +29999,7 @@
           },
           "composite_min": {
             "score": -0.0867,
-            "rank": 869,
+            "rank": 870,
             "pct": 49.5
           }
         }
@@ -30194,12 +30194,12 @@
           },
           "angielski": {
             "score": -0.2549,
-            "rank": 1482,
+            "rank": 1483,
             "pct": 13.8
           },
           "composite_min": {
             "score": -0.2549,
-            "rank": 1374,
+            "rank": 1375,
             "pct": 20.1
           }
         }
@@ -30294,12 +30294,12 @@
           },
           "angielski": {
             "score": -0.2668,
-            "rank": 1505,
+            "rank": 1506,
             "pct": 12.5
           },
           "composite_min": {
             "score": -0.2668,
-            "rank": 1418,
+            "rank": 1419,
             "pct": 17.6
           }
         }
@@ -30594,7 +30594,7 @@
           },
           "angielski": {
             "score": 0.4501,
-            "rank": 331,
+            "rank": 332,
             "pct": 80.8
           },
           "composite_min": {
@@ -30784,7 +30784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.047,
-            "rank": 766,
+            "rank": 767,
             "pct": 55.5
           },
           "matematyka": {
@@ -30884,7 +30884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0606,
-            "rank": 1208,
+            "rank": 1209,
             "pct": 29.8
           },
           "matematyka": {
@@ -30989,7 +30989,7 @@
           },
           "matematyka": {
             "score": 0.3879,
-            "rank": 194,
+            "rank": 195,
             "pct": 88.7
           },
           "angielski": {
@@ -31084,7 +31084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0547,
-            "rank": 729,
+            "rank": 731,
             "pct": 57.6
           },
           "matematyka": {
@@ -31489,7 +31489,7 @@
           },
           "matematyka": {
             "score": 0.2055,
-            "rank": 394,
+            "rank": 395,
             "pct": 77.1
           },
           "angielski": {
@@ -32384,7 +32384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1545,
-            "rank": 415,
+            "rank": 416,
             "pct": 75.9
           },
           "matematyka": {
@@ -32494,7 +32494,7 @@
           },
           "angielski": {
             "score": -0.0851,
-            "rank": 1064,
+            "rank": 1065,
             "pct": 38.1
           },
           "composite_min": {
@@ -32989,7 +32989,7 @@
           },
           "matematyka": {
             "score": 0.0242,
-            "rank": 733,
+            "rank": 734,
             "pct": 57.4
           },
           "angielski": {
@@ -33084,7 +33084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0684,
-            "rank": 1237,
+            "rank": 1238,
             "pct": 28.1
           },
           "matematyka": {
@@ -33884,7 +33884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0479,
-            "rank": 1163,
+            "rank": 1164,
             "pct": 32.4
           },
           "matematyka": {
@@ -34084,7 +34084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0076,
-            "rank": 931,
+            "rank": 932,
             "pct": 45.9
           },
           "matematyka": {
@@ -34184,7 +34184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0907,
-            "rank": 1337,
+            "rank": 1338,
             "pct": 22.3
           },
           "matematyka": {
@@ -34394,7 +34394,7 @@
           },
           "angielski": {
             "score": -0.2204,
-            "rank": 1393,
+            "rank": 1394,
             "pct": 19.0
           },
           "composite_min": {
@@ -34494,7 +34494,7 @@
           },
           "angielski": {
             "score": -0.0733,
-            "rank": 1033,
+            "rank": 1034,
             "pct": 39.9
           },
           "composite_min": {
@@ -34894,12 +34894,12 @@
           },
           "angielski": {
             "score": -0.2799,
-            "rank": 1527,
+            "rank": 1528,
             "pct": 11.2
           },
           "composite_min": {
             "score": -0.2799,
-            "rank": 1442,
+            "rank": 1443,
             "pct": 16.2
           }
         }
@@ -34999,7 +34999,7 @@
           },
           "composite_min": {
             "score": 0.3189,
-            "rank": 132,
+            "rank": 133,
             "pct": 92.3
           }
         }
@@ -35094,7 +35094,7 @@
           },
           "angielski": {
             "score": 0.4409,
-            "rank": 341,
+            "rank": 342,
             "pct": 80.2
           },
           "composite_min": {
@@ -35199,7 +35199,7 @@
           },
           "composite_min": {
             "score": -0.1578,
-            "rank": 1084,
+            "rank": 1085,
             "pct": 37.0
           }
         }
@@ -36284,7 +36284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0472,
-            "rank": 764,
+            "rank": 765,
             "pct": 55.6
           },
           "matematyka": {
@@ -36299,7 +36299,7 @@
           },
           "composite_min": {
             "score": 0.0472,
-            "rank": 524,
+            "rank": 525,
             "pct": 69.5
           }
         }
@@ -36684,7 +36684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1473,
-            "rank": 1526,
+            "rank": 1527,
             "pct": 11.3
           },
           "matematyka": {
@@ -37094,7 +37094,7 @@
           },
           "angielski": {
             "score": 0.5846,
-            "rank": 219,
+            "rank": 220,
             "pct": 87.3
           },
           "composite_min": {
@@ -37399,7 +37399,7 @@
           },
           "composite_min": {
             "score": -0.0133,
-            "rank": 657,
+            "rank": 658,
             "pct": 61.8
           }
         }
@@ -37589,7 +37589,7 @@
           },
           "matematyka": {
             "score": -0.2326,
-            "rank": 1438,
+            "rank": 1439,
             "pct": 16.4
           },
           "angielski": {
@@ -37684,7 +37684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0595,
-            "rank": 706,
+            "rank": 707,
             "pct": 59.0
           },
           "matematyka": {
@@ -37884,7 +37884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1151,
-            "rank": 522,
+            "rank": 523,
             "pct": 69.7
           },
           "matematyka": {
@@ -37984,7 +37984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0703,
-            "rank": 677,
+            "rank": 679,
             "pct": 60.6
           },
           "matematyka": {
@@ -37994,7 +37994,7 @@
           },
           "angielski": {
             "score": -0.0838,
-            "rank": 1059,
+            "rank": 1060,
             "pct": 38.4
           },
           "composite_min": {
@@ -38084,7 +38084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0124,
-            "rank": 1023,
+            "rank": 1024,
             "pct": 40.5
           },
           "matematyka": {
@@ -38099,7 +38099,7 @@
           },
           "composite_min": {
             "score": -0.2662,
-            "rank": 1414,
+            "rank": 1415,
             "pct": 17.8
           }
         }
@@ -38284,7 +38284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0063,
-            "rank": 934,
+            "rank": 937,
             "pct": 45.6
           },
           "matematyka": {
@@ -38972,7 +38972,7 @@
           },
           "angielski": {
             "score": -0.8288,
-            "rank": 836,
+            "rank": 837,
             "pct": 51.4
           },
           "composite_min": {
@@ -39084,7 +39084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0832,
-            "rank": 1305,
+            "rank": 1306,
             "pct": 24.1
           },
           "matematyka": {
@@ -39194,7 +39194,7 @@
           },
           "angielski": {
             "score": -0.0956,
-            "rank": 1092,
+            "rank": 1093,
             "pct": 36.5
           },
           "composite_min": {
@@ -39889,7 +39889,7 @@
           },
           "matematyka": {
             "score": 0.0024,
-            "rank": 786,
+            "rank": 787,
             "pct": 54.3
           },
           "angielski": {
@@ -40289,7 +40289,7 @@
           },
           "matematyka": {
             "score": 0.0611,
-            "rank": 635,
+            "rank": 636,
             "pct": 63.1
           },
           "angielski": {
@@ -40589,7 +40589,7 @@
           },
           "matematyka": {
             "score": 0.142,
-            "rank": 482,
+            "rank": 483,
             "pct": 72.0
           },
           "angielski": {
@@ -40884,7 +40884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0547,
-            "rank": 729,
+            "rank": 730,
             "pct": 57.6
           },
           "matematyka": {
@@ -41184,7 +41184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.4074,
-            "rank": 81,
+            "rank": 82,
             "pct": 95.3
           },
           "matematyka": {
@@ -41199,7 +41199,7 @@
           },
           "composite_min": {
             "score": 0.4074,
-            "rank": 70,
+            "rank": 71,
             "pct": 95.9
           }
         }
@@ -41399,7 +41399,7 @@
           },
           "composite_min": {
             "score": -0.1687,
-            "rank": 1120,
+            "rank": 1121,
             "pct": 34.9
           }
         }
@@ -42023,7 +42023,7 @@
           },
           "matematyka": {
             "score": 46.8498,
-            "rank": 1179,
+            "rank": 1180,
             "pct": 31.5
           },
           "angielski": {
@@ -42033,7 +42033,7 @@
           },
           "composite_min": {
             "score": 46.8498,
-            "rank": 1161,
+            "rank": 1162,
             "pct": 32.5
           }
         },
@@ -42494,12 +42494,12 @@
           },
           "angielski": {
             "score": -0.1711,
-            "rank": 1278,
+            "rank": 1279,
             "pct": 25.7
           },
           "composite_min": {
             "score": -0.2398,
-            "rank": 1341,
+            "rank": 1342,
             "pct": 22.0
           }
         }
@@ -42599,7 +42599,7 @@
           },
           "composite_min": {
             "score": 0.0402,
-            "rank": 544,
+            "rank": 545,
             "pct": 68.4
           }
         }
@@ -42994,12 +42994,12 @@
           },
           "angielski": {
             "score": -0.2707,
-            "rank": 1510,
+            "rank": 1511,
             "pct": 12.2
           },
           "composite_min": {
             "score": -0.2707,
-            "rank": 1425,
+            "rank": 1426,
             "pct": 17.2
           }
         }
@@ -43984,12 +43984,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0741,
-            "rank": 1257,
+            "rank": 1258,
             "pct": 26.9
           },
           "matematyka": {
             "score": -0.1294,
-            "rank": 1147,
+            "rank": 1148,
             "pct": 33.3
           },
           "angielski": {
@@ -44184,7 +44184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0703,
-            "rank": 677,
+            "rank": 678,
             "pct": 60.6
           },
           "matematyka": {
@@ -44584,12 +44584,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0497,
-            "rank": 1168,
+            "rank": 1169,
             "pct": 32.1
           },
           "matematyka": {
             "score": 0.036,
-            "rank": 705,
+            "rank": 706,
             "pct": 59.0
           },
           "angielski": {
@@ -44599,7 +44599,7 @@
           },
           "composite_min": {
             "score": -0.0497,
-            "rank": 770,
+            "rank": 772,
             "pct": 55.2
           }
         }
@@ -44784,7 +44784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0576,
-            "rank": 714,
+            "rank": 715,
             "pct": 58.5
           },
           "matematyka": {
@@ -45399,7 +45399,7 @@
           },
           "composite_min": {
             "score": -0.1207,
-            "rank": 991,
+            "rank": 992,
             "pct": 42.4
           }
         }
@@ -45694,12 +45694,12 @@
           },
           "angielski": {
             "score": -0.2331,
-            "rank": 1429,
+            "rank": 1430,
             "pct": 16.9
           },
           "composite_min": {
             "score": -0.2331,
-            "rank": 1320,
+            "rank": 1321,
             "pct": 23.3
           }
         }
@@ -46099,7 +46099,7 @@
           },
           "composite_min": {
             "score": 0.1696,
-            "rank": 318,
+            "rank": 319,
             "pct": 81.5
           }
         }
@@ -46289,7 +46289,7 @@
           },
           "matematyka": {
             "score": 0.2423,
-            "rank": 340,
+            "rank": 341,
             "pct": 80.2
           },
           "angielski": {
@@ -46689,7 +46689,7 @@
           },
           "matematyka": {
             "score": -0.1167,
-            "rank": 1126,
+            "rank": 1127,
             "pct": 34.5
           },
           "angielski": {
@@ -46999,7 +46999,7 @@
           },
           "composite_min": {
             "score": -0.0926,
-            "rank": 891,
+            "rank": 892,
             "pct": 48.2
           }
         }
@@ -47294,7 +47294,7 @@
           },
           "angielski": {
             "score": -0.1126,
-            "rank": 1136,
+            "rank": 1137,
             "pct": 34.0
           },
           "composite_min": {
@@ -47794,7 +47794,7 @@
           },
           "angielski": {
             "score": -0.1403,
-            "rank": 1203,
+            "rank": 1204,
             "pct": 30.1
           },
           "composite_min": {
@@ -48189,7 +48189,7 @@
           },
           "matematyka": {
             "score": 0.6076,
-            "rank": 63,
+            "rank": 64,
             "pct": 96.3
           },
           "angielski": {
@@ -48784,7 +48784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0587,
-            "rank": 1198,
+            "rank": 1199,
             "pct": 30.3
           },
           "matematyka": {
@@ -48884,7 +48884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0867,
-            "rank": 1322,
+            "rank": 1323,
             "pct": 23.1
           },
           "matematyka": {
@@ -49794,7 +49794,7 @@
           },
           "angielski": {
             "score": 0.1522,
-            "rank": 622,
+            "rank": 623,
             "pct": 63.8
           },
           "composite_min": {
@@ -50384,7 +50384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0136,
-            "rank": 903,
+            "rank": 905,
             "pct": 47.4
           },
           "matematyka": {
@@ -50484,7 +50484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0194,
-            "rank": 1054,
+            "rank": 1055,
             "pct": 38.7
           },
           "matematyka": {
@@ -51084,7 +51084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.2229,
-            "rank": 1630,
+            "rank": 1631,
             "pct": 5.2
           },
           "matematyka": {
@@ -51284,7 +51284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0311,
-            "rank": 824,
+            "rank": 825,
             "pct": 52.1
           },
           "matematyka": {
@@ -51389,12 +51389,12 @@
           },
           "matematyka": {
             "score": -0.2718,
-            "rank": 1520,
+            "rank": 1521,
             "pct": 11.6
           },
           "angielski": {
             "score": -0.2584,
-            "rank": 1490,
+            "rank": 1491,
             "pct": 13.4
           },
           "composite_min": {
@@ -51689,7 +51689,7 @@
           },
           "matematyka": {
             "score": -0.1594,
-            "rank": 1230,
+            "rank": 1231,
             "pct": 28.5
           },
           "angielski": {
@@ -52084,7 +52084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0078,
-            "rank": 929,
+            "rank": 930,
             "pct": 46.0
           },
           "matematyka": {
@@ -52989,7 +52989,7 @@
           },
           "matematyka": {
             "score": -0.0458,
-            "rank": 910,
+            "rank": 911,
             "pct": 47.1
           },
           "angielski": {
@@ -53594,7 +53594,7 @@
           },
           "angielski": {
             "score": -0.1392,
-            "rank": 1199,
+            "rank": 1200,
             "pct": 30.3
           },
           "composite_min": {
@@ -53694,7 +53694,7 @@
           },
           "angielski": {
             "score": -0.1376,
-            "rank": 1193,
+            "rank": 1194,
             "pct": 30.6
           },
           "composite_min": {
@@ -53999,7 +53999,7 @@
           },
           "composite_min": {
             "score": -0.1876,
-            "rank": 1174,
+            "rank": 1175,
             "pct": 31.7
           }
         }
@@ -54089,7 +54089,7 @@
           },
           "matematyka": {
             "score": 0.0992,
-            "rank": 551,
+            "rank": 552,
             "pct": 68.0
           },
           "angielski": {
@@ -54099,7 +54099,7 @@
           },
           "composite_min": {
             "score": -0.101,
-            "rank": 923,
+            "rank": 924,
             "pct": 46.3
           }
         }
@@ -54194,7 +54194,7 @@
           },
           "angielski": {
             "score": -0.1997,
-            "rank": 1342,
+            "rank": 1343,
             "pct": 22.0
           },
           "composite_min": {
@@ -54284,7 +54284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0208,
-            "rank": 1067,
+            "rank": 1068,
             "pct": 38.0
           },
           "matematyka": {
@@ -54494,12 +54494,12 @@
           },
           "angielski": {
             "score": -0.2649,
-            "rank": 1502,
+            "rank": 1503,
             "pct": 12.7
           },
           "composite_min": {
             "score": -0.2649,
-            "rank": 1409,
+            "rank": 1410,
             "pct": 18.1
           }
         }
@@ -54699,7 +54699,7 @@
           },
           "composite_min": {
             "score": -0.2468,
-            "rank": 1365,
+            "rank": 1366,
             "pct": 20.6
           }
         }
@@ -55294,7 +55294,7 @@
           },
           "angielski": {
             "score": 0.3348,
-            "rank": 431,
+            "rank": 432,
             "pct": 74.9
           },
           "composite_min": {
@@ -55484,12 +55484,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0406,
-            "rank": 1132,
+            "rank": 1134,
             "pct": 34.1
           },
           "matematyka": {
             "score": -0.0786,
-            "rank": 1012,
+            "rank": 1013,
             "pct": 41.2
           },
           "angielski": {
@@ -55499,7 +55499,7 @@
           },
           "composite_min": {
             "score": -0.0786,
-            "rank": 851,
+            "rank": 852,
             "pct": 50.5
           }
         }
@@ -55584,7 +55584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0406,
-            "rank": 1132,
+            "rank": 1133,
             "pct": 34.2
           },
           "matematyka": {
@@ -55794,7 +55794,7 @@
           },
           "angielski": {
             "score": 0.1413,
-            "rank": 639,
+            "rank": 640,
             "pct": 62.8
           },
           "composite_min": {
@@ -55894,12 +55894,12 @@
           },
           "angielski": {
             "score": -0.221,
-            "rank": 1399,
+            "rank": 1400,
             "pct": 18.7
           },
           "composite_min": {
             "score": -0.221,
-            "rank": 1281,
+            "rank": 1282,
             "pct": 25.5
           }
         }
@@ -56389,7 +56389,7 @@
           },
           "matematyka": {
             "score": -0.0883,
-            "rank": 1035,
+            "rank": 1037,
             "pct": 39.8
           },
           "angielski": {
@@ -56399,7 +56399,7 @@
           },
           "composite_min": {
             "score": -0.0883,
-            "rank": 872,
+            "rank": 873,
             "pct": 49.3
           }
         }
@@ -56489,7 +56489,7 @@
           },
           "matematyka": {
             "score": -0.1588,
-            "rank": 1228,
+            "rank": 1229,
             "pct": 28.6
           },
           "angielski": {
@@ -56884,7 +56884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0392,
-            "rank": 1127,
+            "rank": 1128,
             "pct": 34.5
           },
           "matematyka": {
@@ -56984,7 +56984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0467,
-            "rank": 768,
+            "rank": 769,
             "pct": 55.3
           },
           "matematyka": {
@@ -57594,7 +57594,7 @@
           },
           "angielski": {
             "score": -0.1935,
-            "rank": 1324,
+            "rank": 1325,
             "pct": 23.0
           },
           "composite_min": {
@@ -57884,7 +57884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0853,
-            "rank": 623,
+            "rank": 624,
             "pct": 63.8
           },
           "matematyka": {
@@ -58184,7 +58184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.2931,
-            "rank": 1674,
+            "rank": 1675,
             "pct": 2.7
           },
           "matematyka": {
@@ -58199,7 +58199,7 @@
           },
           "composite_min": {
             "score": -0.2931,
-            "rank": 1473,
+            "rank": 1474,
             "pct": 14.4
           }
         }
@@ -58589,7 +58589,7 @@
           },
           "matematyka": {
             "score": -0.0103,
-            "rank": 820,
+            "rank": 821,
             "pct": 52.3
           },
           "angielski": {
@@ -58989,7 +58989,7 @@
           },
           "matematyka": {
             "score": -0.0928,
-            "rank": 1051,
+            "rank": 1052,
             "pct": 38.9
           },
           "angielski": {
@@ -58999,7 +58999,7 @@
           },
           "composite_min": {
             "score": -0.0928,
-            "rank": 894,
+            "rank": 895,
             "pct": 48.0
           }
         }
@@ -60189,7 +60189,7 @@
           },
           "matematyka": {
             "score": -0.1793,
-            "rank": 1289,
+            "rank": 1290,
             "pct": 25.1
           },
           "angielski": {
@@ -60284,7 +60284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1025,
-            "rank": 1385,
+            "rank": 1386,
             "pct": 19.5
           },
           "matematyka": {
@@ -60394,12 +60394,12 @@
           },
           "angielski": {
             "score": -0.3053,
-            "rank": 1570,
+            "rank": 1571,
             "pct": 8.7
           },
           "composite_min": {
             "score": -0.3053,
-            "rank": 1504,
+            "rank": 1505,
             "pct": 12.6
           }
         }
@@ -60599,7 +60599,7 @@
           },
           "composite_min": {
             "score": -0.1715,
-            "rank": 1126,
+            "rank": 1127,
             "pct": 34.5
           }
         }
@@ -60684,7 +60684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.3076,
-            "rank": 164,
+            "rank": 165,
             "pct": 90.5
           },
           "matematyka": {
@@ -60699,7 +60699,7 @@
           },
           "composite_min": {
             "score": 0.3076,
-            "rank": 149,
+            "rank": 150,
             "pct": 91.3
           }
         }
@@ -61199,7 +61199,7 @@
           },
           "composite_min": {
             "score": 0.0877,
-            "rank": 453,
+            "rank": 454,
             "pct": 73.7
           }
         }
@@ -61384,7 +61384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0651,
-            "rank": 693,
+            "rank": 694,
             "pct": 59.7
           },
           "matematyka": {
@@ -62189,7 +62189,7 @@
           },
           "matematyka": {
             "score": 0.248,
-            "rank": 331,
+            "rank": 332,
             "pct": 80.8
           },
           "angielski": {
@@ -62584,7 +62584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0234,
-            "rank": 1074,
+            "rank": 1075,
             "pct": 37.6
           },
           "matematyka": {
@@ -62894,7 +62894,7 @@
           },
           "angielski": {
             "score": -0.1365,
-            "rank": 1188,
+            "rank": 1189,
             "pct": 30.9
           },
           "composite_min": {
@@ -62999,7 +62999,7 @@
           },
           "composite_min": {
             "score": 0.113,
-            "rank": 406,
+            "rank": 407,
             "pct": 76.4
           }
         }
@@ -63294,7 +63294,7 @@
           },
           "angielski": {
             "score": -0.0026,
-            "rank": 869,
+            "rank": 870,
             "pct": 49.5
           },
           "composite_min": {
@@ -63384,7 +63384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1068,
-            "rank": 1398,
+            "rank": 1399,
             "pct": 18.7
           },
           "matematyka": {
@@ -63489,7 +63489,7 @@
           },
           "matematyka": {
             "score": 0.2611,
-            "rank": 314,
+            "rank": 315,
             "pct": 81.7
           },
           "angielski": {
@@ -63784,7 +63784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0045,
-            "rank": 940,
+            "rank": 941,
             "pct": 45.3
           },
           "matematyka": {
@@ -64118,7 +64118,7 @@
         "mean": {
           "polski": {
             "score": 67.0083,
-            "rank": 615,
+            "rank": 616,
             "pct": 64.2
           },
           "matematyka": {
@@ -64189,7 +64189,7 @@
           },
           "matematyka": {
             "score": -0.0944,
-            "rank": 1057,
+            "rank": 1058,
             "pct": 38.5
           },
           "angielski": {
@@ -64299,7 +64299,7 @@
           },
           "composite_min": {
             "score": -0.2433,
-            "rank": 1352,
+            "rank": 1353,
             "pct": 21.4
           }
         }
@@ -64589,7 +64589,7 @@
           },
           "matematyka": {
             "score": 0.0964,
-            "rank": 561,
+            "rank": 562,
             "pct": 67.4
           },
           "angielski": {
@@ -64684,7 +64684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0044,
-            "rank": 986,
+            "rank": 987,
             "pct": 42.7
           },
           "matematyka": {
@@ -64994,7 +64994,7 @@
           },
           "angielski": {
             "score": -0.142,
-            "rank": 1207,
+            "rank": 1208,
             "pct": 29.8
           },
           "composite_min": {
@@ -65184,12 +65184,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.036,
-            "rank": 808,
+            "rank": 809,
             "pct": 53.0
           },
           "matematyka": {
             "score": -0.2422,
-            "rank": 1457,
+            "rank": 1458,
             "pct": 15.3
           },
           "angielski": {
@@ -65294,12 +65294,12 @@
           },
           "angielski": {
             "score": -0.2431,
-            "rank": 1458,
+            "rank": 1459,
             "pct": 15.2
           },
           "composite_min": {
             "score": -0.2431,
-            "rank": 1350,
+            "rank": 1351,
             "pct": 21.5
           }
         }
@@ -65384,7 +65384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0992,
-            "rank": 577,
+            "rank": 578,
             "pct": 66.5
           },
           "matematyka": {
@@ -65694,7 +65694,7 @@
           },
           "angielski": {
             "score": -0.0052,
-            "rank": 876,
+            "rank": 877,
             "pct": 49.1
           },
           "composite_min": {
@@ -66399,7 +66399,7 @@
           },
           "composite_min": {
             "score": -0.3221,
-            "rank": 1541,
+            "rank": 1542,
             "pct": 10.4
           }
         }
@@ -66684,7 +66684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0138,
-            "rank": 900,
+            "rank": 901,
             "pct": 47.7
           },
           "matematyka": {
@@ -66799,7 +66799,7 @@
           },
           "composite_min": {
             "score": 0.1067,
-            "rank": 419,
+            "rank": 420,
             "pct": 75.6
           }
         }
@@ -66984,7 +66984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.2697,
-            "rank": 218,
+            "rank": 219,
             "pct": 87.3
           },
           "matematyka": {
@@ -66999,7 +66999,7 @@
           },
           "composite_min": {
             "score": 0.2697,
-            "rank": 191,
+            "rank": 192,
             "pct": 88.9
           }
         }
@@ -67299,7 +67299,7 @@
           },
           "composite_min": {
             "score": -0.011,
-            "rank": 650,
+            "rank": 651,
             "pct": 62.2
           }
         }
@@ -68184,7 +68184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0661,
-            "rank": 690,
+            "rank": 691,
             "pct": 59.9
           },
           "matematyka": {
@@ -68494,7 +68494,7 @@
           },
           "angielski": {
             "score": 0.8963,
-            "rank": 32,
+            "rank": 33,
             "pct": 98.1
           },
           "composite_min": {
@@ -68589,7 +68589,7 @@
           },
           "matematyka": {
             "score": 0.0487,
-            "rank": 670,
+            "rank": 671,
             "pct": 61.0
           },
           "angielski": {
@@ -68599,7 +68599,7 @@
           },
           "composite_min": {
             "score": 0.0487,
-            "rank": 519,
+            "rank": 520,
             "pct": 69.8
           }
         }
@@ -69384,7 +69384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.4306,
-            "rank": 55,
+            "rank": 56,
             "pct": 96.8
           },
           "matematyka": {
@@ -69399,7 +69399,7 @@
           },
           "composite_min": {
             "score": 0.4306,
-            "rank": 48,
+            "rank": 49,
             "pct": 97.2
           }
         }
@@ -69584,7 +69584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1455,
-            "rank": 1520,
+            "rank": 1521,
             "pct": 11.6
           },
           "matematyka": {
@@ -69989,7 +69989,7 @@
           },
           "matematyka": {
             "score": -0.0516,
-            "rank": 929,
+            "rank": 930,
             "pct": 46.0
           },
           "angielski": {
@@ -69999,7 +69999,7 @@
           },
           "composite_min": {
             "score": -0.0516,
-            "rank": 778,
+            "rank": 779,
             "pct": 54.8
           }
         }
@@ -70389,7 +70389,7 @@
           },
           "matematyka": {
             "score": -0.2774,
-            "rank": 1525,
+            "rank": 1526,
             "pct": 11.3
           },
           "angielski": {
@@ -70399,7 +70399,7 @@
           },
           "composite_min": {
             "score": -0.2774,
-            "rank": 1436,
+            "rank": 1437,
             "pct": 16.5
           }
         }
@@ -70484,7 +70484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0248,
-            "rank": 854,
+            "rank": 855,
             "pct": 50.3
           },
           "matematyka": {
@@ -70794,12 +70794,12 @@
           },
           "angielski": {
             "score": 0.0138,
-            "rank": 839,
+            "rank": 840,
             "pct": 51.2
           },
           "composite_min": {
             "score": -0.0913,
-            "rank": 886,
+            "rank": 887,
             "pct": 48.5
           }
         }
@@ -70894,7 +70894,7 @@
           },
           "angielski": {
             "score": -0.2616,
-            "rank": 1494,
+            "rank": 1495,
             "pct": 13.1
           },
           "composite_min": {
@@ -71099,7 +71099,7 @@
           },
           "composite_min": {
             "score": -0.1418,
-            "rank": 1041,
+            "rank": 1042,
             "pct": 39.5
           }
         }
@@ -71184,7 +71184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0174,
-            "rank": 1046,
+            "rank": 1047,
             "pct": 39.2
           },
           "matematyka": {
@@ -71484,7 +71484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1341,
-            "rank": 1483,
+            "rank": 1484,
             "pct": 13.8
           },
           "matematyka": {
@@ -71584,7 +71584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.3174,
-            "rank": 147,
+            "rank": 148,
             "pct": 91.5
           },
           "matematyka": {
@@ -71599,7 +71599,7 @@
           },
           "composite_min": {
             "score": 0.3174,
-            "rank": 135,
+            "rank": 136,
             "pct": 92.2
           }
         }
@@ -71694,7 +71694,7 @@
           },
           "angielski": {
             "score": 0.3753,
-            "rank": 397,
+            "rank": 399,
             "pct": 76.9
           },
           "composite_min": {
@@ -71784,7 +71784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1613,
-            "rank": 403,
+            "rank": 405,
             "pct": 76.5
           },
           "matematyka": {
@@ -71799,7 +71799,7 @@
           },
           "composite_min": {
             "score": 0.1613,
-            "rank": 337,
+            "rank": 339,
             "pct": 80.3
           }
         }
@@ -72284,7 +72284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1041,
-            "rank": 565,
+            "rank": 567,
             "pct": 67.1
           },
           "matematyka": {
@@ -72484,7 +72484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0372,
-            "rank": 801,
+            "rank": 802,
             "pct": 53.4
           },
           "matematyka": {
@@ -72784,7 +72784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0464,
-            "rank": 1156,
+            "rank": 1157,
             "pct": 32.8
           },
           "matematyka": {
@@ -72884,7 +72884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0488,
-            "rank": 752,
+            "rank": 753,
             "pct": 56.3
           },
           "matematyka": {
@@ -73484,7 +73484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0113,
-            "rank": 1017,
+            "rank": 1018,
             "pct": 40.9
           },
           "matematyka": {
@@ -73684,7 +73684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0074,
-            "rank": 1001,
+            "rank": 1002,
             "pct": 41.8
           },
           "matematyka": {
@@ -73789,7 +73789,7 @@
           },
           "matematyka": {
             "score": -0.2085,
-            "rank": 1379,
+            "rank": 1380,
             "pct": 19.8
           },
           "angielski": {
@@ -74184,7 +74184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1007,
-            "rank": 1372,
+            "rank": 1373,
             "pct": 20.2
           },
           "matematyka": {
@@ -74223,7 +74223,7 @@
           },
           "matematyka": {
             "score": 49.2667,
-            "rank": 1038,
+            "rank": 1039,
             "pct": 39.7
           },
           "angielski": {
@@ -74233,7 +74233,7 @@
           },
           "composite_min": {
             "score": 49.2667,
-            "rank": 1015,
+            "rank": 1016,
             "pct": 41.0
           }
         },
@@ -74484,7 +74484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0137,
-            "rank": 1029,
+            "rank": 1030,
             "pct": 40.2
           },
           "matematyka": {
@@ -74594,7 +74594,7 @@
           },
           "angielski": {
             "score": -0.2312,
-            "rank": 1425,
+            "rank": 1426,
             "pct": 17.2
           },
           "composite_min": {
@@ -74689,7 +74689,7 @@
           },
           "matematyka": {
             "score": -0.1454,
-            "rank": 1195,
+            "rank": 1196,
             "pct": 30.5
           },
           "angielski": {
@@ -74889,7 +74889,7 @@
           },
           "matematyka": {
             "score": -0.0692,
-            "rank": 985,
+            "rank": 986,
             "pct": 42.7
           },
           "angielski": {
@@ -74994,7 +74994,7 @@
           },
           "angielski": {
             "score": -0.0662,
-            "rank": 1015,
+            "rank": 1016,
             "pct": 41.0
           },
           "composite_min": {
@@ -75684,7 +75684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0821,
-            "rank": 634,
+            "rank": 635,
             "pct": 63.1
           },
           "matematyka": {
@@ -75794,7 +75794,7 @@
           },
           "angielski": {
             "score": 0.236,
-            "rank": 531,
+            "rank": 532,
             "pct": 69.1
           },
           "composite_min": {
@@ -75984,7 +75984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0134,
-            "rank": 907,
+            "rank": 908,
             "pct": 47.3
           },
           "matematyka": {
@@ -76294,7 +76294,7 @@
           },
           "angielski": {
             "score": -0.0752,
-            "rank": 1039,
+            "rank": 1040,
             "pct": 39.6
           },
           "composite_min": {
@@ -77084,22 +77084,22 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0263,
-            "rank": 846,
+            "rank": 847,
             "pct": 50.8
           },
           "matematyka": {
             "score": -0.1945,
-            "rank": 1342,
+            "rank": 1343,
             "pct": 22.0
           },
           "angielski": {
             "score": -0.1433,
-            "rank": 1212,
+            "rank": 1213,
             "pct": 29.5
           },
           "composite_min": {
             "score": -0.1945,
-            "rank": 1198,
+            "rank": 1199,
             "pct": 30.3
           }
         }
@@ -77599,7 +77599,7 @@
           },
           "composite_min": {
             "score": -0.4927,
-            "rank": 1664,
+            "rank": 1665,
             "pct": 3.3
           }
         }
@@ -77784,7 +77784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0505,
-            "rank": 1171,
+            "rank": 1172,
             "pct": 31.9
           },
           "matematyka": {
@@ -77899,7 +77899,7 @@
           },
           "composite_min": {
             "score": -0.184,
-            "rank": 1166,
+            "rank": 1167,
             "pct": 32.2
           }
         }
@@ -78084,7 +78084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1014,
-            "rank": 1377,
+            "rank": 1378,
             "pct": 19.9
           },
           "matematyka": {
@@ -78299,7 +78299,7 @@
           },
           "composite_min": {
             "score": 0.2425,
-            "rank": 217,
+            "rank": 218,
             "pct": 87.4
           }
         }
@@ -78889,7 +78889,7 @@
           },
           "matematyka": {
             "score": -0.1813,
-            "rank": 1299,
+            "rank": 1300,
             "pct": 24.5
           },
           "angielski": {
@@ -79284,7 +79284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.2771,
-            "rank": 203,
+            "rank": 204,
             "pct": 88.2
           },
           "matematyka": {
@@ -79994,12 +79994,12 @@
           },
           "angielski": {
             "score": -0.3248,
-            "rank": 1599,
+            "rank": 1600,
             "pct": 7.0
           },
           "composite_min": {
             "score": -0.3248,
-            "rank": 1549,
+            "rank": 1550,
             "pct": 9.9
           }
         }
@@ -81472,7 +81472,7 @@
           },
           "angielski": {
             "score": -3.2422,
-            "rank": 933,
+            "rank": 934,
             "pct": 45.8
           },
           "composite_min": {
@@ -82189,7 +82189,7 @@
           },
           "matematyka": {
             "score": -0.1527,
-            "rank": 1213,
+            "rank": 1214,
             "pct": 29.5
           },
           "angielski": {
@@ -82594,7 +82594,7 @@
           },
           "angielski": {
             "score": -0.2205,
-            "rank": 1395,
+            "rank": 1396,
             "pct": 18.9
           },
           "composite_min": {
@@ -83399,7 +83399,7 @@
           },
           "composite_min": {
             "score": -0.0237,
-            "rank": 692,
+            "rank": 693,
             "pct": 59.8
           }
         }
@@ -83494,7 +83494,7 @@
           },
           "angielski": {
             "score": -0.0509,
-            "rank": 980,
+            "rank": 981,
             "pct": 43.0
           },
           "composite_min": {
@@ -84084,7 +84084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0512,
-            "rank": 741,
+            "rank": 742,
             "pct": 56.9
           },
           "matematyka": {
@@ -84289,7 +84289,7 @@
           },
           "matematyka": {
             "score": -0.2371,
-            "rank": 1447,
+            "rank": 1448,
             "pct": 15.9
           },
           "angielski": {
@@ -84299,7 +84299,7 @@
           },
           "composite_min": {
             "score": -0.2371,
-            "rank": 1333,
+            "rank": 1334,
             "pct": 22.5
           }
         }
@@ -84384,7 +84384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0753,
-            "rank": 660,
+            "rank": 661,
             "pct": 61.6
           },
           "matematyka": {
@@ -84584,7 +84584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0495,
-            "rank": 748,
+            "rank": 750,
             "pct": 56.5
           },
           "matematyka": {
@@ -84784,7 +84784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0196,
-            "rank": 880,
+            "rank": 881,
             "pct": 48.8
           },
           "matematyka": {
@@ -84889,7 +84889,7 @@
           },
           "matematyka": {
             "score": -0.0658,
-            "rank": 976,
+            "rank": 977,
             "pct": 43.3
           },
           "angielski": {
@@ -85384,7 +85384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0262,
-            "rank": 848,
+            "rank": 849,
             "pct": 50.7
           },
           "matematyka": {
@@ -85694,7 +85694,7 @@
           },
           "angielski": {
             "score": -0.2423,
-            "rank": 1454,
+            "rank": 1455,
             "pct": 15.5
           },
           "composite_min": {
@@ -86199,7 +86199,7 @@
           },
           "composite_min": {
             "score": -0.0335,
-            "rank": 719,
+            "rank": 720,
             "pct": 58.2
           }
         }
@@ -86284,7 +86284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0249,
-            "rank": 1083,
+            "rank": 1084,
             "pct": 37.0
           },
           "matematyka": {
@@ -86584,7 +86584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0063,
-            "rank": 934,
+            "rank": 936,
             "pct": 45.6
           },
           "matematyka": {
@@ -86794,7 +86794,7 @@
           },
           "angielski": {
             "score": 0.2242,
-            "rank": 544,
+            "rank": 545,
             "pct": 68.4
           },
           "composite_min": {
@@ -86889,17 +86889,17 @@
           },
           "matematyka": {
             "score": -0.1953,
-            "rank": 1344,
+            "rank": 1345,
             "pct": 21.9
           },
           "angielski": {
             "score": -0.3053,
-            "rank": 1570,
+            "rank": 1572,
             "pct": 8.7
           },
           "composite_min": {
             "score": -0.3053,
-            "rank": 1504,
+            "rank": 1506,
             "pct": 12.5
           }
         }
@@ -87094,7 +87094,7 @@
           },
           "angielski": {
             "score": -0.2009,
-            "rank": 1351,
+            "rank": 1352,
             "pct": 21.5
           },
           "composite_min": {
@@ -87384,7 +87384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0677,
-            "rank": 1233,
+            "rank": 1234,
             "pct": 28.3
           },
           "matematyka": {
@@ -87694,12 +87694,12 @@
           },
           "angielski": {
             "score": -0.3248,
-            "rank": 1599,
+            "rank": 1601,
             "pct": 7.0
           },
           "composite_min": {
             "score": -0.3248,
-            "rank": 1549,
+            "rank": 1551,
             "pct": 9.9
           }
         }
@@ -87894,7 +87894,7 @@
           },
           "angielski": {
             "score": -0.192,
-            "rank": 1321,
+            "rank": 1322,
             "pct": 23.2
           },
           "composite_min": {
@@ -87984,7 +87984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.127,
-            "rank": 1460,
+            "rank": 1461,
             "pct": 15.1
           },
           "matematyka": {
@@ -88284,7 +88284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1379,
-            "rank": 1494,
+            "rank": 1495,
             "pct": 13.1
           },
           "matematyka": {
@@ -89489,7 +89489,7 @@
           },
           "matematyka": {
             "score": 0.1412,
-            "rank": 484,
+            "rank": 485,
             "pct": 71.9
           },
           "angielski": {
@@ -89989,7 +89989,7 @@
           },
           "matematyka": {
             "score": 0.0394,
-            "rank": 694,
+            "rank": 695,
             "pct": 59.7
           },
           "angielski": {
@@ -90494,7 +90494,7 @@
           },
           "angielski": {
             "score": -0.2647,
-            "rank": 1499,
+            "rank": 1500,
             "pct": 12.8
           },
           "composite_min": {
@@ -90584,7 +90584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0888,
-            "rank": 1329,
+            "rank": 1330,
             "pct": 22.7
           },
           "matematyka": {
@@ -90594,7 +90594,7 @@
           },
           "angielski": {
             "score": -0.0395,
-            "rank": 946,
+            "rank": 947,
             "pct": 45.0
           },
           "composite_min": {
@@ -90689,12 +90689,12 @@
           },
           "matematyka": {
             "score": 0.1068,
-            "rank": 536,
+            "rank": 537,
             "pct": 68.8
           },
           "angielski": {
             "score": 0.0058,
-            "rank": 855,
+            "rank": 857,
             "pct": 50.2
           },
           "composite_min": {
@@ -91089,7 +91089,7 @@
           },
           "matematyka": {
             "score": -0.1876,
-            "rank": 1316,
+            "rank": 1317,
             "pct": 23.5
           },
           "angielski": {
@@ -91589,7 +91589,7 @@
           },
           "matematyka": {
             "score": 0.0837,
-            "rank": 589,
+            "rank": 590,
             "pct": 65.8
           },
           "angielski": {
@@ -91694,12 +91694,12 @@
           },
           "angielski": {
             "score": 0.0877,
-            "rank": 712,
+            "rank": 713,
             "pct": 58.6
           },
           "composite_min": {
             "score": 0.0877,
-            "rank": 453,
+            "rank": 455,
             "pct": 73.6
           }
         }
@@ -92184,7 +92184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0752,
-            "rank": 1265,
+            "rank": 1267,
             "pct": 26.4
           },
           "matematyka": {
@@ -92199,7 +92199,7 @@
           },
           "composite_min": {
             "score": -0.0752,
-            "rank": 840,
+            "rank": 841,
             "pct": 51.2
           }
         }
@@ -92589,7 +92589,7 @@
           },
           "matematyka": {
             "score": 0.4399,
-            "rank": 150,
+            "rank": 151,
             "pct": 91.3
           },
           "angielski": {
@@ -92689,7 +92689,7 @@
           },
           "matematyka": {
             "score": -0.1064,
-            "rank": 1098,
+            "rank": 1099,
             "pct": 36.2
           },
           "angielski": {
@@ -92699,7 +92699,7 @@
           },
           "composite_min": {
             "score": -0.1064,
-            "rank": 946,
+            "rank": 947,
             "pct": 45.0
           }
         }
@@ -92889,7 +92889,7 @@
           },
           "matematyka": {
             "score": -0.1073,
-            "rank": 1105,
+            "rank": 1106,
             "pct": 35.8
           },
           "angielski": {
@@ -92899,7 +92899,7 @@
           },
           "composite_min": {
             "score": -0.1073,
-            "rank": 952,
+            "rank": 953,
             "pct": 44.7
           }
         }
@@ -93094,7 +93094,7 @@
           },
           "angielski": {
             "score": -0.0107,
-            "rank": 889,
+            "rank": 890,
             "pct": 48.3
           },
           "composite_min": {
@@ -93389,7 +93389,7 @@
           },
           "matematyka": {
             "score": -0.1612,
-            "rank": 1238,
+            "rank": 1239,
             "pct": 28.0
           },
           "angielski": {
@@ -93789,7 +93789,7 @@
           },
           "matematyka": {
             "score": 0.534,
-            "rank": 91,
+            "rank": 92,
             "pct": 94.7
           },
           "angielski": {
@@ -94089,7 +94089,7 @@
           },
           "matematyka": {
             "score": -0.0391,
-            "rank": 895,
+            "rank": 896,
             "pct": 48.0
           },
           "angielski": {
@@ -94484,7 +94484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0847,
-            "rank": 1311,
+            "rank": 1312,
             "pct": 23.8
           },
           "matematyka": {
@@ -94694,7 +94694,7 @@
           },
           "angielski": {
             "score": -0.1432,
-            "rank": 1210,
+            "rank": 1211,
             "pct": 29.7
           },
           "composite_min": {
@@ -95084,7 +95084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0202,
-            "rank": 1062,
+            "rank": 1063,
             "pct": 38.3
           },
           "matematyka": {
@@ -95099,7 +95099,7 @@
           },
           "composite_min": {
             "score": -0.1023,
-            "rank": 930,
+            "rank": 931,
             "pct": 45.9
           }
         }
@@ -95189,7 +95189,7 @@
           },
           "matematyka": {
             "score": -0.0225,
-            "rank": 852,
+            "rank": 853,
             "pct": 50.5
           },
           "angielski": {
@@ -95199,7 +95199,7 @@
           },
           "composite_min": {
             "score": -0.0225,
-            "rank": 686,
+            "rank": 687,
             "pct": 60.1
           }
         }
@@ -95284,7 +95284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0866,
-            "rank": 1320,
+            "rank": 1321,
             "pct": 23.3
           },
           "matematyka": {
@@ -95484,7 +95484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0758,
-            "rank": 655,
+            "rank": 656,
             "pct": 61.9
           },
           "matematyka": {
@@ -95894,7 +95894,7 @@
           },
           "angielski": {
             "score": 0.3622,
-            "rank": 407,
+            "rank": 408,
             "pct": 76.3
           },
           "composite_min": {
@@ -96194,7 +96194,7 @@
           },
           "angielski": {
             "score": 0.0955,
-            "rank": 697,
+            "rank": 698,
             "pct": 59.5
           },
           "composite_min": {
@@ -96584,7 +96584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0744,
-            "rank": 1260,
+            "rank": 1261,
             "pct": 26.7
           },
           "matematyka": {
@@ -96794,7 +96794,7 @@
           },
           "angielski": {
             "score": -0.2339,
-            "rank": 1433,
+            "rank": 1434,
             "pct": 16.7
           },
           "composite_min": {
@@ -97028,7 +97028,7 @@
           },
           "angielski": {
             "score": 68.462,
-            "rank": 734,
+            "rank": 735,
             "pct": 57.3
           },
           "composite_min": {
@@ -97084,7 +97084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0039,
-            "rank": 944,
+            "rank": 945,
             "pct": 45.1
           },
           "matematyka": {
@@ -97294,7 +97294,7 @@
           },
           "angielski": {
             "score": 0.1277,
-            "rank": 661,
+            "rank": 662,
             "pct": 61.6
           },
           "composite_min": {
@@ -97394,12 +97394,12 @@
           },
           "angielski": {
             "score": -0.3055,
-            "rank": 1573,
+            "rank": 1575,
             "pct": 8.5
           },
           "composite_min": {
             "score": -0.3055,
-            "rank": 1507,
+            "rank": 1509,
             "pct": 12.3
           }
         }
@@ -98084,7 +98084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1732,
-            "rank": 368,
+            "rank": 369,
             "pct": 78.6
           },
           "matematyka": {
@@ -98199,7 +98199,7 @@
           },
           "composite_min": {
             "score": -0.0757,
-            "rank": 842,
+            "rank": 843,
             "pct": 51.0
           }
         }
@@ -98489,7 +98489,7 @@
           },
           "matematyka": {
             "score": -0.1657,
-            "rank": 1254,
+            "rank": 1255,
             "pct": 27.1
           },
           "angielski": {
@@ -98499,7 +98499,7 @@
           },
           "composite_min": {
             "score": -0.1657,
-            "rank": 1109,
+            "rank": 1110,
             "pct": 35.5
           }
         }
@@ -98694,7 +98694,7 @@
           },
           "angielski": {
             "score": 0.0444,
-            "rank": 782,
+            "rank": 783,
             "pct": 54.5
           },
           "composite_min": {
@@ -98984,7 +98984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0299,
-            "rank": 829,
+            "rank": 830,
             "pct": 51.8
           },
           "matematyka": {
@@ -99184,7 +99184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0591,
-            "rank": 1200,
+            "rank": 1201,
             "pct": 30.2
           },
           "matematyka": {
@@ -99294,7 +99294,7 @@
           },
           "angielski": {
             "score": -0.0843,
-            "rank": 1061,
+            "rank": 1062,
             "pct": 38.3
           },
           "composite_min": {
@@ -99384,7 +99384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1124,
-            "rank": 535,
+            "rank": 536,
             "pct": 68.9
           },
           "matematyka": {
@@ -99399,7 +99399,7 @@
           },
           "composite_min": {
             "score": 0.1124,
-            "rank": 408,
+            "rank": 409,
             "pct": 76.3
           }
         }
@@ -99499,7 +99499,7 @@
           },
           "composite_min": {
             "score": -0.2886,
-            "rank": 1461,
+            "rank": 1462,
             "pct": 15.1
           }
         }
@@ -99884,7 +99884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0013,
-            "rank": 971,
+            "rank": 972,
             "pct": 43.5
           },
           "matematyka": {
@@ -100284,7 +100284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0964,
-            "rank": 1359,
+            "rank": 1360,
             "pct": 21.0
           },
           "matematyka": {
@@ -100599,7 +100599,7 @@
           },
           "composite_min": {
             "score": -0.0564,
-            "rank": 790,
+            "rank": 791,
             "pct": 54.1
           }
         }
@@ -100689,7 +100689,7 @@
           },
           "matematyka": {
             "score": -0.0293,
-            "rank": 869,
+            "rank": 870,
             "pct": 49.5
           },
           "angielski": {
@@ -100984,7 +100984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0788,
-            "rank": 1283,
+            "rank": 1284,
             "pct": 25.4
           },
           "matematyka": {
@@ -100999,7 +100999,7 @@
           },
           "composite_min": {
             "score": -0.0788,
-            "rank": 853,
+            "rank": 854,
             "pct": 50.4
           }
         }
@@ -101084,7 +101084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1723,
-            "rank": 1575,
+            "rank": 1576,
             "pct": 8.4
           },
           "matematyka": {
@@ -101284,7 +101284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.2886,
-            "rank": 188,
+            "rank": 189,
             "pct": 89.1
           },
           "matematyka": {
@@ -101394,7 +101394,7 @@
           },
           "angielski": {
             "score": -0.0492,
-            "rank": 974,
+            "rank": 976,
             "pct": 43.3
           },
           "composite_min": {
@@ -102189,7 +102189,7 @@
           },
           "matematyka": {
             "score": -0.2963,
-            "rank": 1552,
+            "rank": 1553,
             "pct": 9.8
           },
           "angielski": {
@@ -102199,7 +102199,7 @@
           },
           "composite_min": {
             "score": -0.2963,
-            "rank": 1481,
+            "rank": 1482,
             "pct": 13.9
           }
         }
@@ -102689,7 +102689,7 @@
           },
           "matematyka": {
             "score": 0.6121,
-            "rank": 61,
+            "rank": 62,
             "pct": 96.5
           },
           "angielski": {
@@ -103499,7 +103499,7 @@
           },
           "composite_min": {
             "score": -0.0497,
-            "rank": 770,
+            "rank": 771,
             "pct": 55.2
           }
         }
@@ -104084,7 +104084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0267,
-            "rank": 1090,
+            "rank": 1091,
             "pct": 36.6
           },
           "matematyka": {
@@ -104284,7 +104284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.233,
-            "rank": 264,
+            "rank": 265,
             "pct": 84.7
           },
           "matematyka": {
@@ -104372,19 +104372,19 @@
           },
           "angielski": {
             "score": -6.5439,
-            "rank": 1074,
+            "rank": 1075,
             "pct": 37.6
           },
           "composite_min": {
             "score": -6.5439,
-            "rank": 934,
+            "rank": 935,
             "pct": 45.7
           }
         },
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0063,
-            "rank": 934,
+            "rank": 935,
             "pct": 45.7
           },
           "matematyka": {
@@ -104894,12 +104894,12 @@
           },
           "angielski": {
             "score": -0.0968,
-            "rank": 1097,
+            "rank": 1098,
             "pct": 36.2
           },
           "composite_min": {
             "score": -0.0968,
-            "rank": 909,
+            "rank": 910,
             "pct": 47.2
           }
         }
@@ -104994,7 +104994,7 @@
           },
           "angielski": {
             "score": -0.0564,
-            "rank": 991,
+            "rank": 992,
             "pct": 42.4
           },
           "composite_min": {
@@ -105189,7 +105189,7 @@
           },
           "matematyka": {
             "score": -0.0439,
-            "rank": 902,
+            "rank": 903,
             "pct": 47.6
           },
           "angielski": {
@@ -105199,7 +105199,7 @@
           },
           "composite_min": {
             "score": -0.0439,
-            "rank": 739,
+            "rank": 740,
             "pct": 57.0
           }
         }
@@ -106384,7 +106384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.052,
-            "rank": 1177,
+            "rank": 1178,
             "pct": 31.6
           },
           "matematyka": {
@@ -106399,7 +106399,7 @@
           },
           "composite_min": {
             "score": -0.1243,
-            "rank": 999,
+            "rank": 1000,
             "pct": 41.9
           }
         }
@@ -106994,7 +106994,7 @@
           },
           "angielski": {
             "score": 0.4683,
-            "rank": 314,
+            "rank": 315,
             "pct": 81.7
           },
           "composite_min": {
@@ -107694,7 +107694,7 @@
           },
           "angielski": {
             "score": -0.1433,
-            "rank": 1212,
+            "rank": 1214,
             "pct": 29.5
           },
           "composite_min": {
@@ -107894,7 +107894,7 @@
           },
           "angielski": {
             "score": -0.1122,
-            "rank": 1133,
+            "rank": 1134,
             "pct": 34.1
           },
           "composite_min": {
@@ -108084,7 +108084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0488,
-            "rank": 752,
+            "rank": 754,
             "pct": 56.2
           },
           "matematyka": {
@@ -108184,7 +108184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.2017,
-            "rank": 310,
+            "rank": 311,
             "pct": 82.0
           },
           "matematyka": {
@@ -108199,7 +108199,7 @@
           },
           "composite_min": {
             "score": 0.111,
-            "rank": 411,
+            "rank": 412,
             "pct": 76.1
           }
         }
@@ -108584,7 +108584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0599,
-            "rank": 1205,
+            "rank": 1206,
             "pct": 29.9
           },
           "matematyka": {
@@ -108994,7 +108994,7 @@
           },
           "angielski": {
             "score": -0.1785,
-            "rank": 1292,
+            "rank": 1293,
             "pct": 24.9
           },
           "composite_min": {
@@ -109184,7 +109184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1041,
-            "rank": 565,
+            "rank": 566,
             "pct": 67.2
           },
           "matematyka": {
@@ -109399,7 +109399,7 @@
           },
           "composite_min": {
             "score": -0.0207,
-            "rank": 679,
+            "rank": 680,
             "pct": 60.5
           }
         }
@@ -110684,7 +110684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0617,
-            "rank": 1212,
+            "rank": 1213,
             "pct": 29.5
           },
           "matematyka": {
@@ -110699,7 +110699,7 @@
           },
           "composite_min": {
             "score": -0.0617,
-            "rank": 809,
+            "rank": 810,
             "pct": 53.0
           }
         }
@@ -110789,7 +110789,7 @@
           },
           "matematyka": {
             "score": -0.2966,
-            "rank": 1554,
+            "rank": 1555,
             "pct": 9.7
           },
           "angielski": {
@@ -110999,7 +110999,7 @@
           },
           "composite_min": {
             "score": -0.0593,
-            "rank": 801,
+            "rank": 802,
             "pct": 53.4
           }
         }
@@ -111089,7 +111089,7 @@
           },
           "matematyka": {
             "score": 0.3976,
-            "rank": 180,
+            "rank": 181,
             "pct": 89.5
           },
           "angielski": {
@@ -111099,7 +111099,7 @@
           },
           "composite_min": {
             "score": -0.1273,
-            "rank": 1002,
+            "rank": 1003,
             "pct": 41.7
           }
         }
@@ -111194,12 +111194,12 @@
           },
           "angielski": {
             "score": -0.228,
-            "rank": 1412,
+            "rank": 1413,
             "pct": 17.9
           },
           "composite_min": {
             "score": -0.228,
-            "rank": 1304,
+            "rank": 1305,
             "pct": 24.2
           }
         }
@@ -111984,7 +111984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0744,
-            "rank": 1260,
+            "rank": 1262,
             "pct": 26.7
           },
           "matematyka": {
@@ -112699,7 +112699,7 @@
           },
           "composite_min": {
             "score": -0.2207,
-            "rank": 1278,
+            "rank": 1279,
             "pct": 25.7
           }
         }
@@ -112884,7 +112884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.107,
-            "rank": 549,
+            "rank": 551,
             "pct": 68.0
           },
           "matematyka": {
@@ -112989,17 +112989,17 @@
           },
           "matematyka": {
             "score": -0.0957,
-            "rank": 1064,
+            "rank": 1065,
             "pct": 38.1
           },
           "angielski": {
             "score": -0.0954,
-            "rank": 1090,
+            "rank": 1091,
             "pct": 36.6
           },
           "composite_min": {
             "score": -0.0957,
-            "rank": 903,
+            "rank": 904,
             "pct": 47.5
           }
         }
@@ -113094,7 +113094,7 @@
           },
           "angielski": {
             "score": -0.08,
-            "rank": 1051,
+            "rank": 1052,
             "pct": 38.9
           },
           "composite_min": {
@@ -113194,12 +113194,12 @@
           },
           "angielski": {
             "score": -0.1196,
-            "rank": 1158,
+            "rank": 1159,
             "pct": 32.7
           },
           "composite_min": {
             "score": -0.1196,
-            "rank": 986,
+            "rank": 987,
             "pct": 42.7
           }
         }
@@ -113689,7 +113689,7 @@
           },
           "matematyka": {
             "score": 0.3955,
-            "rank": 186,
+            "rank": 187,
             "pct": 89.2
           },
           "angielski": {
@@ -114284,7 +114284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.02,
-            "rank": 1058,
+            "rank": 1059,
             "pct": 38.5
           },
           "matematyka": {
@@ -114684,7 +114684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0209,
-            "rank": 1069,
+            "rank": 1070,
             "pct": 37.8
           },
           "matematyka": {
@@ -114699,7 +114699,7 @@
           },
           "composite_min": {
             "score": -0.2668,
-            "rank": 1418,
+            "rank": 1420,
             "pct": 17.5
           }
         }
@@ -115089,7 +115089,7 @@
           },
           "matematyka": {
             "score": -0.0911,
-            "rank": 1044,
+            "rank": 1045,
             "pct": 39.3
           },
           "angielski": {
@@ -115099,7 +115099,7 @@
           },
           "composite_min": {
             "score": -0.0911,
-            "rank": 883,
+            "rank": 884,
             "pct": 48.7
           }
         }
@@ -115199,7 +115199,7 @@
           },
           "composite_min": {
             "score": -0.1959,
-            "rank": 1202,
+            "rank": 1203,
             "pct": 30.1
           }
         }
@@ -115284,7 +115284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0017,
-            "rank": 953,
+            "rank": 954,
             "pct": 44.6
           },
           "matematyka": {
@@ -115389,7 +115389,7 @@
           },
           "matematyka": {
             "score": 0.0236,
-            "rank": 735,
+            "rank": 736,
             "pct": 57.3
           },
           "angielski": {
@@ -116784,7 +116784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1307,
-            "rank": 1469,
+            "rank": 1470,
             "pct": 14.6
           },
           "matematyka": {
@@ -117089,7 +117089,7 @@
           },
           "matematyka": {
             "score": 0.0549,
-            "rank": 656,
+            "rank": 657,
             "pct": 61.9
           },
           "angielski": {
@@ -117199,7 +117199,7 @@
           },
           "composite_min": {
             "score": -0.1941,
-            "rank": 1196,
+            "rank": 1197,
             "pct": 30.5
           }
         }
@@ -117494,7 +117494,7 @@
           },
           "angielski": {
             "score": -0.2168,
-            "rank": 1383,
+            "rank": 1384,
             "pct": 19.6
           },
           "composite_min": {
@@ -117584,12 +117584,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0822,
-            "rank": 1299,
+            "rank": 1300,
             "pct": 24.5
           },
           "matematyka": {
             "score": -0.1492,
-            "rank": 1204,
+            "rank": 1205,
             "pct": 30.0
           },
           "angielski": {
@@ -117599,7 +117599,7 @@
           },
           "composite_min": {
             "score": -0.1492,
-            "rank": 1061,
+            "rank": 1062,
             "pct": 38.3
           }
         }
@@ -117884,7 +117884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1206,
-            "rank": 503,
+            "rank": 504,
             "pct": 70.8
           },
           "matematyka": {
@@ -118684,7 +118684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.029,
-            "rank": 837,
+            "rank": 838,
             "pct": 51.3
           },
           "matematyka": {
@@ -118884,7 +118884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1052,
-            "rank": 1390,
+            "rank": 1391,
             "pct": 19.2
           },
           "matematyka": {
@@ -118994,7 +118994,7 @@
           },
           "angielski": {
             "score": 0.089,
-            "rank": 709,
+            "rank": 710,
             "pct": 58.8
           },
           "composite_min": {
@@ -119594,12 +119594,12 @@
           },
           "angielski": {
             "score": -0.2245,
-            "rank": 1405,
+            "rank": 1406,
             "pct": 18.3
           },
           "composite_min": {
             "score": -0.2245,
-            "rank": 1291,
+            "rank": 1292,
             "pct": 24.9
           }
         }
@@ -119884,7 +119884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0812,
-            "rank": 1293,
+            "rank": 1294,
             "pct": 24.8
           },
           "matematyka": {
@@ -119984,7 +119984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0495,
-            "rank": 748,
+            "rank": 749,
             "pct": 56.5
           },
           "matematyka": {
@@ -120099,7 +120099,7 @@
           },
           "composite_min": {
             "score": 0.1613,
-            "rank": 337,
+            "rank": 340,
             "pct": 80.3
           }
         }
@@ -120494,7 +120494,7 @@
           },
           "angielski": {
             "score": -0.002,
-            "rank": 867,
+            "rank": 868,
             "pct": 49.6
           },
           "composite_min": {
@@ -121084,7 +121084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1258,
-            "rank": 487,
+            "rank": 488,
             "pct": 71.7
           },
           "matematyka": {
@@ -121794,7 +121794,7 @@
           },
           "angielski": {
             "score": -0.0492,
-            "rank": 974,
+            "rank": 975,
             "pct": 43.4
           },
           "composite_min": {
@@ -122189,7 +122189,7 @@
           },
           "matematyka": {
             "score": -0.0539,
-            "rank": 938,
+            "rank": 939,
             "pct": 45.5
           },
           "angielski": {
@@ -122284,7 +122284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0894,
-            "rank": 1334,
+            "rank": 1335,
             "pct": 22.4
           },
           "matematyka": {
@@ -122299,7 +122299,7 @@
           },
           "composite_min": {
             "score": -0.0894,
-            "rank": 876,
+            "rank": 877,
             "pct": 49.1
           }
         }
@@ -122499,7 +122499,7 @@
           },
           "composite_min": {
             "score": -0.1945,
-            "rank": 1198,
+            "rank": 1200,
             "pct": 30.3
           }
         }
@@ -123084,7 +123084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1427,
-            "rank": 1509,
+            "rank": 1510,
             "pct": 12.3
           },
           "matematyka": {
@@ -123218,7 +123218,7 @@
         "mean": {
           "polski": {
             "score": 68.3889,
-            "rank": 491,
+            "rank": 492,
             "pct": 71.5
           },
           "matematyka": {
@@ -123389,7 +123389,7 @@
           },
           "matematyka": {
             "score": 0.1101,
-            "rank": 530,
+            "rank": 531,
             "pct": 69.2
           },
           "angielski": {
@@ -123589,7 +123589,7 @@
           },
           "matematyka": {
             "score": -0.1924,
-            "rank": 1334,
+            "rank": 1335,
             "pct": 22.4
           },
           "angielski": {
@@ -123789,17 +123789,17 @@
           },
           "matematyka": {
             "score": -0.1443,
-            "rank": 1191,
+            "rank": 1192,
             "pct": 30.8
           },
           "angielski": {
             "score": -0.186,
-            "rank": 1309,
+            "rank": 1310,
             "pct": 23.9
           },
           "composite_min": {
             "score": -0.186,
-            "rank": 1170,
+            "rank": 1171,
             "pct": 32.0
           }
         }
@@ -124089,7 +124089,7 @@
           },
           "matematyka": {
             "score": -0.1049,
-            "rank": 1094,
+            "rank": 1095,
             "pct": 36.4
           },
           "angielski": {
@@ -124194,7 +124194,7 @@
           },
           "angielski": {
             "score": 0.2985,
-            "rank": 467,
+            "rank": 468,
             "pct": 72.8
           },
           "composite_min": {
@@ -124294,7 +124294,7 @@
           },
           "angielski": {
             "score": 0.6045,
-            "rank": 194,
+            "rank": 195,
             "pct": 88.7
           },
           "composite_min": {
@@ -124589,7 +124589,7 @@
           },
           "matematyka": {
             "score": 0.1834,
-            "rank": 423,
+            "rank": 424,
             "pct": 75.4
           },
           "angielski": {
@@ -124784,7 +124784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0843,
-            "rank": 627,
+            "rank": 628,
             "pct": 63.5
           },
           "matematyka": {
@@ -125067,7 +125067,7 @@
           },
           "matematyka": {
             "score": -12.1935,
-            "rank": 1421,
+            "rank": 1422,
             "pct": 17.4
           },
           "angielski": {
@@ -125399,7 +125399,7 @@
           },
           "composite_min": {
             "score": 0.038,
-            "rank": 550,
+            "rank": 551,
             "pct": 68.0
           }
         }
@@ -125689,12 +125689,12 @@
           },
           "matematyka": {
             "score": -0.1625,
-            "rank": 1243,
+            "rank": 1244,
             "pct": 27.7
           },
           "angielski": {
             "score": -0.2412,
-            "rank": 1451,
+            "rank": 1452,
             "pct": 15.6
           },
           "composite_min": {
@@ -125894,7 +125894,7 @@
           },
           "angielski": {
             "score": -0.3517,
-            "rank": 1624,
+            "rank": 1625,
             "pct": 5.6
           },
           "composite_min": {
@@ -125984,7 +125984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.2957,
-            "rank": 179,
+            "rank": 180,
             "pct": 89.6
           },
           "matematyka": {
@@ -125999,7 +125999,7 @@
           },
           "composite_min": {
             "score": 0.2957,
-            "rank": 160,
+            "rank": 161,
             "pct": 90.7
           }
         }
@@ -126199,7 +126199,7 @@
           },
           "composite_min": {
             "score": -0.1887,
-            "rank": 1180,
+            "rank": 1181,
             "pct": 31.4
           }
         }
@@ -126494,12 +126494,12 @@
           },
           "angielski": {
             "score": -0.2757,
-            "rank": 1520,
+            "rank": 1521,
             "pct": 11.6
           },
           "composite_min": {
             "score": -0.2757,
-            "rank": 1434,
+            "rank": 1435,
             "pct": 16.6
           }
         }
@@ -126889,7 +126889,7 @@
           },
           "matematyka": {
             "score": 0.0984,
-            "rank": 555,
+            "rank": 556,
             "pct": 67.7
           },
           "angielski": {
@@ -126999,7 +126999,7 @@
           },
           "composite_min": {
             "score": -0.1829,
-            "rank": 1160,
+            "rank": 1161,
             "pct": 32.6
           }
         }
@@ -127694,7 +127694,7 @@
           },
           "angielski": {
             "score": 0.8267,
-            "rank": 82,
+            "rank": 83,
             "pct": 95.2
           },
           "composite_min": {
@@ -127884,7 +127884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0754,
-            "rank": 657,
+            "rank": 658,
             "pct": 61.8
           },
           "matematyka": {
@@ -127894,7 +127894,7 @@
           },
           "angielski": {
             "score": -0.0145,
-            "rank": 895,
+            "rank": 896,
             "pct": 48.0
           },
           "composite_min": {
@@ -128084,7 +128084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1663,
-            "rank": 386,
+            "rank": 387,
             "pct": 77.6
           },
           "matematyka": {
@@ -128099,7 +128099,7 @@
           },
           "composite_min": {
             "score": 0.1663,
-            "rank": 323,
+            "rank": 324,
             "pct": 81.2
           }
         }
@@ -128184,7 +128184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1262,
-            "rank": 485,
+            "rank": 486,
             "pct": 71.8
           },
           "matematyka": {
@@ -128594,7 +128594,7 @@
           },
           "angielski": {
             "score": 0.0219,
-            "rank": 823,
+            "rank": 824,
             "pct": 52.2
           },
           "composite_min": {
@@ -128784,7 +128784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.495,
-            "rank": 26,
+            "rank": 27,
             "pct": 98.5
           },
           "matematyka": {
@@ -128799,7 +128799,7 @@
           },
           "composite_min": {
             "score": 0.495,
-            "rank": 22,
+            "rank": 23,
             "pct": 98.7
           }
         }
@@ -128884,7 +128884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0974,
-            "rank": 586,
+            "rank": 587,
             "pct": 65.9
           },
           "matematyka": {
@@ -128999,7 +128999,7 @@
           },
           "composite_min": {
             "score": -0.2006,
-            "rank": 1220,
+            "rank": 1221,
             "pct": 29.1
           }
         }
@@ -129689,7 +129689,7 @@
           },
           "matematyka": {
             "score": -0.2207,
-            "rank": 1413,
+            "rank": 1414,
             "pct": 17.8
           },
           "angielski": {
@@ -129699,7 +129699,7 @@
           },
           "composite_min": {
             "score": -0.2207,
-            "rank": 1278,
+            "rank": 1280,
             "pct": 25.6
           }
         }
@@ -129984,7 +129984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0136,
-            "rank": 1027,
+            "rank": 1028,
             "pct": 40.3
           },
           "matematyka": {
@@ -130194,7 +130194,7 @@
           },
           "angielski": {
             "score": -0.1142,
-            "rank": 1139,
+            "rank": 1141,
             "pct": 33.7
           },
           "composite_min": {
@@ -130294,12 +130294,12 @@
           },
           "angielski": {
             "score": -0.0575,
-            "rank": 995,
+            "rank": 996,
             "pct": 42.2
           },
           "composite_min": {
             "score": -0.0575,
-            "rank": 794,
+            "rank": 795,
             "pct": 53.8
           }
         }
@@ -130499,7 +130499,7 @@
           },
           "composite_min": {
             "score": -0.3096,
-            "rank": 1519,
+            "rank": 1520,
             "pct": 11.7
           }
         }
@@ -130684,7 +130684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0509,
-            "rank": 1174,
+            "rank": 1175,
             "pct": 31.7
           },
           "matematyka": {
@@ -132484,7 +132484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1021,
-            "rank": 1381,
+            "rank": 1382,
             "pct": 19.7
           },
           "matematyka": {
@@ -132899,7 +132899,7 @@
           },
           "composite_min": {
             "score": 0.2859,
-            "rank": 168,
+            "rank": 169,
             "pct": 90.2
           }
         }
@@ -133084,12 +133084,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0136,
-            "rank": 903,
+            "rank": 904,
             "pct": 47.5
           },
           "matematyka": {
             "score": -0.0986,
-            "rank": 1071,
+            "rank": 1072,
             "pct": 37.7
           },
           "angielski": {
@@ -133184,7 +133184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1297,
-            "rank": 476,
+            "rank": 477,
             "pct": 72.3
           },
           "matematyka": {
@@ -133299,7 +133299,7 @@
           },
           "composite_min": {
             "score": 0.2303,
-            "rank": 236,
+            "rank": 237,
             "pct": 86.3
           }
         }
@@ -133589,7 +133589,7 @@
           },
           "matematyka": {
             "score": -0.2258,
-            "rank": 1425,
+            "rank": 1426,
             "pct": 17.2
           },
           "angielski": {
@@ -133894,7 +133894,7 @@
           },
           "angielski": {
             "score": 0.2361,
-            "rank": 529,
+            "rank": 530,
             "pct": 69.2
           },
           "composite_min": {
@@ -134289,7 +134289,7 @@
           },
           "matematyka": {
             "score": 0.0366,
-            "rank": 702,
+            "rank": 703,
             "pct": 59.2
           },
           "angielski": {
@@ -134499,7 +134499,7 @@
           },
           "composite_min": {
             "score": -0.2573,
-            "rank": 1381,
+            "rank": 1382,
             "pct": 19.7
           }
         }
@@ -134784,7 +134784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.107,
-            "rank": 1400,
+            "rank": 1401,
             "pct": 18.6
           },
           "matematyka": {
@@ -134899,7 +134899,7 @@
           },
           "composite_min": {
             "score": 0.2068,
-            "rank": 268,
+            "rank": 269,
             "pct": 84.4
           }
         }
@@ -135194,12 +135194,12 @@
           },
           "angielski": {
             "score": -0.2165,
-            "rank": 1380,
+            "rank": 1381,
             "pct": 19.8
           },
           "composite_min": {
             "score": -0.2165,
-            "rank": 1264,
+            "rank": 1265,
             "pct": 26.5
           }
         }
@@ -135294,12 +135294,12 @@
           },
           "angielski": {
             "score": 0.0074,
-            "rank": 851,
+            "rank": 852,
             "pct": 50.5
           },
           "composite_min": {
             "score": -0.0455,
-            "rank": 748,
+            "rank": 749,
             "pct": 56.5
           }
         }
@@ -135684,7 +135684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0005,
-            "rank": 961,
+            "rank": 962,
             "pct": 44.1
           },
           "matematyka": {
@@ -136099,7 +136099,7 @@
           },
           "composite_min": {
             "score": -0.2371,
-            "rank": 1333,
+            "rank": 1335,
             "pct": 22.4
           }
         }
@@ -136284,7 +136284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0246,
-            "rank": 857,
+            "rank": 858,
             "pct": 50.2
           },
           "matematyka": {
@@ -136484,7 +136484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.1384,
-            "rank": 1498,
+            "rank": 1499,
             "pct": 12.9
           },
           "matematyka": {
@@ -136494,12 +136494,12 @@
           },
           "angielski": {
             "score": -0.1485,
-            "rank": 1227,
+            "rank": 1228,
             "pct": 28.7
           },
           "composite_min": {
             "score": -0.3021,
-            "rank": 1495,
+            "rank": 1496,
             "pct": 13.1
           }
         }
@@ -136999,7 +136999,7 @@
           },
           "composite_min": {
             "score": -0.3005,
-            "rank": 1492,
+            "rank": 1493,
             "pct": 13.3
           }
         }
@@ -137189,7 +137189,7 @@
           },
           "matematyka": {
             "score": -0.2126,
-            "rank": 1389,
+            "rank": 1390,
             "pct": 19.2
           },
           "angielski": {
@@ -137599,7 +137599,7 @@
           },
           "composite_min": {
             "score": -0.0045,
-            "rank": 632,
+            "rank": 633,
             "pct": 63.3
           }
         }
@@ -138189,7 +138189,7 @@
           },
           "matematyka": {
             "score": -0.0014,
-            "rank": 799,
+            "rank": 800,
             "pct": 53.5
           },
           "angielski": {
@@ -138784,7 +138784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.105,
-            "rank": 559,
+            "rank": 560,
             "pct": 67.5
           },
           "matematyka": {
@@ -139794,12 +139794,12 @@
           },
           "angielski": {
             "score": -0.1175,
-            "rank": 1154,
+            "rank": 1155,
             "pct": 32.9
           },
           "composite_min": {
             "score": -0.1175,
-            "rank": 982,
+            "rank": 983,
             "pct": 42.9
           }
         }
@@ -140094,7 +140094,7 @@
           },
           "angielski": {
             "score": -0.2001,
-            "rank": 1345,
+            "rank": 1346,
             "pct": 21.8
           },
           "composite_min": {
@@ -140384,7 +140384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.2397,
-            "rank": 1645,
+            "rank": 1646,
             "pct": 4.4
           },
           "matematyka": {
@@ -140584,7 +140584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.011,
-            "rank": 919,
+            "rank": 920,
             "pct": 46.6
           },
           "matematyka": {
@@ -140689,7 +140689,7 @@
           },
           "matematyka": {
             "score": 0.0064,
-            "rank": 776,
+            "rank": 777,
             "pct": 54.9
           },
           "angielski": {
@@ -141184,7 +141184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.015,
-            "rank": 1035,
+            "rank": 1036,
             "pct": 39.8
           },
           "matematyka": {
@@ -141484,12 +141484,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1808,
-            "rank": 348,
+            "rank": 349,
             "pct": 79.8
           },
           "matematyka": {
             "score": 0.4231,
-            "rank": 162,
+            "rank": 163,
             "pct": 90.6
           },
           "angielski": {
@@ -141499,7 +141499,7 @@
           },
           "composite_min": {
             "score": 0.1808,
-            "rank": 300,
+            "rank": 301,
             "pct": 82.6
           }
         }
@@ -141994,12 +141994,12 @@
           },
           "angielski": {
             "score": -0.0083,
-            "rank": 884,
+            "rank": 885,
             "pct": 48.6
           },
           "composite_min": {
             "score": -0.0083,
-            "rank": 642,
+            "rank": 643,
             "pct": 62.7
           }
         }
@@ -142028,7 +142028,7 @@
           },
           "angielski": {
             "score": 56.7333,
-            "rank": 1210,
+            "rank": 1211,
             "pct": 29.7
           },
           "composite_min": {
@@ -142684,7 +142684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0225,
-            "rank": 864,
+            "rank": 865,
             "pct": 49.8
           },
           "matematyka": {
@@ -143584,7 +143584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1224,
-            "rank": 497,
+            "rank": 498,
             "pct": 71.1
           },
           "matematyka": {
@@ -143599,7 +143599,7 @@
           },
           "composite_min": {
             "score": 0.1224,
-            "rank": 388,
+            "rank": 389,
             "pct": 77.4
           }
         }
@@ -144284,7 +144284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.015,
-            "rank": 893,
+            "rank": 894,
             "pct": 48.1
           },
           "matematyka": {
@@ -144699,7 +144699,7 @@
           },
           "composite_min": {
             "score": -0.3026,
-            "rank": 1498,
+            "rank": 1499,
             "pct": 12.9
           }
         }
@@ -145184,7 +145184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0362,
-            "rank": 806,
+            "rank": 807,
             "pct": 53.1
           },
           "matematyka": {
@@ -145284,7 +145284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1784,
-            "rank": 354,
+            "rank": 355,
             "pct": 79.4
           },
           "matematyka": {
@@ -145589,7 +145589,7 @@
           },
           "matematyka": {
             "score": -0.0457,
-            "rank": 908,
+            "rank": 909,
             "pct": 47.2
           },
           "angielski": {
@@ -145599,7 +145599,7 @@
           },
           "composite_min": {
             "score": -0.0457,
-            "rank": 750,
+            "rank": 751,
             "pct": 56.4
           }
         }
@@ -146594,7 +146594,7 @@
           },
           "angielski": {
             "score": 0.8935,
-            "rank": 35,
+            "rank": 36,
             "pct": 98.0
           },
           "composite_min": {
@@ -146989,7 +146989,7 @@
           },
           "matematyka": {
             "score": 0.1612,
-            "rank": 455,
+            "rank": 456,
             "pct": 73.5
           },
           "angielski": {
@@ -147989,7 +147989,7 @@
           },
           "matematyka": {
             "score": -0.6375,
-            "rank": 1695,
+            "rank": 1696,
             "pct": 1.5
           },
           "angielski": {
@@ -147999,7 +147999,7 @@
           },
           "composite_min": {
             "score": -0.6375,
-            "rank": 1691,
+            "rank": 1692,
             "pct": 1.7
           }
         }
@@ -149789,7 +149789,7 @@
           },
           "matematyka": {
             "score": 0.0731,
-            "rank": 610,
+            "rank": 611,
             "pct": 64.5
           },
           "angielski": {
@@ -150084,7 +150084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.111,
-            "rank": 1414,
+            "rank": 1415,
             "pct": 17.8
           },
           "matematyka": {
@@ -150099,7 +150099,7 @@
           },
           "composite_min": {
             "score": -0.111,
-            "rank": 967,
+            "rank": 968,
             "pct": 43.8
           }
         }
@@ -150684,7 +150684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.193,
-            "rank": 324,
+            "rank": 325,
             "pct": 81.2
           },
           "matematyka": {
@@ -150884,7 +150884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0237,
-            "rank": 1077,
+            "rank": 1078,
             "pct": 37.4
           },
           "matematyka": {
@@ -150994,12 +150994,12 @@
           },
           "angielski": {
             "score": -0.3767,
-            "rank": 1640,
+            "rank": 1641,
             "pct": 4.7
           },
           "composite_min": {
             "score": -0.3767,
-            "rank": 1607,
+            "rank": 1608,
             "pct": 6.6
           }
         }
@@ -151784,7 +151784,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.2697,
-            "rank": 218,
+            "rank": 220,
             "pct": 87.3
           },
           "matematyka": {
@@ -151799,7 +151799,7 @@
           },
           "composite_min": {
             "score": 0.2697,
-            "rank": 191,
+            "rank": 193,
             "pct": 88.8
           }
         }
@@ -152689,7 +152689,7 @@
           },
           "matematyka": {
             "score": -0.1626,
-            "rank": 1245,
+            "rank": 1246,
             "pct": 27.6
           },
           "angielski": {
@@ -152699,7 +152699,7 @@
           },
           "composite_min": {
             "score": -0.1626,
-            "rank": 1099,
+            "rank": 1100,
             "pct": 36.1
           }
         }
@@ -152884,7 +152884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0072,
-            "rank": 999,
+            "rank": 1000,
             "pct": 41.9
           },
           "matematyka": {
@@ -153284,7 +153284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1544,
-            "rank": 417,
+            "rank": 418,
             "pct": 75.8
           },
           "matematyka": {
@@ -153989,7 +153989,7 @@
           },
           "matematyka": {
             "score": 0.5369,
-            "rank": 87,
+            "rank": 88,
             "pct": 94.9
           },
           "angielski": {
@@ -154562,7 +154562,7 @@
         "diff_mean": {
           "polski": {
             "score": -2.7946,
-            "rank": 1106,
+            "rank": 1107,
             "pct": 35.7
           },
           "matematyka": {
@@ -154884,7 +154884,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1519,
-            "rank": 424,
+            "rank": 425,
             "pct": 75.3
           },
           "matematyka": {
@@ -155099,7 +155099,7 @@
           },
           "composite_min": {
             "score": 0.0753,
-            "rank": 472,
+            "rank": 473,
             "pct": 72.6
           }
         }
@@ -155584,7 +155584,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0046,
-            "rank": 989,
+            "rank": 990,
             "pct": 42.5
           },
           "matematyka": {
@@ -155599,7 +155599,7 @@
           },
           "composite_min": {
             "score": -0.0046,
-            "rank": 634,
+            "rank": 635,
             "pct": 63.1
           }
         }
@@ -155889,7 +155889,7 @@
           },
           "matematyka": {
             "score": -0.0214,
-            "rank": 849,
+            "rank": 850,
             "pct": 50.6
           },
           "angielski": {
@@ -156489,7 +156489,7 @@
           },
           "matematyka": {
             "score": -0.2362,
-            "rank": 1444,
+            "rank": 1445,
             "pct": 16.0
           },
           "angielski": {
@@ -156789,7 +156789,7 @@
           },
           "matematyka": {
             "score": 0.2453,
-            "rank": 335,
+            "rank": 336,
             "pct": 80.5
           },
           "angielski": {
@@ -156899,7 +156899,7 @@
           },
           "composite_min": {
             "score": -0.1835,
-            "rank": 1163,
+            "rank": 1164,
             "pct": 32.4
           }
         }
@@ -156989,7 +156989,7 @@
           },
           "matematyka": {
             "score": -0.1529,
-            "rank": 1215,
+            "rank": 1216,
             "pct": 29.4
           },
           "angielski": {
@@ -157084,7 +157084,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.152,
-            "rank": 422,
+            "rank": 423,
             "pct": 75.5
           },
           "matematyka": {
@@ -157289,7 +157289,7 @@
           },
           "matematyka": {
             "score": 0.3185,
-            "rank": 254,
+            "rank": 255,
             "pct": 85.2
           },
           "angielski": {
@@ -157494,7 +157494,7 @@
           },
           "angielski": {
             "score": 0.3753,
-            "rank": 397,
+            "rank": 398,
             "pct": 76.9
           },
           "composite_min": {
@@ -157689,7 +157689,7 @@
           },
           "matematyka": {
             "score": 0.2501,
-            "rank": 327,
+            "rank": 328,
             "pct": 81.0
           },
           "angielski": {
@@ -159994,7 +159994,7 @@
           },
           "angielski": {
             "score": -0.0777,
-            "rank": 1044,
+            "rank": 1045,
             "pct": 39.3
           },
           "composite_min": {
@@ -160384,12 +160384,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0848,
-            "rank": 1313,
+            "rank": 1314,
             "pct": 23.7
           },
           "matematyka": {
             "score": -0.2579,
-            "rank": 1485,
+            "rank": 1486,
             "pct": 13.7
           },
           "angielski": {
@@ -160399,7 +160399,7 @@
           },
           "composite_min": {
             "score": -0.2579,
-            "rank": 1386,
+            "rank": 1387,
             "pct": 19.4
           }
         }
@@ -160699,7 +160699,7 @@
           },
           "composite_min": {
             "score": -0.0575,
-            "rank": 794,
+            "rank": 796,
             "pct": 53.8
           }
         }
@@ -160984,7 +160984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0927,
-            "rank": 1349,
+            "rank": 1350,
             "pct": 21.6
           },
           "matematyka": {
@@ -161094,7 +161094,7 @@
           },
           "angielski": {
             "score": 0.4769,
-            "rank": 306,
+            "rank": 307,
             "pct": 82.2
           },
           "composite_min": {
@@ -161284,7 +161284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0888,
-            "rank": 1329,
+            "rank": 1331,
             "pct": 22.7
           },
           "matematyka": {
@@ -161394,7 +161394,7 @@
           },
           "angielski": {
             "score": -0.1075,
-            "rank": 1120,
+            "rank": 1121,
             "pct": 34.9
           },
           "composite_min": {
@@ -161589,7 +161589,7 @@
           },
           "matematyka": {
             "score": -0.0774,
-            "rank": 1008,
+            "rank": 1010,
             "pct": 41.3
           },
           "angielski": {
@@ -162284,7 +162284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.044,
-            "rank": 775,
+            "rank": 776,
             "pct": 54.9
           },
           "matematyka": {
@@ -162484,7 +162484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.2699,
-            "rank": 216,
+            "rank": 217,
             "pct": 87.4
           },
           "matematyka": {
@@ -162499,7 +162499,7 @@
           },
           "composite_min": {
             "score": 0.2699,
-            "rank": 189,
+            "rank": 190,
             "pct": 89.0
           }
         }
@@ -162799,7 +162799,7 @@
           },
           "composite_min": {
             "score": -0.0692,
-            "rank": 824,
+            "rank": 825,
             "pct": 52.1
           }
         }
@@ -163494,7 +163494,7 @@
           },
           "angielski": {
             "score": 0.5563,
-            "rank": 242,
+            "rank": 243,
             "pct": 85.9
           },
           "composite_min": {
@@ -164284,7 +164284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0945,
-            "rank": 596,
+            "rank": 597,
             "pct": 65.3
           },
           "matematyka": {
@@ -164484,7 +164484,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0246,
-            "rank": 857,
+            "rank": 859,
             "pct": 50.1
           },
           "matematyka": {
@@ -164494,7 +164494,7 @@
           },
           "angielski": {
             "score": 0.1506,
-            "rank": 625,
+            "rank": 626,
             "pct": 63.7
           },
           "composite_min": {
@@ -164689,7 +164689,7 @@
           },
           "matematyka": {
             "score": -0.2284,
-            "rank": 1434,
+            "rank": 1435,
             "pct": 16.6
           },
           "angielski": {
@@ -164699,7 +164699,7 @@
           },
           "composite_min": {
             "score": -0.2284,
-            "rank": 1306,
+            "rank": 1307,
             "pct": 24.1
           }
         }
@@ -165199,7 +165199,7 @@
           },
           "composite_min": {
             "score": -0.665,
-            "rank": 1702,
+            "rank": 1703,
             "pct": 1.0
           }
         }
@@ -165984,7 +165984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0299,
-            "rank": 829,
+            "rank": 831,
             "pct": 51.7
           },
           "matematyka": {
@@ -166184,7 +166184,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.02,
-            "rank": 1058,
+            "rank": 1060,
             "pct": 38.4
           },
           "matematyka": {
@@ -166199,7 +166199,7 @@
           },
           "composite_min": {
             "score": -0.02,
-            "rank": 675,
+            "rank": 676,
             "pct": 60.8
           }
         }
@@ -166984,7 +166984,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0412,
-            "rank": 782,
+            "rank": 783,
             "pct": 54.5
           },
           "matematyka": {
@@ -166999,7 +166999,7 @@
           },
           "composite_min": {
             "score": 0.0412,
-            "rank": 540,
+            "rank": 541,
             "pct": 68.6
           }
         }
@@ -167489,7 +167489,7 @@
           },
           "matematyka": {
             "score": -0.0466,
-            "rank": 914,
+            "rank": 915,
             "pct": 46.9
           },
           "angielski": {
@@ -167989,7 +167989,7 @@
           },
           "matematyka": {
             "score": 0.104,
-            "rank": 544,
+            "rank": 545,
             "pct": 68.4
           },
           "angielski": {
@@ -167999,7 +167999,7 @@
           },
           "composite_min": {
             "score": 0.104,
-            "rank": 430,
+            "rank": 431,
             "pct": 75.0
           }
         }
@@ -168284,7 +168284,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": -0.0932,
-            "rank": 1352,
+            "rank": 1353,
             "pct": 21.4
           },
           "matematyka": {
@@ -168394,7 +168394,7 @@
           },
           "angielski": {
             "score": 0.792,
-            "rank": 101,
+            "rank": 102,
             "pct": 94.1
           },
           "composite_min": {
@@ -168584,12 +168584,12 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.1163,
-            "rank": 516,
+            "rank": 517,
             "pct": 70.0
           },
           "matematyka": {
             "score": -0.0595,
-            "rank": 958,
+            "rank": 959,
             "pct": 44.3
           },
           "angielski": {
@@ -168684,7 +168684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0686,
-            "rank": 683,
+            "rank": 684,
             "pct": 60.3
           },
           "matematyka": {
@@ -168889,7 +168889,7 @@
           },
           "matematyka": {
             "score": 0.226,
-            "rank": 366,
+            "rank": 367,
             "pct": 78.7
           },
           "angielski": {
@@ -169194,7 +169194,7 @@
           },
           "angielski": {
             "score": 0.1553,
-            "rank": 615,
+            "rank": 616,
             "pct": 64.2
           },
           "composite_min": {
@@ -169289,7 +169289,7 @@
           },
           "matematyka": {
             "score": 0.0458,
-            "rank": 682,
+            "rank": 683,
             "pct": 60.3
           },
           "angielski": {
@@ -169494,12 +169494,12 @@
           },
           "angielski": {
             "score": -0.3913,
-            "rank": 1653,
+            "rank": 1654,
             "pct": 3.9
           },
           "composite_min": {
             "score": -0.3913,
-            "rank": 1618,
+            "rank": 1619,
             "pct": 5.9
           }
         }
@@ -169789,17 +169789,17 @@
           },
           "matematyka": {
             "score": -0.0774,
-            "rank": 1008,
+            "rank": 1009,
             "pct": 41.4
           },
           "angielski": {
             "score": -0.2804,
-            "rank": 1529,
+            "rank": 1530,
             "pct": 11.1
           },
           "composite_min": {
             "score": -0.2804,
-            "rank": 1444,
+            "rank": 1445,
             "pct": 16.0
           }
         }
@@ -169989,7 +169989,7 @@
           },
           "matematyka": {
             "score": -0.3065,
-            "rank": 1566,
+            "rank": 1567,
             "pct": 9.0
           },
           "angielski": {
@@ -170094,7 +170094,7 @@
           },
           "angielski": {
             "score": 0.3924,
-            "rank": 380,
+            "rank": 381,
             "pct": 77.9
           },
           "composite_min": {
@@ -170894,12 +170894,12 @@
           },
           "angielski": {
             "score": -0.3562,
-            "rank": 1627,
+            "rank": 1628,
             "pct": 5.4
           },
           "composite_min": {
             "score": -0.3562,
-            "rank": 1586,
+            "rank": 1587,
             "pct": 7.8
           }
         }
@@ -171384,7 +171384,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0349,
-            "rank": 812,
+            "rank": 813,
             "pct": 52.8
           },
           "matematyka": {
@@ -171684,7 +171684,7 @@
         "unit_norm_diff_mean": {
           "polski": {
             "score": 0.0754,
-            "rank": 657,
+            "rank": 659,
             "pct": 61.7
           },
           "matematyka": {
@@ -171699,7 +171699,7 @@
           },
           "composite_min": {
             "score": -0.2107,
-            "rank": 1247,
+            "rank": 1248,
             "pct": 27.5
           }
         }
