@@ -209,7 +209,8 @@
   function detailChart(hist, years, view, dim) {
     const series = DETAIL_SUBJECTS.map(subj => ({
       colour: SUBJECT_COLOURS[subj],
-      markers: subj === 'composite_min',
+      // Dots only for composite_min so it doesn't hide the subject lines.
+      pointsOnly: subj === 'composite_min',
       points: Object.fromEntries(years.map(y => {
         const cell = hist[subj]?.[view]?.[String(y)];
         return [y, cell ? cell[dim] : null];
@@ -247,8 +248,11 @@
     const header = `<tr><th></th>${DETAIL_SUBJECTS.map(s => `<th>${t('subject_' + s)}</th>`).join('')}</tr>`;
     const title = view === 'single_year' ? t('detailSecSingle')
                 : view === 'loo' ? t('detailSecLOO') : t('detailSecLastK');
-    return `<div class="detail-sec-title">${title}</div>
-      <table class="detail-table">
+    // <caption> is part of the table, so the title always stays directly above
+    // its table and wraps together with it (a separate sibling div could drift
+    // onto a different line on narrow screens).
+    return `<table class="detail-table">
+        <caption>${title}</caption>
         <thead>${header}</thead><tbody>${bodyRows}</tbody>
       </table>`;
   }

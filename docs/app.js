@@ -71,9 +71,12 @@ const SUBJECT_COLOURS = {
 //
 // opts:
 //   years:   [2021, 2022, …]  — x positions, in order
-//   series:  [{ colour, points: {<year>: value|null}, markers?: bool }]
+//   series:  [{ colour, points: {<year>: value|null},
+//              markers?: bool,      // line + dots
+//              pointsOnly?: bool }] // dots only, no line (e.g. composite_min,
+//                                   //   so it doesn't hide the subject lines)
 //   invertY: true for rank charts (1 = best, drawn at the top)
-//   fmtY:    (value) => short string, used for the two Y-axis labels
+//   fmtY:    (value) => short string, used for the Y-axis tick labels
 //   width/height: optional pixel size
 // Points keyed by year; missing years are gaps (line skips them).
 
@@ -109,18 +112,24 @@ function lineChartSVG(opts) {
     return opts.invertY ? (mT + t * plotH) : (mT + (1 - t) * plotH);
   };
 
+  const fmtY = opts.fmtY || ((v) => String(Math.round(v)));
+
+  // Y gridlines + tick labels: min, max, and a couple of values in between
+  // for readability. Ticks sit at real data values (computed across the data
+  // range, positioned via yOf which handles the invertY case).
+  const nTicks = (dataHi === dataLo) ? 1 : 4;   // min, two intermediate, max
+  let grid = '';
+  for (let k = 0; k < nTicks; k++) {
+    const v = (nTicks === 1) ? dataLo : dataLo + (k / (nTicks - 1)) * (dataHi - dataLo);
+    const gy = yOf(v);
+    grid +=
+      `<line x1="${mL}" y1="${gy.toFixed(1)}" x2="${mL + plotW}" y2="${gy.toFixed(1)}" stroke="#eee"/>` +
+      `<text x="${mL - 4}" y="${(gy + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="#666">${fmtY(v)}</text>`;
+  }
+
   const axes =
     `<line x1="${mL}" y1="${mT}" x2="${mL}" y2="${mT + plotH}" stroke="#ccc"/>` +
     `<line x1="${mL}" y1="${mT + plotH}" x2="${mL + plotW}" y2="${mT + plotH}" stroke="#ccc"/>`;
-
-  // Top/bottom Y labels — actual data extremes; for invertY the top is the
-  // best (lowest) value.
-  const topVal = opts.invertY ? dataLo : dataHi;
-  const botVal = opts.invertY ? dataHi : dataLo;
-  const fmtY = opts.fmtY || ((v) => String(Math.round(v)));
-  const yLabels =
-    `<text x="${mL - 4}" y="${mT + 7}" text-anchor="end" font-size="9" fill="#666">${fmtY(topVal)}</text>` +
-    `<text x="${mL - 4}" y="${mT + plotH}" text-anchor="end" font-size="9" fill="#666">${fmtY(botVal)}</text>`;
 
   const xLabels = years.map(y =>
     `<text x="${xOf(y).toFixed(1)}" y="${H - 5}" text-anchor="middle" font-size="9" fill="#666">${y}</text>`
@@ -131,15 +140,17 @@ function lineChartSVG(opts) {
       .map(y => (s.points[y] == null) ? null : `${xOf(y).toFixed(1)},${yOf(s.points[y]).toFixed(1)}`)
       .filter(Boolean);
     if (!coords.length) return '';
-    const poly = `<polyline fill="none" stroke="${s.colour}" stroke-width="${s.markers ? 2 : 1.4}" points="${coords.join(' ')}"/>`;
-    const dots = s.markers
+    const poly = s.pointsOnly
+      ? ''
+      : `<polyline fill="none" stroke="${s.colour}" stroke-width="${s.markers ? 2 : 1.4}" points="${coords.join(' ')}"/>`;
+    const dots = (s.markers || s.pointsOnly)
       ? years.map(y => (s.points[y] == null) ? '' :
-          `<circle cx="${xOf(y).toFixed(1)}" cy="${yOf(s.points[y]).toFixed(1)}" r="2.3" fill="${s.colour}"/>`).join('')
+          `<circle cx="${xOf(y).toFixed(1)}" cy="${yOf(s.points[y]).toFixed(1)}" r="${s.pointsOnly ? 2.6 : 2.3}" fill="${s.colour}"/>`).join('')
       : '';
     return poly + dots;
   }).join('');
 
-  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${axes}${yLabels}${xLabels}${lines}</svg>`;
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${grid}${axes}${xLabels}${lines}</svg>`;
 }
 
 // Shared subject legend (coloured dots + names), used under chart groups.

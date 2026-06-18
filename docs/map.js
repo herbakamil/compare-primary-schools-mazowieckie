@@ -360,9 +360,9 @@
     const subjects = ['polski', 'matematyka', 'angielski', 'composite_min'];
     const series = subjects.map(subj => ({
       colour: SUBJECT_COLOURS[subj],
-      // composite_min equals the weakest subject each year, so its line sits
-      // exactly on that subject's line — markers keep it visible when they coincide.
-      markers: subj === 'composite_min',
+      // composite_min equals the weakest subject each year, so a line would sit
+      // exactly on that subject's line and hide it — draw it as dots only.
+      pointsOnly: subj === 'composite_min',
       points: Object.fromEntries(
         yearsPresent.map(y => [y, hist[subj]?.single_year?.[String(y)]?.score ?? null])),
     }));
