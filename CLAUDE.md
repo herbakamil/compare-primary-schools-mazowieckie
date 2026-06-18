@@ -35,7 +35,8 @@ compare-primary-schools-mazowieckie/
 │   ├── egzamin-osmoklasisty/                   # OKE xlsx files, one per year
 │   │   ├── 2021_-_*.xlsx
 │   │   ├── 2022_-_*.xlsx
-│   │   └── ...
+│   │   ├── ...
+│   │   └── SOURCES.csv                          # provenance of each xlsx (see below)
 │   └── school_coords.csv                       # geocoding cache (rspo, address, lat, lon)
 ├── output/                                     # OUTPUT for analysts (xlsx)
 │   └── schools-{metric}.xlsx   × 4
@@ -81,6 +82,23 @@ relevant columns are:
 
 Subjects present: `polski`, `matematyka`, `angielski`, and several minor foreign
 languages (`francuski`, `hiszpanski`, `niemiecki`, `rosyjski`, `wloski`).
+
+### Provenance — `data/egzamin-osmoklasisty/SOURCES.csv`
+
+Every source xlsx must be documented in `SOURCES.csv` (columns: `file_name,
+year, webpage, document_link, retrieved_date, notes`). `file_name` is the exact
+on-disk name (including any `.xlsx.xlsx` double extension) and is the join key.
+
+The notebook's load cell **raises** if any source file present in
+`data/egzamin-osmoklasisty/` is missing from `SOURCES.csv` (and warns if
+`SOURCES.csv` lists a file not on disk). This forces recording where each file
+came from whenever a new one is dropped in. Dotfiles (e.g. LibreOffice
+`.~lock.*`) are ignored — they are not source data.
+
+Note: the loader only ingests files whose name **starts with the year**
+(`YEAR_FILE_RE = ^\d{4}`), so a file like `bip_1143...2020...xlsx` (year not at
+the start) is documented in `SOURCES.csv` but **not** loaded — its `notes`
+column says so.
 
 ---
 
