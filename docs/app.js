@@ -65,10 +65,13 @@ function hexLerp(a, b, t) {
   return '#' + ch.join('');
 }
 
-// Dark or light text that reads on a given background colour.
+// Dark or light text that reads on a given background colour. The 0.5 cutoff
+// (rather than 0.6) keeps dark text on the medium greens/reds — where it
+// actually has better contrast than white — so white letters appear only on the
+// darkest backgrounds (a small elite top band, not the whole top ~5%).
 function textOn(hex) {
   const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6 ? '#222' : '#fff';
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.5 ? '#222' : '#fff';
 }
 
 // Continuous colour: flat yellow in B (±0.33σ, muddy middle); A ramps
