@@ -116,11 +116,16 @@
       viewRank  = base?.rank  ?? null;
     }
 
-    // A–E class for the displayed score, bucketed against the base
+    // A/B/C class for the displayed score, bucketed against the base
     // distribution (same sigma/centre the map uses), so map and ranking agree.
+    // The cell is coloured by the continuous gradient (not a flat class colour),
+    // so two schools either side of a boundary look almost the same — the letter
+    // flips but the colour barely moves, showing the boundary is soft.
     const centre = baseData.metadata.sigma_centre[metric][subject];
     const sigma  = baseData.metadata.sigma[metric][subject];
-    const classIndex = classIndexFor(viewScore, centre, sigma);
+    const { p1, p99 } = scoreExtent(metric, subject);
+    const classIndex = classIndex3(viewScore, centre, sigma);
+    const classColour = classIndex == null ? null : gradient3Colour(viewScore, centre, sigma, p1, p99);
 
     return {
       rspo: school.rspo,
@@ -134,7 +139,9 @@
       score: viewScore,
       rank: viewRank,
       classIndex,
-      classLetter: classIndex == null ? null : CLASS_LETTERS[classIndex],
+      classLetter: classIndex == null ? null : CLASS3_LETTERS[classIndex],
+      classColour,
+      classTextColour: classColour ? textOn(classColour) : null,
       looMinR, looMaxR,
       singleMinR, singleMaxR,
     };
@@ -190,10 +197,12 @@
     { key: 'singleMinR',  i18n: 'colSingleRange', num: true,  help: 'helpSingleRange' },
   ];
 
-  function classBadge(ci, label) {
-    if (ci == null) return '<span class="class-badge class-badge-sm">—</span>';
-    const text = (label != null) ? label : CLASS_LETTERS[ci];
-    return `<span class="class-badge class-badge-sm" style="background:${CLASS_COLOURS[ci]};color:${CLASS_TEXT_COLOURS[ci]}">${text}</span>`;
+  // A/B/C badge coloured by the continuous gradient (soft boundaries).
+  function classBadge(score, centre, sigma, p1, p99) {
+    const letter = classLetter3(score, centre, sigma);
+    if (letter == null) return '<span class="class-badge class-badge-sm">—</span>';
+    const bg = gradient3Colour(score, centre, sigma, p1, p99);
+    return `<span class="class-badge class-badge-sm" style="background:${bg};color:${textOn(bg)}">${letter}</span>`;
   }
 
   const DETAIL_SUBJECTS = ['polski', 'matematyka', 'angielski', 'composite_min'];
@@ -279,15 +288,16 @@
     const subj = state.subject;
     const cCentre = baseData.metadata.sigma_centre[state.metric][subj];
     const cSigma  = baseData.metadata.sigma[state.metric][subj];
-    const counts = [0, 0, 0, 0, 0];
+    const { p1: cP1, p99: cP99 } = scoreExtent(state.metric, subj);
+    const counts = [0, 0, 0];
     const trajBadges = yearsPresent.map(y => {
-      const cell = hist[subj]?.single_year?.[String(y)];
-      const ci = cell ? classIndexFor(cell.score, cCentre, cSigma) : null;
+      const sc = hist[subj]?.single_year?.[String(y)]?.score;
+      const ci = classIndex3(sc, cCentre, cSigma);
       if (ci != null) counts[ci]++;
-      return `<span class="traj-item">${y}&nbsp;${classBadge(ci)}</span>`;
+      return `<span class="traj-item">${y}&nbsp;${classBadge(sc, cCentre, cSigma, cP1, cP99)}</span>`;
     }).join(' ');
-    const countSummary = [4, 3, 2, 1, 0]
-      .filter(i => counts[i] > 0).map(i => `${CLASS_LETTERS[i]}×${counts[i]}`).join('  ');
+    const countSummary = [2, 1, 0]
+      .filter(i => counts[i] > 0).map(i => `${CLASS3_LETTERS[i]}×${counts[i]}`).join('  ');
 
     // 2×3 chart grid: rows = LOO / single-year, cols = score / rank / percentile.
     const dims = [
@@ -355,7 +365,7 @@
       const syCell  = (r.singleMinR != null) ? `${r.singleMinR}–${r.singleMaxR}` : '—';
       const pubLabel = r.pub ? t('publicYesShort') : t('publicNoShort');
       const classCell = (r.classLetter)
-        ? `<span class="class-badge" style="background:${CLASS_COLOURS[r.classIndex]};color:${CLASS_TEXT_COLOURS[r.classIndex]}">${r.classLetter}</span>`
+        ? `<span class="class-badge" style="background:${r.classColour};color:${r.classTextColour}">${r.classLetter}</span>`
         : '—';
       const selected = (r.rspo === state.selectedSchool);
       const mainRow = `<tr data-rspo="${r.rspo}"${selected ? ' class="highlight"' : ''}>

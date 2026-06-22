@@ -33,38 +33,30 @@ const MAZ_VIEWBOX = '19.2,53.6,23.2,51.0';
 // -----------------------------------------------------------------------------
 // Colour / class mapping
 //
-// One set of z-score thresholds drives both the map colours and the ranking
-// A–E class, so they always agree. Index 0..4 runs worst → best:
-//   0 = E (≤ −1.5σ), 1 = D, 2 = C (±0.33σ), 3 = B, 4 = A (≥ +1.5σ).
+// 3 classes by distance from the per-(metric,subject) centre, boundary ±0.33σ:
+//   A = good   (z >  +0.33σ)
+//   B = medium (±0.33σ — the "muddy middle"; kept flat yellow, honest)
+//   C = weak   (z <  −0.33σ)
+// Index 0=weak(C) … 2=good(A). The ±0.33σ band is wider than the multi-year
+// base score's own noise (~0.12σ from LOO), so the three buckets are
+// statistically distinguishable; the old ±1.5σ A/E split was arbitrary.
 
-const CLASS_LETTERS = ['E', 'D', 'C', 'B', 'A'];
-const CLASS_COLOURS = [COLOURS.satRed, COLOURS.red, COLOURS.yellow, COLOURS.green, COLOURS.satGreen];
-// Text colour that reads on each class colour (white on the saturated ends).
-const CLASS_TEXT_COLOURS = ['#fff', '#222', '#222', '#222', '#fff'];
+const CLASS_BOUND = 0.33;
+const CLASS3_LETTERS = ['C', 'B', 'A'];
+const CLASS3_FLAT = [COLOURS.satRed, COLOURS.yellow, COLOURS.satGreen];  // toggle-off
 
-function classIndexFor(score, centre, sigma) {
+function classIndex3(score, centre, sigma) {
   if (score == null || sigma == null || sigma === 0) return null;
   const z = (score - centre) / sigma;
-  if (z <= -1.5)   return 0;  // E
-  if (z <  -0.33)  return 1;  // D
-  if (z <=  0.33)  return 2;  // C
-  if (z <   1.5)   return 3;  // B
-  return 4;                   // A
+  if (z >  CLASS_BOUND) return 2;  // A good
+  if (z < -CLASS_BOUND) return 0;  // C weak
+  return 1;                        // B medium
 }
 
-// Optional continuous variant: a diverging gradient that ramps smoothly through
-// the (wide) B and D bands, but stays FLAT in C (muddy middle) and beyond ±1.5σ
-// (A/E, bold extremes). The ramp endpoints are the adjacent class colours, so
-// the two modes line up at the band boundaries. Anchors (z, colour):
-//   −1.5 satRed · −0.915 red · ±0.33 yellow (flat C) · +0.915 green · +1.5 satGreen
-const GRADIENT_STOPS = [
-  [-1.5,   COLOURS.satRed],
-  [-0.915, COLOURS.red],
-  [-0.33,  COLOURS.yellow],
-  [ 0.33,  COLOURS.yellow],
-  [ 0.915, COLOURS.green],
-  [ 1.5,   COLOURS.satGreen],
-];
+function classLetter3(score, centre, sigma) {
+  const i = classIndex3(score, centre, sigma);
+  return i == null ? null : CLASS3_LETTERS[i];
+}
 
 function hexLerp(a, b, t) {
   const pa = [parseInt(a.slice(1, 3), 16), parseInt(a.slice(3, 5), 16), parseInt(a.slice(5, 7), 16)];
@@ -73,28 +65,53 @@ function hexLerp(a, b, t) {
   return '#' + ch.join('');
 }
 
-function gradientColour(z) {
-  if (z <= GRADIENT_STOPS[0][0]) return GRADIENT_STOPS[0][1];
-  const last = GRADIENT_STOPS[GRADIENT_STOPS.length - 1];
-  if (z >= last[0]) return last[1];
-  for (let i = 1; i < GRADIENT_STOPS.length; i++) {
-    const [z0, c0] = GRADIENT_STOPS[i - 1];
-    const [z1, c1] = GRADIENT_STOPS[i];
-    if (z <= z1) {
-      const t = (z1 === z0) ? 0 : (z - z0) / (z1 - z0);
-      return hexLerp(c0, c1, t);   // flat where c0 === c1 (the C plateau)
-    }
-  }
-  return last[1];
+// Dark or light text that reads on a given background colour.
+function textOn(hex) {
+  const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6 ? '#222' : '#fff';
 }
 
-// gradient=true → continuous colour (smooth in B/D, flat in C/A/E);
-// gradient=false → the 5 discrete class colours.
-function colourFor(score, centre, sigma, gradient) {
-  const i = classIndexFor(score, centre, sigma);
+// Continuous colour: flat yellow in B (±0.33σ, muddy middle); A ramps
+// yellow→green→satGreen out to p99; C ramps yellow→red→satRed out to p1;
+// saturates beyond p1/p99. p1/p99 are the robust extremes (not min/max), so one
+// outlier school can't stretch the scale and wash everyone else out.
+function gradient3Colour(score, centre, sigma, p1, p99) {
+  if (score == null || sigma == null || sigma === 0) return COLOURS.missing;
+  const lo = centre - CLASS_BOUND * sigma;
+  const hi = centre + CLASS_BOUND * sigma;
+  if (score >= lo && score <= hi) return COLOURS.yellow;
+  if (score > hi) {
+    const t = Math.min(1, (score - hi) / Math.max(1e-9, p99 - hi));
+    return t <= 0.5 ? hexLerp(COLOURS.yellow, COLOURS.green, t / 0.5)
+                    : hexLerp(COLOURS.green, COLOURS.satGreen, (t - 0.5) / 0.5);
+  }
+  const t = Math.min(1, (lo - score) / Math.max(1e-9, lo - p1));
+  return t <= 0.5 ? hexLerp(COLOURS.yellow, COLOURS.red, t / 0.5)
+                  : hexLerp(COLOURS.red, COLOURS.satRed, (t - 0.5) / 0.5);
+}
+
+// gradient=true → continuous (gradient3Colour); false → 3 flat class colours.
+function colourFor(score, centre, sigma, p1, p99, gradient) {
+  const i = classIndex3(score, centre, sigma);
   if (i == null) return COLOURS.missing;
-  if (!gradient) return CLASS_COLOURS[i];
-  return gradientColour((score - centre) / sigma);
+  return gradient ? gradient3Colour(score, centre, sigma, p1, p99) : CLASS3_FLAT[i];
+}
+
+// p1/p99 of the base scores for a (metric, subject), computed once and cached.
+// 1720 numbers → sorting is sub-millisecond; recomputed only on a cache miss
+// (per metric/subject), never per marker. No notebook/metadata change needed.
+const _extentCache = {};
+function scoreExtent(metric, subject) {
+  const key = metric + '|' + subject;
+  if (_extentCache[key]) return _extentCache[key];
+  const vals = baseData.schools
+    .map(s => s.scores?.[metric]?.[subject]?.score)
+    .filter(v => v != null)
+    .sort((a, b) => a - b);
+  const at = (p) => vals.length ? vals[Math.min(vals.length - 1, Math.max(0, Math.round(p / 100 * (vals.length - 1))))] : 0;
+  const r = { p1: at(1), p99: at(99) };
+  _extentCache[key] = r;
+  return r;
 }
 
 // Per-subject line colours, shared by the map popup sparkline and the ranking
@@ -282,8 +299,8 @@ const I18N = {
     sectionSearch: 'Szukaj adresu',
     sectionLegend: 'Legenda',
     sectionSettings: 'Ustawienia',
-    gradientToggle: 'Gradient w klasach B i D',
-    gradientHelp: 'Płynne przejście koloru w pasmach B i D (bliżej C jaśniej, bliżej A/E mocniej). C, A i E pozostają jednolite.',
+    gradientToggle: 'Gradient koloru',
+    gradientHelp: 'Płynne przejście koloru w klasach A i C (im dalej od średniej, tym mocniej, aż do 1.–99. percentyla). Środek (B) pozostaje jednolicie żółty.',
     labelSubject: 'Przedmiot',
     labelMetric: 'Metryka',
     labelPublic: 'Publiczna',
@@ -297,11 +314,9 @@ const I18N = {
     searchHelp: 'Geokodowanie: OpenStreetMap Nominatim. Wyszukiwanie tylko po kliknięciu „Szukaj”.',
     searchNotFound: 'Nie znaleziono adresu.',
     searchError: 'Błąd geokodowania.',
-    legendSatGreen: 'Bardzo dobry (≥ +1.5σ)',
-    legendGreen: 'Dobry (+0.33σ … +1.5σ)',
-    legendYellow: 'Przeciętny (±0.33σ)',
-    legendRed: 'Słaby (−1.5σ … −0.33σ)',
-    legendSatRed: 'Bardzo słaby (≤ −1.5σ)',
+    legendGood: 'Dobra (powyżej +0.33σ)',
+    legendMedium: 'Średnia (±0.33σ)',
+    legendWeak: 'Słaba (poniżej −0.33σ)',
     metric_mean: 'Średnia',
     metric_median: 'Mediana',
     metric_diff_mean: 'Różnica od średniej',
@@ -375,8 +390,8 @@ const I18N = {
     sectionSearch: 'Address search',
     sectionLegend: 'Legend',
     sectionSettings: 'Settings',
-    gradientToggle: 'Gradient within classes B and D',
-    gradientHelp: 'Smooth colour transition within the B and D bands (lighter near C, stronger near A/E). C, A and E stay solid.',
+    gradientToggle: 'Colour gradient',
+    gradientHelp: 'Smooth colour within classes A and C (stronger the further from average, up to the 1st/99th percentile). The middle (B) stays solid yellow.',
     labelSubject: 'Subject',
     labelMetric: 'Metric',
     labelPublic: 'Public',
@@ -390,11 +405,9 @@ const I18N = {
     searchHelp: 'Geocoding: OpenStreetMap Nominatim. Searches only on submit.',
     searchNotFound: 'Address not found.',
     searchError: 'Geocoding error.',
-    legendSatGreen: 'Excellent (≥ +1.5σ)',
-    legendGreen: 'Good (+0.33σ … +1.5σ)',
-    legendYellow: 'Average (±0.33σ)',
-    legendRed: 'Weak (−1.5σ … −0.33σ)',
-    legendSatRed: 'Very weak (≤ −1.5σ)',
+    legendGood: 'Good (above +0.33σ)',
+    legendMedium: 'Average (±0.33σ)',
+    legendWeak: 'Weak (below −0.33σ)',
     metric_mean: 'Mean',
     metric_median: 'Median',
     metric_diff_mean: 'Difference from mean',

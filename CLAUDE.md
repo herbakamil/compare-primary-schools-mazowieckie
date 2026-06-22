@@ -196,15 +196,28 @@ redundant; the min captures the bottleneck subject.
 
 ## Colour scale (for the map)
 
-Diverging green–yellow–red gradient, 5 classes, computed **per (metric, subject)**:
+**3 classes** by distance from the centre, boundary ±0.33σ, computed **per
+(metric, subject)**:
 
-| Class | Condition |
-|-------|-----------|
-| Saturated red | score ≤ centre − 1.5σ |
-| Red | centre − 1.5σ < score < centre − 0.33σ |
-| Yellow | centre − 0.33σ ≤ score ≤ centre + 0.33σ |
-| Green | centre + 0.33σ < score < centre + 1.5σ |
-| Saturated green | score ≥ centre + 1.5σ |
+| Class | Condition | Flat colour |
+|-------|-----------|-------------|
+| **A** good | score > centre + 0.33σ | green `#1a9850` |
+| **B** medium | centre − 0.33σ ≤ score ≤ centre + 0.33σ | yellow `#fde08a` |
+| **C** weak | score < centre − 0.33σ | red `#d6604d` |
+
+The ±0.33σ band is wider than the multi-year base score's own year-to-year noise
+(≈ 0.12σ, from LOO), so the three buckets are statistically distinguishable. The
+old 5-class scheme (extra ±1.5σ "saturated" cutoffs) was dropped — ±1.5σ was
+arbitrary and median-angielski left class A empty (centre + 1.5σ > 100).
+
+A **gradient toggle** (map "Ustawienia", default off; ranking class column always
+gradient) renders a continuous colour instead of 3 flat ones: B stays flat
+yellow (muddy middle, §7), A ramps yellow→green and C ramps yellow→red out to the
+**1st / 99th percentile** of the actual score distribution (robust to outliers,
+so one extreme school can't stretch the scale). p1/p99 are computed **client-side**
+from the 1,720 base scores per (metric, subject) — not exported (cheap: a sort of
+1,720 numbers, cached per metric/subject). Only `sigma`/`sigma_centre` come from
+the JSON metadata; the ±0.33σ boundary and gradient anchors derive from those.
 
 σ and centre are computed **per metric and per subject**, because the metrics
 live on different scales (`mean`/`median` are 0–100; `diff_mean` and

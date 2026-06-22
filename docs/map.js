@@ -140,7 +140,8 @@
     const score = scoreOf(school, metric, subject);
     const centre = baseData.metadata.sigma_centre[metric][subject];
     const sigma  = baseData.metadata.sigma[metric][subject];
-    return colourFor(score, centre, sigma, state.gradient);
+    const { p1, p99 } = scoreExtent(metric, subject);
+    return colourFor(score, centre, sigma, p1, p99, state.gradient);
   }
 
   function applyMarkerColour(marker) {
@@ -157,7 +158,8 @@
     }
     const centre = baseData.metadata.sigma_centre[state.metric][state.subject];
     const sigma  = baseData.metadata.sigma[state.metric][state.subject];
-    const fill = n > 0 ? colourFor(sum / n, centre, sigma, state.gradient) : COLOURS.missing;
+    const { p1, p99 } = scoreExtent(state.metric, state.subject);
+    const fill = n > 0 ? colourFor(sum / n, centre, sigma, p1, p99, state.gradient) : COLOURS.missing;
     const count = children.length;
     // Size scales gently with count.
     const size = Math.min(56, 28 + Math.round(Math.sqrt(count) * 2));

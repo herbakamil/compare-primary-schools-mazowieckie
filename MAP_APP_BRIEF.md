@@ -198,31 +198,30 @@ Four subjects, also a toggle: `polski`, `matematyka`, `angielski`, and
 
 For the selected (metric, subject), read `centre = metadata.sigma_centre[metric][subject]`
 and `sigma = metadata.sigma[metric][subject]`. Map a school's
-`score = scores[metric][subject].score` to one of 5 classes:
+`score = scores[metric][subject].score` to one of **3 classes** (boundary ±0.33σ):
 
-| Class | Condition | Colour |
-|-------|-----------|--------|
-| Saturated red | score ≤ centre − 1.5σ | `#d6604d` |
-| Red | centre − 1.5σ < score < centre − 0.33σ | `#f4a582` |
-| Yellow | centre − 0.33σ ≤ score ≤ centre + 0.33σ | `#fde08a` |
-| Green | centre + 0.33σ < score < centre + 1.5σ | `#a6dba0` |
-| Saturated green | score ≥ centre + 1.5σ | `#1a9850` |
+| Class | Condition | Flat colour |
+|-------|-----------|-------------|
+| **A** good | score > centre + 0.33σ | `#1a9850` green |
+| **B** medium | centre − 0.33σ ≤ score ≤ centre + 0.33σ | `#fde08a` yellow |
+| **C** weak | score < centre − 0.33σ | `#d6604d` red |
 
-(You may interpolate a continuous gradient between centre and ±1.5σ instead of 5
-discrete classes, saturating beyond ±1.5σ — but 5 classes is the baseline.)
+The ±0.33σ band is wider than the multi-year base score's own noise (≈ 0.12σ from
+LOO), so the 3 buckets are statistically distinguishable. The earlier 5-class
+scheme (extra ±1.5σ "saturated" cutoffs) was dropped — ±1.5σ was arbitrary and
+left class A empty for median-angielski (centre + 1.5σ > 100).
 
-**Gradient toggle (Ustawienia / Settings, below the legend).** A checkbox lets
-the user switch the markers between the 5 discrete classes (default) and a
-continuous gradient. The gradient ramps smoothly only through the **B and D**
-bands — the two widest (1.17σ each) — while **C stays flat yellow** (muddy
-middle, §7) and **A/E stay flat saturated** (bold, clamped extremes). The ramp
-endpoints are the adjacent class colours, so the two modes line up at every band
-boundary; `colourFor(score, centre, sigma, gradient)` (app.js) and
-`GRADIENT_STOPS` implement it, and clusters colour by the same function on their
-mean. State persists like other settings (URL `gradient=1` > localStorage >
-default off). It is a permanent user setting. The legend keeps the 5 discrete
-class swatches as reference even in gradient mode, each labelled with its class
-letter A–E (matching the ranking's "Klasa" column).
+**Gradient toggle (Ustawienia / Settings, below the legend; default off — the
+ranking class column is always gradient).** A continuous colour instead of 3 flat
+ones: **B stays flat yellow** (muddy middle, §7), **A ramps yellow→green** and
+**C ramps yellow→red** out to the **1st / 99th percentile** of the score
+distribution (robust — one outlier can't stretch the scale). `colourFor(score,
+centre, sigma, p1, p99, gradient)` + `gradient3Colour` (app.js) implement it;
+clusters colour by the same function on their mean. p1/p99 are computed
+**client-side** from the 1,720 base scores per (metric, subject) (`scoreExtent`,
+cached) — not exported. State persists like other settings (URL `gradient=1` >
+localStorage > default off). The legend shows the 3 classes labelled A/B/C
+(matching the ranking's "Klasa" column).
 
 The centre differs by metric: for `mean`/`median` it's the voivodeship average
 (~54–66), for the diff-based metrics it's 0 (and composite_min uses its own
@@ -355,9 +354,10 @@ The data has real uncertainty and the UI must not overstate precision.
 - **Map shows colour, never a numeric rank.** A school's rank in the dense middle
   of the distribution swings by ~10% of all positions (100+ places) when a single
   year is added or removed — a density artifact, not a real difference. A number
-  like "#234" implies precision the data can't support. The colour scale
-  saturates at ±1.5σ precisely so the muddy middle looks muddy. Numeric ranks live
-  only in the ranking page, always shown *with* their LOO/single-year ranges.
+  like "#234" implies precision the data can't support. The middle class (B,
+  ±0.33σ) is a flat "muddy" yellow precisely so the muddy middle looks muddy —
+  even in gradient mode B stays flat. Numeric ranks live only in the ranking
+  page, always shown *with* their LOO/single-year ranges.
 
 - **Public/private filter matters.** Empirically the very top of every subject is
   dominated by private schools, so a parent looking for a strong *public* school
