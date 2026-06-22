@@ -546,7 +546,7 @@
       maybeShowHistoryOptIn();
       // Auto-load if the user has already consented — the range columns need
       // the new metric's file even on the base view.
-      if (state.historyOptIn) await ensureMetricLoaded();
+      if (state.historyOptIn) { try { await ensureMetricLoaded(); } catch (e) { console.error(e); } }
       renderAll();
     });
 
@@ -562,7 +562,7 @@
       updateViewParamField();
       syncURL();
       maybeShowHistoryOptIn();
-      if (state.historyOptIn) await ensureMetricLoaded();
+      if (state.historyOptIn) { try { await ensureMetricLoaded(); } catch (e) { console.error(e); } }
       renderAll();
     });
 
@@ -592,7 +592,7 @@
     optinCB.addEventListener('change', async () => {
       if (!optinCB.checked) return;
       optinCB.disabled = true;
-      await ensureMetricLoaded();
+      try { await ensureMetricLoaded(); } catch (e) { console.error(e); }
       optinCB.disabled = false;
       maybeShowHistoryOptIn();
       renderAll();
@@ -645,11 +645,23 @@
     updateViewParamField();
     maybeShowHistoryOptIn();
 
-    // Returning users who already consented get the per-metric file loaded up
-    // front so the range columns are populated without re-checking the box.
-    if (state.historyOptIn) await ensureMetricLoaded();
+    // Show the base table immediately — it works from schools-base.json alone.
     renderAll();
     syncURL();
+
+    // Returning users who already consented get the per-metric file (~0.8 MB
+    // gzipped) so the range columns fill in. Load it AFTER the first render and
+    // without blocking — otherwise the page would show only "Ładowanie…" with no
+    // data for the whole download, and a failed/slow fetch would look broken.
+    if (state.historyOptIn) {
+      try {
+        await ensureMetricLoaded();
+      } catch (e) {
+        console.error('history load failed', e);
+      }
+      maybeShowHistoryOptIn();
+      renderAll();   // refresh ranges + reset the info line
+    }
   }
 
   main();
