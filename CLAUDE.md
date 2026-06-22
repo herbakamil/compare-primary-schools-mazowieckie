@@ -201,9 +201,15 @@ redundant; the min captures the bottleneck subject.
 
 | Class | Condition | Flat colour |
 |-------|-----------|-------------|
-| **A** good | score > centre + 0.33σ | green `#1a9850` |
-| **B** medium | centre − 0.33σ ≤ score ≤ centre + 0.33σ | yellow `#fde08a` |
-| **C** weak | score < centre − 0.33σ | red `#d6604d` |
+| **A** above average | score > centre + 0.33σ | green `#1a9850` |
+| **B** around average | centre − 0.33σ ≤ score ≤ centre + 0.33σ | yellow `#fde08a` |
+| **C** below average | score < centre − 0.33σ | red `#d6604d` |
+
+Legend labels are deliberately neutral — "powyżej / w okolicy / poniżej średniej"
+(above / around / below average), **not** "good / weak": a school just past the
+±0.33σ boundary doesn't deserve a value judgement the data can't support (§7).
+"Średnia" alone is avoided for B because it clashes with the `mean` metric's
+display label ("Średnia").
 
 The ±0.33σ band is wider than the multi-year base score's own year-to-year noise
 (≈ 0.12σ, from LOO), so the three buckets are statistically distinguishable. The

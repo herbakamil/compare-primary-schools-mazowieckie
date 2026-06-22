@@ -202,9 +202,14 @@ and `sigma = metadata.sigma[metric][subject]`. Map a school's
 
 | Class | Condition | Flat colour |
 |-------|-----------|-------------|
-| **A** good | score > centre + 0.33σ | `#1a9850` green |
-| **B** medium | centre − 0.33σ ≤ score ≤ centre + 0.33σ | `#fde08a` yellow |
-| **C** weak | score < centre − 0.33σ | `#d6604d` red |
+| **A** above average | score > centre + 0.33σ | `#1a9850` green |
+| **B** around average | centre − 0.33σ ≤ score ≤ centre + 0.33σ | `#fde08a` yellow |
+| **C** below average | score < centre − 0.33σ | `#d6604d` red |
+
+Legend labels are neutral — "powyżej / w okolicy / poniżej średniej" (above /
+around / below average), not "good / weak", so a school just past the ±0.33σ
+boundary isn't given a value judgement the data can't support (§7). "Średnia"
+alone is avoided for B (clashes with the `mean` metric label "Średnia").
 
 The ±0.33σ band is wider than the multi-year base score's own noise (≈ 0.12σ from
 LOO), so the 3 buckets are statistically distinguishable. The earlier 5-class
