@@ -220,8 +220,9 @@ endpoints are the adjacent class colours, so the two modes line up at every band
 boundary; `colourFor(score, centre, sigma, gradient)` (app.js) and
 `GRADIENT_STOPS` implement it, and clusters colour by the same function on their
 mean. State persists like other settings (URL `gradient=1` > localStorage >
-default off). It is currently a comparison aid — keep, repurpose, or drop once a
-default is chosen.
+default off). It is a permanent user setting. The legend keeps the 5 discrete
+class swatches as reference even in gradient mode, each labelled with its class
+letter A–E (matching the ranking's "Klasa" column).
 
 The centre differs by metric: for `mean`/`median` it's the voivodeship average
 (~54–66), for the diff-based metrics it's 0 (and composite_min uses its own
