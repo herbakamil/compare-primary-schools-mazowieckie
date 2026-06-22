@@ -211,6 +211,18 @@ and `sigma = metadata.sigma[metric][subject]`. Map a school's
 (You may interpolate a continuous gradient between centre and ±1.5σ instead of 5
 discrete classes, saturating beyond ±1.5σ — but 5 classes is the baseline.)
 
+**Gradient toggle (Ustawienia / Settings, below the legend).** A checkbox lets
+the user switch the markers between the 5 discrete classes (default) and a
+continuous gradient. The gradient ramps smoothly only through the **B and D**
+bands — the two widest (1.17σ each) — while **C stays flat yellow** (muddy
+middle, §7) and **A/E stay flat saturated** (bold, clamped extremes). The ramp
+endpoints are the adjacent class colours, so the two modes line up at every band
+boundary; `colourFor(score, centre, sigma, gradient)` (app.js) and
+`GRADIENT_STOPS` implement it, and clusters colour by the same function on their
+mean. State persists like other settings (URL `gradient=1` > localStorage >
+default off). It is currently a comparison aid — keep, repurpose, or drop once a
+default is chosen.
+
 The centre differs by metric: for `mean`/`median` it's the voivodeship average
 (~54–66), for the diff-based metrics it's 0 (and composite_min uses its own
 empirical mean). That's why you must read centre/sigma from metadata rather than

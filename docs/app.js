@@ -52,9 +52,49 @@ function classIndexFor(score, centre, sigma) {
   return 4;                   // A
 }
 
-function colourFor(score, centre, sigma) {
+// Optional continuous variant: a diverging gradient that ramps smoothly through
+// the (wide) B and D bands, but stays FLAT in C (muddy middle) and beyond ±1.5σ
+// (A/E, bold extremes). The ramp endpoints are the adjacent class colours, so
+// the two modes line up at the band boundaries. Anchors (z, colour):
+//   −1.5 satRed · −0.915 red · ±0.33 yellow (flat C) · +0.915 green · +1.5 satGreen
+const GRADIENT_STOPS = [
+  [-1.5,   COLOURS.satRed],
+  [-0.915, COLOURS.red],
+  [-0.33,  COLOURS.yellow],
+  [ 0.33,  COLOURS.yellow],
+  [ 0.915, COLOURS.green],
+  [ 1.5,   COLOURS.satGreen],
+];
+
+function hexLerp(a, b, t) {
+  const pa = [parseInt(a.slice(1, 3), 16), parseInt(a.slice(3, 5), 16), parseInt(a.slice(5, 7), 16)];
+  const pb = [parseInt(b.slice(1, 3), 16), parseInt(b.slice(3, 5), 16), parseInt(b.slice(5, 7), 16)];
+  const ch = pa.map((v, i) => Math.round(v + (pb[i] - v) * t).toString(16).padStart(2, '0'));
+  return '#' + ch.join('');
+}
+
+function gradientColour(z) {
+  if (z <= GRADIENT_STOPS[0][0]) return GRADIENT_STOPS[0][1];
+  const last = GRADIENT_STOPS[GRADIENT_STOPS.length - 1];
+  if (z >= last[0]) return last[1];
+  for (let i = 1; i < GRADIENT_STOPS.length; i++) {
+    const [z0, c0] = GRADIENT_STOPS[i - 1];
+    const [z1, c1] = GRADIENT_STOPS[i];
+    if (z <= z1) {
+      const t = (z1 === z0) ? 0 : (z - z0) / (z1 - z0);
+      return hexLerp(c0, c1, t);   // flat where c0 === c1 (the C plateau)
+    }
+  }
+  return last[1];
+}
+
+// gradient=true → continuous colour (smooth in B/D, flat in C/A/E);
+// gradient=false → the 5 discrete class colours.
+function colourFor(score, centre, sigma, gradient) {
   const i = classIndexFor(score, centre, sigma);
-  return i == null ? COLOURS.missing : CLASS_COLOURS[i];
+  if (i == null) return COLOURS.missing;
+  if (!gradient) return CLASS_COLOURS[i];
+  return gradientColour((score - centre) / sigma);
 }
 
 // Per-subject line colours, shared by the map popup sparkline and the ranking
@@ -241,6 +281,9 @@ const I18N = {
     sectionFilters: 'Filtry',
     sectionSearch: 'Szukaj adresu',
     sectionLegend: 'Legenda',
+    sectionSettings: 'Ustawienia',
+    gradientToggle: 'Gradient w klasach B i D',
+    gradientHelp: 'Płynne przejście koloru w pasmach B i D (bliżej C jaśniej, bliżej A/E mocniej). C, A i E pozostają jednolite.',
     labelSubject: 'Przedmiot',
     labelMetric: 'Metryka',
     labelPublic: 'Publiczna',
@@ -331,6 +374,9 @@ const I18N = {
     sectionFilters: 'Filters',
     sectionSearch: 'Address search',
     sectionLegend: 'Legend',
+    sectionSettings: 'Settings',
+    gradientToggle: 'Gradient within classes B and D',
+    gradientHelp: 'Smooth colour transition within the B and D bands (lighter near C, stronger near A/E). C, A and E stay solid.',
     labelSubject: 'Subject',
     labelMetric: 'Metric',
     labelPublic: 'Public',

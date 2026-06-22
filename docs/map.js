@@ -20,6 +20,7 @@
     selectedSchool: null,         // rspo (number) or null
     lang: DEFAULTS.lang,
     historyOptIn: false,
+    gradient: false,              // continuous colour in B/D bands (vs 5 discrete classes)
   };
 
   let map = null;
@@ -49,6 +50,12 @@
     state.selectedSchool = Number.isInteger(school) ? school : null;
 
     state.historyOptIn = !!readPrefs().history_optin;
+
+    // gradient: URL > localStorage > default(false)
+    const gradParam = getURLParams().get('gradient');
+    if (gradParam === '1') state.gradient = true;
+    else if (gradParam === '0') state.gradient = false;
+    else state.gradient = !!readPrefs().gradient;
   }
 
   function syncURL() {
@@ -62,6 +69,7 @@
       min_years:  state.minYears > 1 ? state.minYears : null,
       school:     state.selectedSchool,
       lang:       state.lang !== DEFAULTS.lang ? state.lang : null,
+      gradient:   state.gradient ? '1' : null,
     });
   }
 
@@ -132,7 +140,7 @@
     const score = scoreOf(school, metric, subject);
     const centre = baseData.metadata.sigma_centre[metric][subject];
     const sigma  = baseData.metadata.sigma[metric][subject];
-    return colourFor(score, centre, sigma);
+    return colourFor(score, centre, sigma, state.gradient);
   }
 
   function applyMarkerColour(marker) {
@@ -149,7 +157,7 @@
     }
     const centre = baseData.metadata.sigma_centre[state.metric][state.subject];
     const sigma  = baseData.metadata.sigma[state.metric][state.subject];
-    const fill = n > 0 ? colourFor(sum / n, centre, sigma) : COLOURS.missing;
+    const fill = n > 0 ? colourFor(sum / n, centre, sigma, state.gradient) : COLOURS.missing;
     const count = children.length;
     // Size scales gently with count.
     const size = Math.min(56, 28 + Math.round(Math.sqrt(count) * 2));
@@ -545,6 +553,17 @@
       myrDisp.textContent = state.minYears;
       syncURL();
       refreshFilters();
+    });
+
+    // Gradient toggle (continuous colour in B/D bands)
+    const gradCb = document.getElementById('gradient-toggle');
+    gradCb.checked = state.gradient;
+    if (state.gradient) gradCb.setAttribute('checked', '');
+    gradCb.addEventListener('change', () => {
+      state.gradient = gradCb.checked;
+      writePref('gradient', state.gradient);
+      syncURL();
+      recolourAll();
     });
 
     wireSearch();

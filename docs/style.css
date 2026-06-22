@@ -109,6 +109,15 @@ body { display: flex; flex-direction: column; }
 
 .field input[type="range"] { width: 100%; }
 
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  margin-bottom: 0.3rem;
+}
+.checkbox-field span { font-size: 0.9rem; }
+
 .radio-group {
   border: none;
   padding: 0;
