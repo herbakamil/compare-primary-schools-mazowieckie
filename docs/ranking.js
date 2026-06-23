@@ -187,8 +187,8 @@
   const COLUMNS = [
     { key: 'rank',       i18n: 'colRank',        num: true,  width: '4rem' },
     { key: 'name',       i18n: 'colName',        num: false },
-    { key: 'street',     i18n: 'colStreet',      num: false },
     { key: 'town',       i18n: 'colTown',        num: false },
+    { key: 'street',     i18n: 'colStreet',      num: false },
     { key: 'pub',        i18n: 'colPublic',      num: false, width: '5rem' },
     { key: 'n_years',    i18n: 'colNYears',      num: true,  width: '4rem' },
     { key: 'score',       i18n: 'colScore',       num: true },
@@ -371,8 +371,8 @@
       const mainRow = `<tr data-rspo="${r.rspo}"${selected ? ' class="highlight"' : ''}>
         <td class="num">${r.rank ?? '—'}</td>
         <td>${escapeHTML(r.name)}${offMap}</td>
-        <td>${escapeHTML(r.street || '')}</td>
         <td>${escapeHTML(r.town || '')}</td>
+        <td>${escapeHTML(r.street || '')}</td>
         <td>${pubLabel}</td>
         <td class="num">${r.n_years}</td>
         <td class="num">${fmtScoreHTML(r.score, state.metric)}</td>
