@@ -25,7 +25,8 @@ other projects.
 
 ```
 notebooks/   analysis (how_to_measure_school_quality.ipynb)
-scripts/     geocode_schools.py — geocode school addresses
+scripts/     geocode_schools.py  — geocode school addresses
+             validate_export.py  — check the JSON exports against the source xlsx
 data/        input data (OKE xlsx files) + coordinate cache
 output/      xlsx files for analysts
 docs/        the map app (GitHub Pages); docs/data/ holds the JSON the app loads
@@ -82,7 +83,21 @@ After a new year of results is published:
 4. **Re-run the export cells** (or the whole notebook) so the fresh coordinates
    are merged into `schools-base.json`.
 
-5. **Commit** the generated files in `docs/data/` and `output/`, plus
+5. **Validate the export** against the source data before committing:
+
+   ```bash
+   uv run python scripts/validate_export.py
+   ```
+
+   It independently re-reads the OKE xlsx and recomputes every metric, view
+   aggregate (base / single-year / leave-one-out / last-k), `composite_min`, and
+   rank/percentile, then checks the JSON the app serves
+   (`docs/data/schools-base.json` and `schools-{metric}.json`) against it. Exit
+   code 0 = everything matches; a non-zero exit with a per-check `FAIL` listing
+   means the export and the source disagree — investigate before publishing.
+   (Override the locations with `--data-dir` / `--docs-data`.)
+
+6. **Commit** the generated files in `docs/data/` and `output/`, plus
    `data/school_coords.csv`.
 
 ## Output files
