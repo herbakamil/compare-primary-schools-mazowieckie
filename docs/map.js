@@ -16,7 +16,7 @@
     subject: DEFAULTS.subject,
     publicFilter: 'all',          // 'all' | 'tak' | 'nie'
     threshold: null,              // number; null means no threshold filter
-    minYears: 1,                  // 1..5
+    minYears: 1,                  // 1..(number of dataset years)
     selectedSchool: null,         // rspo (number) or null
     lang: DEFAULTS.lang,
     historyOptIn: false,
@@ -45,7 +45,7 @@
     state.threshold = Number.isFinite(thr) ? thr : null;
 
     const my = parseInt(url.get('min_years'), 10);
-    if (Number.isInteger(my) && my >= 1 && my <= 5) state.minYears = my;
+    if (Number.isInteger(my) && my >= 1) state.minYears = my;  // upper bound clamped after load
 
     const school = parseInt(url.get('school'), 10);
     state.selectedSchool = Number.isInteger(school) ? school : null;
@@ -678,9 +678,13 @@
       refreshFilters();
     });
 
-    // Min years slider
+    // Min years slider. Max = number of dataset years, so it scales when a new
+    // exam year lands; also clamp a too-large minYears carried over from an older URL.
     const myr = document.getElementById('min-years-slider');
     const myrDisp = document.getElementById('min-years-display');
+    const maxYears = baseData.metadata.years_in_data.length;
+    myr.max = maxYears;
+    state.minYears = Math.min(state.minYears, maxYears);
     myr.value = state.minYears;
     myrDisp.textContent = state.minYears;
     myr.addEventListener('input', () => {
