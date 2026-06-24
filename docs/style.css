@@ -43,16 +43,46 @@ body { display: flex; flex-direction: column; }
 .topnav nav a:hover { background: rgba(0,0,0,0.05); }
 .topnav nav a.active { background: var(--text); color: white; }
 .lang-toggle {
+  display: inline-flex;
   border: 1px solid var(--border);
-  background: white;
-  color: var(--text);
-  padding: 0.35rem 0.6rem;
   border-radius: 3px;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 600;
+  overflow: hidden;
 }
-.lang-toggle:hover { background: #eee; }
+.lang-toggle .lang-opt {
+  border: none;
+  background: white;
+  color: var(--text-muted);
+  padding: 0.3rem 0.55rem;
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.lang-toggle .lang-opt + .lang-opt { border-left: 1px solid var(--border); }
+.lang-toggle .lang-opt:not(.active):hover { background: #eee; }
+.lang-toggle .lang-opt.active {
+  background: var(--text);
+  color: white;
+  font-weight: 700;
+  cursor: default;
+}
+
+/* Low-data warning icon (ranking "Lata" column) */
+.warn-icon { cursor: help; font-size: 0.85em; }
+
+/* Data-coverage years subtitle */
+.data-years {
+  margin: 0 0 0.7rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* "Click a row…" hint — bold so it's not missed */
+.click-hint { font-weight: 600; color: var(--text); }
+
+/* Note explaining the bold (weakest) subject in the detail tables */
+.detail-tables-note { margin: 0.4rem 0 0.6rem; }
 
 /* Methodology page layout */
 .page-methodology main {

@@ -378,8 +378,11 @@ const I18N = {
     detailSecSingle: 'Pojedyncze lata',
     detailSecLOO: 'LOO (z pominięciem roku)',
     detailSecLastK: 'Ostatnie k lat',
+    detailSecBase: 'Wynik za całość lat (baza)',
+    detailWeakestNote: 'Pogrubienie = przedmiot z najniższym wynikiem (ten, który wyznacza composite_min), niezależnie od pokazywanej miary (wynik/pozycja/percentyl).',
     offMap: 'brak lokalizacji',
     rowsShown: (n, total) => `${n} z ${total} szkół`,
+    dataYears: (lo, hi) => `Egzamin ósmoklasisty ${lo}–${hi}`,
     historyOptIn: 'Wczytaj zakresy rankingu (LOO, pojedyncze lata) i widoki — ~0.8 MB',
     historyLoading: 'Ładowanie szczegółowych danych…',
     publicYesShort: 'Tak',
@@ -476,8 +479,11 @@ const I18N = {
     detailSecSingle: 'Single years',
     detailSecLOO: 'LOO (year left out)',
     detailSecLastK: 'Last k years',
+    detailSecBase: 'Score across all years (base)',
+    detailWeakestNote: 'Bold = the subject with the lowest score (the one that sets composite_min), regardless of the dimension shown (score/rank/percentile).',
     offMap: 'no location',
     rowsShown: (n, total) => `${n} of ${total} schools`,
+    dataYears: (lo, hi) => `8th-grade exam ${lo}–${hi}`,
     historyOptIn: 'Load rank ranges (LOO, single years) and views — ~0.8 MB',
     historyLoading: 'Loading detailed data…',
     publicYesShort: 'Yes',
@@ -511,24 +517,45 @@ function setLang(lang) {
   applyI18N();
 }
 
-// Wire the #lang-toggle button (present in every page's nav). The button shows
-// the language you'd switch TO (EN while on PL, PL while on EN). On click it
-// flips the language, re-translates static [data-i18n] labels (via setLang),
-// persists the choice, then calls onAfterChange so the page can re-render its
-// dynamic, language-dependent content (select options, table, popups) — that
-// part differs per page, so each passes its own callback.
+// Wire the #lang-toggle control (present in every page's nav). It is a two-option
+// segment "PL | EN" with the ACTIVE language highlighted/bold — unambiguous (a
+// single letter reads either as the current state or the action) and it surfaces
+// that the other language exists. Clicking the inactive option switches to it,
+// re-translates static [data-i18n] labels (via setLang), persists the choice,
+// then calls onAfterChange so the page can re-render its dynamic, language-
+// dependent content (select options, table, popups) — that part differs per page.
 function wireLangToggle(onAfterChange) {
-  const btn = document.getElementById('lang-toggle');
-  if (!btn) return;
-  // Show the CURRENT language (PL while on Polish), not the target.
-  const relabel = () => { btn.textContent = (currentLang === 'pl') ? 'PL' : 'EN'; };
-  relabel();
-  btn.addEventListener('click', () => {
-    setLang(currentLang === 'pl' ? 'en' : 'pl');
+  const el = document.getElementById('lang-toggle');
+  if (!el) return;
+  const LANGS = ['pl', 'en'];
+  const render = () => {
+    el.innerHTML = LANGS.map(l =>
+      `<button type="button" class="lang-opt${l === currentLang ? ' active' : ''}" `
+      + `data-lang="${l}" aria-pressed="${l === currentLang}">${l.toUpperCase()}</button>`
+    ).join('');
+  };
+  render();
+  el.addEventListener('click', (e) => {
+    const opt = e.target.closest('.lang-opt');
+    if (!opt) return;
+    const lang = opt.getAttribute('data-lang');
+    if (lang === currentLang) return;
+    setLang(lang);
     writePref('lang', currentLang);
-    relabel();
+    render();
     if (onAfterChange) onAfterChange();
   });
+}
+
+// Fill the #data-years subtitle (if present) from the loaded base metadata.
+// Range min–max, so it auto-updates when a new exam year is added. Re-callable
+// (e.g. after a language switch) since the label text is language-dependent.
+function fillDataYears() {
+  const el = document.getElementById('data-years');
+  if (!el || typeof baseData === 'undefined' || !baseData) return;
+  const years = baseData.metadata.years_in_data;
+  if (!years || !years.length) return;
+  el.textContent = t('dataYears', Math.min(...years), Math.max(...years));
 }
 
 // -----------------------------------------------------------------------------

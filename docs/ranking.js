@@ -272,6 +272,29 @@
       </table>`;
   }
 
+  // The "all years" (base) aggregate per subject — always present, so even schools
+  // with < 3 years (no LOO / last_k folds) still get a meaningful numeric table.
+  // Mirrors the map popup, which shows the base value for every subject.
+  function detailBaseTable(hist, dim) {
+    const fmt = dimFmt(dim);
+    const core = ['polski', 'matematyka', 'angielski'];
+    let weakest = null, weakestScore = Infinity;
+    for (const s of core) {
+      const sc = hist[s]?.base?.score;
+      if (sc != null && sc < weakestScore) { weakestScore = sc; weakest = s; }
+    }
+    const cells = DETAIL_SUBJECTS.map(s => {
+      const cell = hist[s]?.base;
+      const val = (cell && cell[dim] != null) ? fmt(cell[dim]) : '—';
+      return `<td class="num${s === weakest ? ' weakest' : ''}">${val}</td>`;
+    }).join('');
+    const header = `<tr><th></th>${DETAIL_SUBJECTS.map(s => `<th>${t('subject_' + s)}</th>`).join('')}</tr>`;
+    return `<table class="detail-table">
+        <caption>${t('detailSecBase')}</caption>
+        <thead>${header}</thead><tbody><tr><th></th>${cells}</tr></tbody>
+      </table>`;
+  }
+
   // The expandable detail panel: class trajectory for the selected subject, a
   // 2×3 grid of charts (LOO / single-year × score / rank / percentile) showing
   // all subjects, and numeric tables behind a toggle. Needs the per-metric
@@ -334,10 +357,12 @@
       tablesBlock = `
         <button type="button" class="detail-tables-toggle">${t('detailHideTables')}</button>
         <div class="detail-dim-switch">${dimSwitch}</div>
+        <p class="muted small detail-tables-note">${t('detailWeakestNote')}</p>
         <div class="detail-tables">
           ${detailTable(hist, yearsPresent, 'single_year', state.detailTableDim)}
           ${detailTable(hist, yearsPresent, 'loo', state.detailTableDim)}
           ${detailTable(hist, ks, 'last_k', state.detailTableDim)}
+          ${detailBaseTable(hist, state.detailTableDim)}
         </div>`;
     }
 
@@ -380,7 +405,7 @@
         <td>${escapeHTML(r.town || '')}</td>
         <td>${escapeHTML(r.street || '')}</td>
         <td>${pubLabel}</td>
-        <td class="num">${r.n_years}</td>
+        <td class="num">${r.n_years}${r.n_years < 3 ? ` <span class="warn-icon" title="${escapeHTML(t('warnShortHistory'))}">⚠️</span>` : ''}</td>
         <td class="num">${fmtScoreHTML(r.score, state.metric)}</td>
         <td class="num class-cell">${classCell}</td>
         <td class="num">${looCell}</td>
@@ -616,6 +641,7 @@
       syncURL();
       fillMetricSelect(metricSel, state.metric);
       fillSubjectSelect(subjectSel, state.subject);
+      fillDataYears();
       renderAll();
     });
   }
@@ -650,6 +676,7 @@
       return;
     }
     wireControls();
+    fillDataYears();
     updateViewParamField();
     maybeShowHistoryOptIn();
 

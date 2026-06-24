@@ -714,6 +714,7 @@
       syncURL();
       fillSubjectSelect(subjectSel, state.subject);
       fillMetricSelect(metricSel, state.metric);
+      fillDataYears();
       refreshFilters();
       if (state.selectedSchool != null) reopenSelectedPopup();
     });
@@ -765,6 +766,7 @@
     buildClusterGroup();
     plotAllMarkers();
     buildSchoolSearchIndex();
+    fillDataYears();
     wireControls();
     syncURL();          // canonicalise the URL (e.g. add resolved threshold)
     openInitialPopup(); // if ?school=… was in the URL
