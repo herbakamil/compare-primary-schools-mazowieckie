@@ -62,6 +62,19 @@
       </section>
 
       <section class="panel-section">
+        <h2 data-i18n="sectionFindSchool">Znajdź szkołę</h2>
+        <div class="field school-find">
+          <input type="text" id="school-find-input" autocomplete="off"
+                 placeholder="np. Słupica, STO, Kopernika"
+                 data-i18n-attr="placeholder|findSchoolPlaceholder"
+                 role="combobox" aria-expanded="false" aria-autocomplete="list"
+                 aria-controls="school-find-list">
+          <ul id="school-find-list" class="autocomplete-list" role="listbox" hidden></ul>
+        </div>
+        <p class="muted small" data-i18n="findSchoolHelp">Wpisz nazwę lub miejscowość — wybierz z listy, aby przejść do szkoły na mapie.</p>
+      </section>
+
+      <section class="panel-section">
         <h2 data-i18n="sectionSearch">Szukaj adresu</h2>
         <form id="search-form" class="field">
           <input type="text" id="search-input" placeholder="np. Marszałkowska 1, Warszawa" data-i18n-attr="placeholder|searchPlaceholder">

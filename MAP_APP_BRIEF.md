@@ -64,6 +64,8 @@ file the map needs for its core function. Shape:
       "n_years": 5,
       "miejscowosc": "Raczyny",
       "ulica_nr": "ul. Kopernika 5",
+      "gmina": "Sokołów Podlaski",
+      "powiat": "Sokołowski",
       "lat": 52.26853,             // null if not geocoded
       "lon": 22.63428,             // null if not geocoded
       "scores": {
@@ -276,6 +278,15 @@ assuming 0.
   geocodes a typed address (Nominatim) and pans/zooms there so the user can see
   nearby schools. Fire the geocode **only on submit** (Enter / button), one
   request per submit — no search-as-you-type (Nominatim policy; see §3).
+- **Find a school (typeahead):** a *separate* box from the address search,
+  searching **our own `schools-base.json`** by name + town as the user types.
+  This is **not** geocoding — it's a local substring filter over data already in
+  the browser, so the Nominatim "no auto-complete" rule (§3) does **not** apply.
+  Matching is diacritic-insensitive (NFD strip + explicit `ł→l`; "slupica" finds
+  "Słupica"), capped to 15 results, keyboard-navigable (↑/↓/Enter/Esc). Picking a
+  school zooms its cluster open and opens the popup (reuses the `?school=` focus
+  path). Schools without coordinates are listed with a "(not on map)" tag and
+  hand off to the ranking (`ranking.html?school=<rspo>`), which selects them.
 - **Popup (on marker click):** show the rich base stats this school has —
   name, public/private, town + street, n_years, and for the selected metric the
   per-subject score / rank / pct plus composite_min. Show a warning badge if
@@ -323,14 +334,18 @@ top nav (Mapa / Ranking), and they pass state to each other via URL params and
 localStorage (§9).
 
 A sortable, filterable **table** — this is where numeric ranks are allowed (the
-map is not). Supports both browsing the full list and searching by name (e.g.
-"Vizja", "STO").
+map is not). Supports both browsing the full list and searching by name or
+location — the text filter matches name, town, street, gmina **and** powiat
+(e.g. "Vizja", "STO", "powiat pruszkowski").
 
-Per school row, show:
-- School name, town, public/private, n_years.
-- **Base rank** for the selected (metric, subject).
+Per school row, show (in this column order):
+- **Base rank** for the selected (metric, subject), school name, town, street,
+  public/private, n_years, score, class.
 - **LOO rank range** — min and max rank across the LOO folds, e.g. "234 (198–267)".
 - **Single-year rank range** — min and max rank across single-year views.
+- **Gmina, powiat** — placed last (administrative geography is least important,
+  so it trails the score/rank/range columns); single-year range stays ahead of
+  them as it carries more signal.
 
 Controls:
 - Metric selector and subject selector.

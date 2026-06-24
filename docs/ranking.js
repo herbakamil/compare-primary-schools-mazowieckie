@@ -133,6 +133,8 @@
       name: school.name,
       street: school.ulica_nr,
       town: school.miejscowosc,
+      gmina: school.gmina,
+      powiat: school.powiat,
       pub: isPublic(school),
       n_years: school.n_years,
       hasCoords: school.lat != null && school.lon != null,
@@ -159,7 +161,9 @@
         const inName = r.name.toLowerCase().includes(q);
         const inTown = (r.town || '').toLowerCase().includes(q);
         const inStreet = (r.street || '').toLowerCase().includes(q);
-        if (!inName && !inTown && !inStreet) return false;
+        const inGmina = (r.gmina || '').toLowerCase().includes(q);
+        const inPowiat = (r.powiat || '').toLowerCase().includes(q);
+        if (!inName && !inTown && !inStreet && !inGmina && !inPowiat) return false;
       }
       // Drop rows where the view's score is missing — they can't be ranked here.
       if (r.score == null) return false;
@@ -195,6 +199,8 @@
     { key: 'classLetter', i18n: 'colClass',       num: true,  width: '4rem' },
     { key: 'looMinR',     i18n: 'colLOORange',    num: true,  help: 'helpLOORange' },
     { key: 'singleMinR',  i18n: 'colSingleRange', num: true,  help: 'helpSingleRange' },
+    { key: 'gmina',       i18n: 'colGmina',       num: false },
+    { key: 'powiat',      i18n: 'colPowiat',      num: false },
   ];
 
   // A/B/C badge coloured by the continuous gradient (soft boundaries).
@@ -379,6 +385,8 @@
         <td class="num class-cell">${classCell}</td>
         <td class="num">${looCell}</td>
         <td class="num">${syCell}</td>
+        <td>${escapeHTML(r.gmina || '')}</td>
+        <td>${escapeHTML(r.powiat || '')}</td>
       </tr>`;
       // A selected row expands an inline detail panel below it.
       return mainRow + (selected ? renderDetailRow(r) : '');

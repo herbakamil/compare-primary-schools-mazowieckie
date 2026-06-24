@@ -26,6 +26,7 @@
   let map = null;
   let clusterGroup = null;
   let markersByRspo = new Map();  // rspo -> Leaflet circleMarker
+  let schoolSearchIndex = [];     // [{rspo,name,town,gmina,onMap,hay}] for the "find school" box
   let historyData = null;         // metric-keyed cache for opt-in history
 
   // ---------------------------------------------------------------------------
@@ -477,6 +478,138 @@
   }
 
   // ---------------------------------------------------------------------------
+  // "Find a school" — local typeahead over our own data (not geocoding)
+
+  // Diacritic-insensitive, lower-cased. NFD strips ą/ć/ę/ó/ś/ź/ż (base + combining
+  // mark), but Polish 'ł' is its own codepoint and does NOT decompose, so map it
+  // explicitly — otherwise "slupica" would not match "Słupica".
+  function normalizeText(s) {
+    return (s || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/ł/g, 'l').replace(/Ł/g, 'l')   // ł / Ł (no NFD decomposition)
+      .toLowerCase();
+  }
+
+  // Precompute once after load: the haystack matches on name + town (decision §1).
+  function buildSchoolSearchIndex() {
+    schoolSearchIndex = baseData.schools.map(s => ({
+      rspo:  s.rspo,
+      name:  s.name,
+      town:  s.miejscowosc || '',
+      gmina: s.gmina || '',
+      onMap: s.lat != null && s.lon != null,
+      hay:   normalizeText(s.name + ' ' + (s.miejscowosc || '')),
+    }));
+  }
+
+  // On-map school: zoom into its cluster and open the popup. If the school is
+  // currently hidden by the filters, just pan to it (no marker in the cluster).
+  function goToSchoolOnMap(rspo) {
+    const marker = markersByRspo.get(rspo);
+    if (!marker) return;
+    state.selectedSchool = rspo;
+    syncURL();
+    if (clusterGroup.hasLayer(marker)) {
+      clusterGroup.zoomToShowLayer(marker, () => marker.openPopup());
+    } else {
+      map.setView(marker.getLatLng(), 14);
+    }
+  }
+
+  // Off-map school (no coordinates): hand off to the ranking, which selects and
+  // scrolls to it. Carry metric/subject/lang so the ranking opens in the same view.
+  function goToSchoolInRanking(rspo) {
+    const usp = new URLSearchParams();
+    if (state.metric  !== DEFAULTS.metric)  usp.set('metric',  state.metric);
+    if (state.subject !== DEFAULTS.subject) usp.set('subject', state.subject);
+    if (state.lang    !== DEFAULTS.lang)    usp.set('lang',    state.lang);
+    usp.set('school', rspo);
+    window.location.href = 'ranking.html?' + usp.toString();
+  }
+
+  function wireSchoolFind() {
+    const input = document.getElementById('school-find-input');
+    const list  = document.getElementById('school-find-list');
+    let results = [];
+    let activeIndex = -1;
+
+    function close() {
+      list.hidden = true;
+      list.innerHTML = '';
+      input.setAttribute('aria-expanded', 'false');
+      results = [];
+      activeIndex = -1;
+    }
+
+    function render() {
+      if (!results.length) {
+        list.innerHTML = `<li class="ac-empty" aria-disabled="true">${t('findSchoolNoResults')}</li>`;
+      } else {
+        list.innerHTML = results.map((r, i) => {
+          const loc = [r.town, r.gmina && ('gm. ' + r.gmina)].filter(Boolean).join(' · ');
+          const tag = r.onMap ? '' : ` <span class="ac-offmap">${t('findSchoolOffMap')}</span>`;
+          return `<li role="option" data-i="${i}"${i === activeIndex ? ' class="active"' : ''}>`
+            + `<span class="ac-name">${escapeHTML(r.name)}</span>`
+            + `<span class="ac-loc">${escapeHTML(loc)}${tag}</span></li>`;
+        }).join('');
+      }
+      list.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+    }
+
+    function select(i) {
+      const r = results[i];
+      if (!r) return;
+      input.value = r.name;
+      close();
+      if (r.onMap) goToSchoolOnMap(r.rspo);
+      else goToSchoolInRanking(r.rspo);
+    }
+
+    function ensureActiveVisible() {
+      const el = list.querySelector('li.active');
+      if (el) el.scrollIntoView({ block: 'nearest' });
+    }
+
+    input.addEventListener('input', () => {
+      const q = normalizeText(input.value.trim());
+      if (q.length < 2) { close(); return; }
+      results = schoolSearchIndex.filter(s => s.hay.includes(q)).slice(0, 15);
+      activeIndex = -1;
+      render();
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (list.hidden || !results.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIndex = Math.min(activeIndex + 1, results.length - 1);
+        render(); ensureActiveVisible();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIndex = Math.max(activeIndex - 1, 0);
+        render(); ensureActiveVisible();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        select(activeIndex >= 0 ? activeIndex : 0);
+      } else if (e.key === 'Escape') {
+        close();
+      }
+    });
+
+    // mousedown (not click) so the pick fires before the input's blur hides the list.
+    list.addEventListener('mousedown', (e) => {
+      const li = e.target.closest('li[data-i]');
+      if (!li) return;
+      e.preventDefault();
+      select(parseInt(li.getAttribute('data-i'), 10));
+    });
+
+    input.addEventListener('blur', () => setTimeout(close, 120));
+  }
+
+  // ---------------------------------------------------------------------------
   // History opt-in fetch
 
   async function ensureHistoryLoaded() {
@@ -569,6 +702,7 @@
     });
 
     wireSearch();
+    wireSchoolFind();
     wireHistoryButtons();
     wireNavLinks();
 
@@ -630,6 +764,7 @@
     }
     buildClusterGroup();
     plotAllMarkers();
+    buildSchoolSearchIndex();
     wireControls();
     syncURL();          // canonicalise the URL (e.g. add resolved threshold)
     openInitialPopup(); // if ?school=… was in the URL
