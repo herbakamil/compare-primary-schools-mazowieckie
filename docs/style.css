@@ -128,7 +128,9 @@ body.page-methodology { display: block; height: auto; }
 /* Floating "back to contents" button — appears after scrolling, jumps to the top */
 #toc-fab {
   position: fixed;
-  right: 1rem;
+  /* Sit just outside the centred 720px text column (half = 360px) on wide screens,
+     so it tracks where the text ends; fall back to the window edge when narrow. */
+  right: max(1rem, calc(50% - 360px - 3.1rem));
   bottom: 1rem;
   z-index: 20;
   display: none;
