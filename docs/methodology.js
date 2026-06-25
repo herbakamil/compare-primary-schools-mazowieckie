@@ -11,4 +11,14 @@
   setLang(resolvePref('lang', ['pl', 'en']));
   showLangContent();
   wireLangToggle(() => showLangContent());
+
+  // Floating "back to contents" button: appears once you scroll down, and jumps
+  // to the top (where the ToC lives). Avoids the downsides of a sticky ToC bar.
+  const tocFab = document.getElementById('toc-fab');
+  if (tocFab) {
+    const toggleFab = () => tocFab.classList.toggle('visible', window.scrollY > 300);
+    toggleFab();
+    window.addEventListener('scroll', toggleFab, { passive: true });
+    tocFab.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
 }());

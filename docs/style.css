@@ -125,6 +125,28 @@ body.page-methodology { display: block; height: auto; }
 .page-methodology .toc li { margin: 0.15rem 0; }
 @media (max-width: 640px) { .page-methodology .toc ul { columns: 1; } }
 
+/* Floating "back to contents" button — appears after scrolling, jumps to the top */
+#toc-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem; height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+#toc-fab.visible { display: flex; }
+#toc-fab:hover { background: #eee; }
+
 /* Map page layout */
 .page-map main { flex: 1; display: flex; min-height: 0; }
 #map { flex: 1; min-width: 0; height: 100%; }
