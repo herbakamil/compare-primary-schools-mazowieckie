@@ -20,7 +20,7 @@
     selectedSchool: null,         // rspo (number) or null
     lang: DEFAULTS.lang,
     historyOptIn: false,
-    gradient: false,              // continuous colour in B/D bands (vs 5 discrete classes)
+    gradient: true,               // continuous colour by default; flat 3 classes via the toggle
   };
 
   let map = null;
@@ -52,11 +52,11 @@
 
     state.historyOptIn = !!readPrefs().history_optin;
 
-    // gradient: URL > localStorage > default(false)
+    // gradient: URL > localStorage > default(true)
     const gradParam = getURLParams().get('gradient');
     if (gradParam === '1') state.gradient = true;
     else if (gradParam === '0') state.gradient = false;
-    else state.gradient = !!readPrefs().gradient;
+    else { const stored = readPrefs().gradient; state.gradient = stored === undefined ? true : stored; }
   }
 
   function syncURL() {
@@ -70,7 +70,7 @@
       min_years:  state.minYears > 1 ? state.minYears : null,
       school:     state.selectedSchool,
       lang:       state.lang !== DEFAULTS.lang ? state.lang : null,
-      gradient:   state.gradient ? '1' : null,
+      gradient:   state.gradient ? null : '0',   // param only when off (on is the default)
     });
   }
 
