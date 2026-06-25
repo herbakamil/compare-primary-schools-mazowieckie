@@ -627,14 +627,35 @@ def check_class_spread(metadata, rspo_to_school_base_data, rep: Report):
 
 # ── main ─────────────────────────────────────────────────────────────────────
 
+def build_parser() -> argparse.ArgumentParser:
+    """Command-line arguments: where the source xlsx and the served JSON live."""
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--data-dir', default='data/egzamin-osmoklasisty', type=Path,
+                        help='directory with the source OKE xlsx files')
+    parser.add_argument('--docs-data', default='docs/data', type=Path,
+                        help='directory with schools-base.json and schools-{metric}.json')
+    return parser
+
+
+def filter_rows_to_json_years(all_rows: list[dict], json_years: set[Year]) -> list[dict]:
+    """Keep only the rows for the years the JSON was built from, so the
+    recomputation matches the export even when newer xlsx files are present.
+    Exits if a year the JSON used is missing from the xlsx; notes ignored extras."""
+    xlsx_years = {row['year'] for row in all_rows}
+    missing_years = json_years - xlsx_years
+    if missing_years:
+        sys.exit(f'The JSON was built from years {sorted(json_years)} but the xlsx is '
+                 f'missing {sorted(missing_years)} — cannot validate.')
+    rows = [row for row in all_rows if row['year'] in json_years]
+    extra_years = xlsx_years - json_years
+    note = f' (ignoring extra xlsx years {sorted(extra_years)})' if extra_years else ''
+    print(f'  {len(rows):,} clean (school, year) rows over years {sorted(json_years)}{note}')
+    return rows
+
+
 def main():
-    ap = argparse.ArgumentParser(description=__doc__,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--data-dir', default='data/egzamin-osmoklasisty', type=Path,
-                    help='directory with the source OKE xlsx files')
-    ap.add_argument('--docs-data', default='docs/data', type=Path,
-                    help='directory with schools-base.json and schools-{metric}.json')
-    args = ap.parse_args()
+    args = build_parser().parse_args()
 
     print('Loading JSON exports …')
     metadata, rspo_to_school_base_data, metric_to_rspo_to_school_data = load_json_exports(args.docs_data)
@@ -643,16 +664,7 @@ def main():
           f'metrics {list(metric_to_rspo_to_school_data)}')
 
     print('Reading source xlsx …')
-    all_rows = read_clean_rows(args.data_dir)
-    xlsx_years = {row['year'] for row in all_rows}
-    missing_years = json_years - xlsx_years
-    if missing_years:
-        sys.exit(f'The JSON was built from years {sorted(json_years)} but the xlsx is '
-                 f'missing {sorted(missing_years)} — cannot validate.')
-    rows = [row for row in all_rows if row['year'] in json_years]  # validate the JSON's own years
-    extra_years = xlsx_years - json_years
-    note = f' (ignoring extra xlsx years {sorted(extra_years)})' if extra_years else ''
-    print(f'  {len(rows):,} clean (school, year) rows over years {sorted(json_years)}{note}')
+    rows = filter_rows_to_json_years(read_clean_rows(args.data_dir), json_years)
 
     print('Recomputing metrics / views / ranks / metadata independently …')
     subject_to_year_to_voivodeship_mean = compute_voivodeship_means(rows)
