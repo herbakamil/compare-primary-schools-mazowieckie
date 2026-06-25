@@ -92,6 +92,20 @@ body { display: flex; flex-direction: column; }
   overflow-y: auto;
   line-height: 1.5;
 }
+.page-methodology .lead { font-size: 1.05rem; margin: 0 0 1.2rem; }
+.page-methodology section { margin: 1.6rem 0; }
+.page-methodology h2 {
+  font-size: 1.15rem;
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-methodology h3 { font-size: 1rem; margin: 1rem 0 0.3rem; }
+.page-methodology p { margin: 0.5rem 0; }
+.page-methodology ul { margin: 0.5rem 0; padding-left: 1.3rem; }
+.page-methodology li { margin: 0.3rem 0; }
+.page-methodology .swatch { vertical-align: middle; margin-right: 0.2rem; }
+.page-methodology a { color: #2166ac; }
 
 /* Map page layout */
 .page-map main { flex: 1; display: flex; min-height: 0; }
