@@ -14,3 +14,9 @@ dependencies = [
     "seaborn",
     "xlsxwriter>=3.2.9",
 ]
+
+[tool.ruff]
+line-length = 99
+
+[tool.ruff.format]
+quote-style = "single"

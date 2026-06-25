@@ -32,6 +32,7 @@ this repo. The script exits with an error if no contact is set.
 
 Requirements: requests (already a project dependency via jupyter stack, or add it).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -47,9 +48,9 @@ from urllib.request import Request, urlopen
 
 # ── Paths (relative to project root; script lives in scripts/) ──────────────
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SCHOOLS_BASE_JSON = PROJECT_ROOT / "docs" / "data" / "schools-base.json"
-COORDS_CSV = PROJECT_ROOT / "data" / "school_coords.csv"
-UNMAPPED_CSV = PROJECT_ROOT / "data" / "school_coords_unmapped.csv"
+SCHOOLS_BASE_JSON = PROJECT_ROOT / 'docs' / 'data' / 'schools-base.json'
+COORDS_CSV = PROJECT_ROOT / 'data' / 'school_coords.csv'
+UNMAPPED_CSV = PROJECT_ROOT / 'data' / 'school_coords_unmapped.csv'
 
 # Threshold for "suspicious shared-coordinate group". With the new strategy
 # we expect no shared coords at all — except for genuine cases (a school
@@ -57,7 +58,7 @@ UNMAPPED_CSV = PROJECT_ROOT / "data" / "school_coords_unmapped.csv"
 # should be eyeballed.
 SHARED_COORD_WARN_THRESHOLD = 3
 
-NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search'
 REQUEST_DELAY_SECONDS = 1.1  # Nominatim usage policy: max 1 request/second
 
 # Mazowieckie voivodeship bounding box (lon_min, lat_min, lon_max, lat_max).
@@ -65,27 +66,29 @@ REQUEST_DELAY_SECONDS = 1.1  # Nominatim usage policy: max 1 request/second
 MAZ_LON_MIN, MAZ_LAT_MIN = 19.2, 51.0
 MAZ_LON_MAX, MAZ_LAT_MAX = 23.2, 53.6
 # Nominatim viewbox format: "left,top,right,bottom" (west_lon,north_lat,east_lon,south_lat).
-MAZ_VIEWBOX = f"{MAZ_LON_MIN},{MAZ_LAT_MAX},{MAZ_LON_MAX},{MAZ_LAT_MIN}"
+MAZ_VIEWBOX = f'{MAZ_LON_MIN},{MAZ_LAT_MAX},{MAZ_LON_MAX},{MAZ_LAT_MIN}'
 
 # Street prefixes the OKE data tacks on (e.g. "ul. Marszałkowska 1"). Nominatim
 # fares better when we either drop them or also try a stripped form.
-STREET_PREFIXES = ("ul.", "Ul.", "UL.", "al.", "Al.", "AL.", "pl.", "Pl.", "os.", "Os.")
+STREET_PREFIXES = ('ul.', 'Ul.', 'UL.', 'al.', 'Al.', 'AL.', 'pl.', 'Pl.', 'os.', 'Os.')
 
 # Nominatim requires a User-Agent identifying the application AND a way to
 # contact whoever runs it (stock HTTP-library User-Agents are blocked). The app
 # id lives in source, but the contact must NOT be hardcoded — this repo is
 # public. It is supplied at runtime via the NOMINATIM_CONTACT env var (or the
 # --contact flag), and slotted into this template. See README "Geocoding".
-CONTACT_ENV_VAR = "NOMINATIM_CONTACT"
-USER_AGENT_TEMPLATE = "compare-primary-schools-mazowieckie/1.0 (school quality map; contact: {contact})"
+CONTACT_ENV_VAR = 'NOMINATIM_CONTACT'
+USER_AGENT_TEMPLATE = (
+    'compare-primary-schools-mazowieckie/1.0 (school quality map; contact: {contact})'
+)
 
-CSV_COLUMNS = ["rspo", "miejscowosc", "ulica_nr", "latitude", "longitude"]
+CSV_COLUMNS = ['rspo', 'miejscowosc', 'ulica_nr', 'latitude', 'longitude']
 
 
 def normalize_address(miejscowosc: str | None, ulica_nr: str | None) -> str:
     """Build a normalized address key for comparison (lowercased, stripped)."""
-    parts = [str(miejscowosc or "").strip(), str(ulica_nr or "").strip()]
-    return "|".join(p.lower() for p in parts)
+    parts = [str(miejscowosc or '').strip(), str(ulica_nr or '').strip()]
+    return '|'.join(p.lower() for p in parts)
 
 
 def resolve_user_agent(cli_contact: str | None) -> str:
@@ -95,14 +98,14 @@ def resolve_user_agent(cli_contact: str | None) -> str:
     Exits with a clear message if neither is set, because Nominatim rejects
     requests that lack a valid contact.
     """
-    contact = (cli_contact or os.environ.get(CONTACT_ENV_VAR) or "").strip()
+    contact = (cli_contact or os.environ.get(CONTACT_ENV_VAR) or '').strip()
     if not contact:
         sys.exit(
-            f"ERROR: no Nominatim contact set. Nominatim requires a valid contact "
-            f"(email or URL) and rejects requests without one.\n"
-            f"  Pass it inline:   {CONTACT_ENV_VAR}=you@example.com uv run python scripts/geocode_schools.py\n"
-            f"  Or via the flag:  uv run python scripts/geocode_schools.py --contact you@example.com\n"
-            f"See the README \"Geocoding\" section for details."
+            f'ERROR: no Nominatim contact set. Nominatim requires a valid contact '
+            f'(email or URL) and rejects requests without one.\n'
+            f'  Pass it inline:   {CONTACT_ENV_VAR}=you@example.com uv run python scripts/geocode_schools.py\n'
+            f'  Or via the flag:  uv run python scripts/geocode_schools.py --contact you@example.com\n'
+            f'See the README "Geocoding" section for details.'
         )
     return USER_AGENT_TEMPLATE.format(contact=contact)
 
@@ -112,7 +115,7 @@ def _strip_street_prefix(street: str) -> str:
     s = street.strip()
     for prefix in STREET_PREFIXES:
         if s.startswith(prefix):
-            s = s[len(prefix):].strip()
+            s = s[len(prefix) :].strip()
             break
     return s
 
@@ -123,19 +126,21 @@ def _in_mazowieckie(lat: float, lon: float) -> bool:
 
 def _nominatim_request(params: dict, user_agent: str) -> list:
     """One Nominatim request. Returns the parsed JSON list (possibly empty)."""
-    url = f"{NOMINATIM_URL}?{urlencode(params)}"
-    request = Request(url, headers={"User-Agent": user_agent, "Accept-Language": "pl"})
+    url = f'{NOMINATIM_URL}?{urlencode(params)}'
+    request = Request(url, headers={'User-Agent': user_agent, 'Accept-Language': 'pl'})
     try:
         with urlopen(request, timeout=30) as response:
-            return json.loads(response.read().decode("utf-8"))
+            return json.loads(response.read().decode('utf-8'))
     except Exception as exc:
-        print(f"    request failed: {exc}", file=sys.stderr)
+        print(f'    request failed: {exc}', file=sys.stderr)
         return []
     finally:
         time.sleep(REQUEST_DELAY_SECONDS)
 
 
-def geocode_address(miejscowosc: str | None, ulica_nr: str | None, user_agent: str) -> tuple[float, float] | None:
+def geocode_address(
+    miejscowosc: str | None, ulica_nr: str | None, user_agent: str
+) -> tuple[float, float] | None:
     """Geocode a single address via Nominatim, biased to Mazowieckie.
 
     Strategy (try in order, accept first result that lands inside Mazowieckie):
@@ -149,8 +154,8 @@ def geocode_address(miejscowosc: str | None, ulica_nr: str | None, user_agent: s
     (the previous behaviour silently put 773 of 1,720 schools on top of each
     other at the Pałac Kultury location and similar).
     """
-    miejscowosc = (miejscowosc or "").strip()
-    ulica_raw = (ulica_nr or "").strip()
+    miejscowosc = (miejscowosc or '').strip()
+    ulica_raw = (ulica_nr or '').strip()
     if not miejscowosc or not ulica_raw:
         return None  # no street → no street-level match possible
 
@@ -159,44 +164,50 @@ def geocode_address(miejscowosc: str | None, ulica_nr: str | None, user_agent: s
 
     # 1. Structured query — Nominatim prefers `street=<housenumber> <streetname>`
     #    or `street=<streetname> <housenumber>`; both forms work in practice.
-    queries.append({
-        "street": street_clean,
-        "city": miejscowosc,
-        "state": "województwo mazowieckie",
-        "country": "Polska",
-        "countrycodes": "pl",
-        "format": "json",
-        "limit": "1",
-    })
+    queries.append(
+        {
+            'street': street_clean,
+            'city': miejscowosc,
+            'state': 'województwo mazowieckie',
+            'country': 'Polska',
+            'countrycodes': 'pl',
+            'format': 'json',
+            'limit': '1',
+        }
+    )
 
     # 2. Free-text, viewbox-bounded to Mazowieckie.
-    queries.append({
-        "q": f"{street_clean}, {miejscowosc}, województwo mazowieckie, Polska",
-        "format": "json",
-        "limit": "1",
-        "countrycodes": "pl",
-        "viewbox": MAZ_VIEWBOX,
-        "bounded": "1",
-    })
+    queries.append(
+        {
+            'q': f'{street_clean}, {miejscowosc}, województwo mazowieckie, Polska',
+            'format': 'json',
+            'limit': '1',
+            'countrycodes': 'pl',
+            'viewbox': MAZ_VIEWBOX,
+            'bounded': '1',
+        }
+    )
 
     # 3. Original "ul. X" form — some streets disambiguate better with the tag.
     if street_clean != ulica_raw:
-        queries.append({
-            "q": f"{ulica_raw}, {miejscowosc}, województwo mazowieckie, Polska",
-            "format": "json",
-            "limit": "1",
-            "countrycodes": "pl",
-            "viewbox": MAZ_VIEWBOX,
-            "bounded": "1",
-        })
+        queries.append(
+            {
+                'q': f'{ulica_raw}, {miejscowosc}, województwo mazowieckie, Polska',
+                'format': 'json',
+                'limit': '1',
+                'countrycodes': 'pl',
+                'viewbox': MAZ_VIEWBOX,
+                'bounded': '1',
+            }
+        )
 
     for params in queries:
         data = _nominatim_request(params, user_agent)
         if not data:
             continue
         try:
-            lat = float(data[0]["lat"])
-            lon = float(data[0]["lon"])
+            lat = float(data[0]['lat'])
+            lon = float(data[0]['lon'])
         except (KeyError, ValueError, TypeError):
             continue
         if not _in_mazowieckie(lat, lon):
@@ -213,7 +224,7 @@ def load_existing_cache(path: Path) -> list[dict]:
     """Load existing coordinate cache as an ordered list of row dicts."""
     if not path.exists():
         return []
-    with path.open(newline="", encoding="utf-8") as f:
+    with path.open(newline='', encoding='utf-8') as f:
         return list(csv.DictReader(f))
 
 
@@ -221,34 +232,35 @@ def load_schools(path: Path) -> list[dict]:
     """Load schools (rspo, miejscowosc, ulica_nr) from schools-base.json."""
     if not path.exists():
         raise FileNotFoundError(
-            f"{path} not found. Run the analysis notebook first to generate it."
+            f'{path} not found. Run the analysis notebook first to generate it.'
         )
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = json.loads(path.read_text(encoding='utf-8'))
     return [
         {
-            "rspo": school["rspo"],
-            "miejscowosc": school.get("miejscowosc"),
-            "ulica_nr": school.get("ulica_nr"),
+            'rspo': school['rspo'],
+            'miejscowosc': school.get('miejscowosc'),
+            'ulica_nr': school.get('ulica_nr'),
         }
-        for school in payload["schools"]
+        for school in payload['schools']
     ]
 
 
 def write_cache(path: Path, rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8") as f:
+    with path.open('w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS)
         writer.writeheader()
         for row in rows:
-            writer.writerow({col: row.get(col, "") for col in CSV_COLUMNS})
+            writer.writerow({col: row.get(col, '') for col in CSV_COLUMNS})
 
 
 def _gmaps_url(miejscowosc: str, ulica_nr: str) -> str:
     """A Google Maps search URL for the school address — clickable in the CSV."""
     from urllib.parse import quote_plus
-    parts = [p for p in [ulica_nr, miejscowosc, "województwo mazowieckie", "Polska"] if p]
-    q = quote_plus(", ".join(parts))
-    return f"https://www.google.com/maps/search/?api=1&query={q}"
+
+    parts = [p for p in [ulica_nr, miejscowosc, 'województwo mazowieckie', 'Polska'] if p]
+    q = quote_plus(', '.join(parts))
+    return f'https://www.google.com/maps/search/?api=1&query={q}'
 
 
 def write_unmapped_report(rows: list[dict], path: Path) -> int:
@@ -260,24 +272,26 @@ def write_unmapped_report(rows: list[dict], path: Path) -> int:
 
     Returns the count of unmapped schools (so the caller can summarise).
     """
-    unmapped = [r for r in rows if not (r.get("latitude") and r.get("longitude"))]
+    unmapped = [r for r in rows if not (r.get('latitude') and r.get('longitude'))]
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8") as f:
+    with path.open('w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(
             f,
-            fieldnames=["rspo", "miejscowosc", "ulica_nr", "google_maps_search"],
+            fieldnames=['rspo', 'miejscowosc', 'ulica_nr', 'google_maps_search'],
         )
         writer.writeheader()
         for r in unmapped:
-            writer.writerow({
-                "rspo": r.get("rspo", ""),
-                "miejscowosc": r.get("miejscowosc", ""),
-                "ulica_nr": r.get("ulica_nr", ""),
-                "google_maps_search": _gmaps_url(
-                    str(r.get("miejscowosc", "")),
-                    str(r.get("ulica_nr", "")),
-                ),
-            })
+            writer.writerow(
+                {
+                    'rspo': r.get('rspo', ''),
+                    'miejscowosc': r.get('miejscowosc', ''),
+                    'ulica_nr': r.get('ulica_nr', ''),
+                    'google_maps_search': _gmaps_url(
+                        str(r.get('miejscowosc', '')),
+                        str(r.get('ulica_nr', '')),
+                    ),
+                }
+            )
     return len(unmapped)
 
 
@@ -293,24 +307,30 @@ def report_shared_coords(rows: list[dict], warn_threshold: int) -> list[tuple]:
     threshold, sorted by count descending.
     """
     from collections import defaultdict
+
     by_coord: dict[tuple, list[str]] = defaultdict(list)
     for r in rows:
-        lat = r.get("latitude")
-        lon = r.get("longitude")
+        lat = r.get('latitude')
+        lon = r.get('longitude')
         if lat and lon:
-            by_coord[(lat, lon)].append(str(r.get("rspo", "")))
+            by_coord[(lat, lon)].append(str(r.get('rspo', '')))
 
-    groups = [(len(rspos), coord, rspos) for coord, rspos in by_coord.items()
-              if len(rspos) >= warn_threshold]
+    groups = [
+        (len(rspos), coord, rspos)
+        for coord, rspos in by_coord.items()
+        if len(rspos) >= warn_threshold
+    ]
     groups.sort(reverse=True)
     return groups
 
 
 # ── Refactored pipeline: plan → run → summary → reports ─────────────────────
 
+
 @dataclass
 class GeocodingPlan:
     """Everything `run_geocoding_loop` needs to do its job, decided up front."""
+
     schools_by_rspo: dict[int, dict]
     cache_by_rspo: dict[int, dict]
     # CSV order — preserved through the run, extended for newly-appended rspos.
@@ -327,23 +347,24 @@ class GeocodingPlan:
 @dataclass
 class GeocodingResult:
     """Output of `run_geocoding_loop`."""
+
     rows: list[dict]
     updated_count: int
     new_count: int
 
 
-def plan_geocoding(schools: list[dict],
-                   existing_rows: list[dict],
-                   limit: int | None) -> GeocodingPlan:
+def plan_geocoding(
+    schools: list[dict], existing_rows: list[dict], limit: int | None
+) -> GeocodingPlan:
     """Decide which schools to re-geocode, which to skip, and which to defer.
 
     A school is queued when its address changed since the cached row OR the
     cached row has no coordinates. New schools (rspo not in cache) are
     appended. `limit`, if set, caps the queue and moves the rest to deferred.
     """
-    cache_by_rspo = {int(row["rspo"]): row for row in existing_rows}
-    ordered_rspo = [int(row["rspo"]) for row in existing_rows]
-    schools_by_rspo = {s["rspo"]: s for s in schools}
+    cache_by_rspo = {int(row['rspo']): row for row in existing_rows}
+    ordered_rspo = [int(row['rspo']) for row in existing_rows]
+    schools_by_rspo = {s['rspo']: s for s in schools}
 
     plan = GeocodingPlan(
         schools_by_rspo=schools_by_rspo,
@@ -359,18 +380,18 @@ def plan_geocoding(schools: list[dict],
         school = schools_by_rspo.get(rspo)
         if school is None:
             continue  # cached row for a school that's no longer in the source
-        old_addr = normalize_address(cached.get("miejscowosc"), cached.get("ulica_nr"))
-        new_addr = normalize_address(school["miejscowosc"], school["ulica_nr"])
-        has_coords = bool(cached.get("latitude")) and bool(cached.get("longitude"))
+        old_addr = normalize_address(cached.get('miejscowosc'), cached.get('ulica_nr'))
+        new_addr = normalize_address(school['miejscowosc'], school['ulica_nr'])
+        has_coords = bool(cached.get('latitude')) and bool(cached.get('longitude'))
         if old_addr == new_addr and has_coords:
             plan.kept_count += 1
         else:
-            queue.append((rspo, school, "update"))
+            queue.append((rspo, school, 'update'))
 
     # New schools (rspo not in cache) get appended at the end.
     for school in schools:
-        if school["rspo"] not in cache_by_rspo:
-            queue.append((school["rspo"], school, "new"))
+        if school['rspo'] not in cache_by_rspo:
+            queue.append((school['rspo'], school, 'new'))
 
     if limit is None or limit >= len(queue):
         plan.to_geocode = queue
@@ -382,8 +403,7 @@ def plan_geocoding(schools: list[dict],
     return plan
 
 
-def _assemble_rows(result_by_rspo: dict[int, dict],
-                   ordered_rspo: list[int]) -> list[dict]:
+def _assemble_rows(result_by_rspo: dict[int, dict], ordered_rspo: list[int]) -> list[dict]:
     """Lay out the final CSV in `ordered_rspo` order; tail any extras."""
     rows = [result_by_rspo[r] for r in ordered_rspo if r in result_by_rspo]
     ordered_set = set(ordered_rspo)
@@ -393,10 +413,9 @@ def _assemble_rows(result_by_rspo: dict[int, dict],
     return rows
 
 
-def run_geocoding_loop(plan: GeocodingPlan,
-                       user_agent: str,
-                       save_path: Path,
-                       save_every: int = 50) -> GeocodingResult:
+def run_geocoding_loop(
+    plan: GeocodingPlan, user_agent: str, save_path: Path, save_every: int = 50
+) -> GeocodingResult:
     """Geocode every row in `plan.to_geocode`, saving the CSV periodically.
 
     Rows in `plan.cache_by_rspo` that aren't being re-geocoded pass through
@@ -411,8 +430,8 @@ def run_geocoding_loop(plan: GeocodingPlan,
 
     n_total = len(plan.to_geocode)
     print(
-        f"\nGeocoding {n_total:,} schools"
-        + (f" ({len(plan.deferred):,} deferred due to --limit)" if plan.deferred else "")
+        f'\nGeocoding {n_total:,} schools'
+        + (f' ({len(plan.deferred):,} deferred due to --limit)' if plan.deferred else '')
     )
 
     updated_count = 0
@@ -421,28 +440,28 @@ def run_geocoding_loop(plan: GeocodingPlan,
 
     for index, (rspo, school, action) in enumerate(plan.to_geocode, start=1):
         pct = index / n_total * 100 if n_total else 100.0
-        label = "re-geocoding" if action == "update" else "geocoding NEW"
+        label = 're-geocoding' if action == 'update' else 'geocoding NEW'
         print(
-            f"  [{index:>4,}/{n_total:,} ({pct:5.1f}%)] {label} rspo={rspo}: "
-            f"{school['miejscowosc']}, {school['ulica_nr']}"
+            f'  [{index:>4,}/{n_total:,} ({pct:5.1f}%)] {label} rspo={rspo}: '
+            f'{school["miejscowosc"]}, {school["ulica_nr"]}'
         )
-        coords = geocode_address(school["miejscowosc"], school["ulica_nr"], user_agent)
-        if action == "update":
+        coords = geocode_address(school['miejscowosc'], school['ulica_nr'], user_agent)
+        if action == 'update':
             updated_count += 1
         else:
             new_count += 1
             ordered_rspo.append(rspo)
         result_by_rspo[rspo] = {
-            "rspo": rspo,
-            "miejscowosc": school["miejscowosc"],
-            "ulica_nr": school["ulica_nr"],
-            "latitude": coords[0] if coords else "",
-            "longitude": coords[1] if coords else "",
+            'rspo': rspo,
+            'miejscowosc': school['miejscowosc'],
+            'ulica_nr': school['ulica_nr'],
+            'latitude': coords[0] if coords else '',
+            'longitude': coords[1] if coords else '',
         }
 
         if index % save_every == 0 and index < n_total:
             write_cache(save_path, _assemble_rows(result_by_rspo, ordered_rspo))
-            print(f"    [partial cache saved — {index:,}/{n_total:,} done]")
+            print(f'    [partial cache saved — {index:,}/{n_total:,} done]')
 
     final_rows = _assemble_rows(result_by_rspo, ordered_rspo)
     write_cache(save_path, final_rows)
@@ -450,56 +469,65 @@ def run_geocoding_loop(plan: GeocodingPlan,
 
 
 def print_run_summary(plan: GeocodingPlan, result: GeocodingResult, csv_path: Path) -> None:
-    missing = sum(1 for r in result.rows if not r.get("latitude"))
+    missing = sum(1 for r in result.rows if not r.get('latitude'))
     print()
-    print(f"Done. Cache written to {csv_path}")
-    print(f"  kept (unchanged):   {plan.kept_count:,}")
-    print(f"  updated (changed):  {result.updated_count:,}")
-    print(f"  new (appended):     {result.new_count:,}")
-    print(f"  total rows:         {len(result.rows):,}")
-    print(f"  still missing coords: {missing:,}")
+    print(f'Done. Cache written to {csv_path}')
+    print(f'  kept (unchanged):   {plan.kept_count:,}')
+    print(f'  updated (changed):  {result.updated_count:,}')
+    print(f'  new (appended):     {result.new_count:,}')
+    print(f'  total rows:         {len(result.rows):,}')
+    print(f'  still missing coords: {missing:,}')
 
 
-def emit_post_run_reports(rows: list[dict],
-                          unmapped_path: Path,
-                          warn_threshold: int) -> None:
+def emit_post_run_reports(rows: list[dict], unmapped_path: Path, warn_threshold: int) -> None:
     """Refresh the unmapped CSV and print the shared-coords warning."""
     n_unmapped = write_unmapped_report(rows, unmapped_path)
     print()
     if n_unmapped:
-        print(f"⚠ {n_unmapped:,} school(s) without coordinates — wrote {unmapped_path}")
-        print(f"  Each row in that file has a Google Maps search URL. Open it,")
-        print(f"  find the school, copy the lat/lon, paste into the cache by hand.")
+        print(f'⚠ {n_unmapped:,} school(s) without coordinates — wrote {unmapped_path}')
+        print('  Each row in that file has a Google Maps search URL. Open it,')
+        print('  find the school, copy the lat/lon, paste into the cache by hand.')
     else:
-        print(f"✓ All schools mapped. {unmapped_path.name} is empty.")
+        print(f'✓ All schools mapped. {unmapped_path.name} is empty.')
 
     shared = report_shared_coords(rows, warn_threshold)
     print()
     if shared:
-        print(f"⚠ {len(shared)} group(s) of ≥{warn_threshold} schools at identical coordinates:")
+        print(f'⚠ {len(shared)} group(s) of ≥{warn_threshold} schools at identical coordinates:')
         for count, coord, rspos in shared[:10]:
-            preview = ", ".join(rspos[:5]) + (f", … (+{len(rspos)-5})" if len(rspos) > 5 else "")
-            print(f"    {count:>3} schools at {coord}: rspo={preview}")
+            preview = ', '.join(rspos[:5]) + (f', … (+{len(rspos) - 5})' if len(rspos) > 5 else '')
+            print(f'    {count:>3} schools at {coord}: rspo={preview}')
         if len(shared) > 10:
-            print(f"    … and {len(shared)-10} more groups")
-        print(f"  Either these are genuine multi-school complexes, or the geocoder")
-        print(f"  is finding the same node for differing addresses — eyeball them.")
+            print(f'    … and {len(shared) - 10} more groups')
+        print('  Either these are genuine multi-school complexes, or the geocoder')
+        print('  is finding the same node for differing addresses — eyeball them.')
     else:
-        print(f"✓ No group of ≥{warn_threshold} schools at identical coordinates.")
+        print(f'✓ No group of ≥{warn_threshold} schools at identical coordinates.')
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--limit", type=int, default=None,
-                        help="Maximum number of NEW geocoding requests (for testing).")
-    parser.add_argument("--force", action="store_true",
-                        help="Re-geocode every school, ignoring the cache.")
-    parser.add_argument("--contact", default=None,
-                        help=f"Contact (email or URL) for the Nominatim User-Agent. "
-                             f"Overrides the {CONTACT_ENV_VAR} env var.")
-    parser.add_argument("--report-only", action="store_true",
-                        help="Skip geocoding entirely. Re-emit the unmapped CSV "
-                             "and shared-coords report from the current cache.")
+    parser.add_argument(
+        '--limit',
+        type=int,
+        default=None,
+        help='Maximum number of NEW geocoding requests (for testing).',
+    )
+    parser.add_argument(
+        '--force', action='store_true', help='Re-geocode every school, ignoring the cache.'
+    )
+    parser.add_argument(
+        '--contact',
+        default=None,
+        help=f'Contact (email or URL) for the Nominatim User-Agent. '
+        f'Overrides the {CONTACT_ENV_VAR} env var.',
+    )
+    parser.add_argument(
+        '--report-only',
+        action='store_true',
+        help='Skip geocoding entirely. Re-emit the unmapped CSV '
+        'and shared-coords report from the current cache.',
+    )
     return parser.parse_args(argv)
 
 
@@ -517,11 +545,13 @@ def main() -> None:
     user_agent = resolve_user_agent(args.contact)
 
     schools = load_schools(SCHOOLS_BASE_JSON)
-    print(f"Loaded {len(schools):,} schools from {SCHOOLS_BASE_JSON.name}")
+    print(f'Loaded {len(schools):,} schools from {SCHOOLS_BASE_JSON.name}')
 
     existing_rows = [] if args.force else load_existing_cache(COORDS_CSV)
-    print(f"Existing cache: {len(existing_rows):,} rows"
-          + (" (ignored due to --force)" if args.force else ""))
+    print(
+        f'Existing cache: {len(existing_rows):,} rows'
+        + (' (ignored due to --force)' if args.force else '')
+    )
 
     plan = plan_geocoding(schools, existing_rows, args.limit)
     result = run_geocoding_loop(plan, user_agent, COORDS_CSV)
@@ -529,5 +559,5 @@ def main() -> None:
     emit_post_run_reports(result.rows, UNMAPPED_CSV, SHARED_COORD_WARN_THRESHOLD)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

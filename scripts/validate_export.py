@@ -36,6 +36,7 @@ Usage
       --docs-data docs/data
 Exit code 0 if everything passes, 1 otherwise.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -57,17 +58,18 @@ from scipy import stats
 # document the ROLE at each use site (so the two don't repeat each other).
 Rspo = int
 Year = int
-Subject = str          # 'polski' | 'matematyka' | 'angielski' | 'composite_min'
-Metric = str           # 'mean' | 'median' | 'diff_mean' | 'unit_norm_diff_mean'
-ViewKind = str         # 'base' | 'loo' | 'single_year' | 'last_k'
+Subject = str  # 'polski' | 'matematyka' | 'angielski' | 'composite_min'
+Metric = str  # 'mean' | 'median' | 'diff_mean' | 'unit_norm_diff_mean'
+ViewKind = str  # 'base' | 'loo' | 'single_year' | 'last_k'
 # A view is identified by (metric, subject, view_kind, param); param is None for
 # base, else an int (the excluded/selected year, or k).
-ViewKey = tuple[Metric, Subject, ViewKind, "int | None"]
+ViewKey = tuple[Metric, Subject, ViewKind, 'int | None']
 ViewScores = dict[ViewKey, dict[Rspo, float]]
 
 
 class ScoreCell(TypedDict):
     """One exported value: the aggregate score, its rank (1 = best) and percentile."""
+
     score: float
     rank: int
     pct: float
@@ -96,6 +98,7 @@ N_COL, MEAN_COL, MEDIAN_COL = 'liczba zdajacych', 'wynik sredni (%)', 'mediana (
 
 
 # ── xlsx reading (independent re-implementation of the notebook loader) ───────
+
 
 def normalize_text(text: str) -> str:
     """Lower-case, strip Polish diacritics (incl. l-stroke), collapse whitespace —
@@ -139,13 +142,15 @@ def read_clean_rows(data_dir: Path) -> list[dict]:
     present for all three core subjects (rows missing any are dropped). Column
     extraction is vectorised; a missing sheet/column fails with a clear message.
     """
-    files = sorted(p for p in data_dir.glob('*.xlsx*')
-                   if not p.name.startswith('.') and YEAR_FILE_RE.match(p.name))
+    files = sorted(
+        p
+        for p in data_dir.glob('*.xlsx*')
+        if not p.name.startswith('.') and YEAR_FILE_RE.match(p.name)
+    )
     if not files:
         sys.exit(f'No source xlsx files (matching ^\\d{{4}}) in {data_dir}')
 
-    needed = [(subject, col) for subject in CORE_SUBJECTS
-              for col in (N_COL, MEAN_COL, MEDIAN_COL)]
+    needed = [(subject, col) for subject in CORE_SUBJECTS for col in (N_COL, MEAN_COL, MEDIAN_COL)]
     per_file_frames = []
     for path in files:
         year = int(YEAR_FILE_RE.match(path.name).group(0))
@@ -158,12 +163,18 @@ def read_clean_rows(data_dir: Path) -> list[dict]:
         if missing:
             sys.exit(f'{path.name}: expected columns not found after normalisation: {missing}')
 
-        column_data = {'rspo': pd.to_numeric(sheet[('meta', 'rspo')], errors='coerce'),
-                       'year': year}
+        column_data = {
+            'rspo': pd.to_numeric(sheet[('meta', 'rspo')], errors='coerce'),
+            'year': year,
+        }
         for subject in CORE_SUBJECTS:
             column_data[f'n_{subject}'] = pd.to_numeric(sheet[(subject, N_COL)], errors='coerce')
-            column_data[f'mean_{subject}'] = pd.to_numeric(sheet[(subject, MEAN_COL)], errors='coerce')
-            column_data[f'median_{subject}'] = pd.to_numeric(sheet[(subject, MEDIAN_COL)], errors='coerce')
+            column_data[f'mean_{subject}'] = pd.to_numeric(
+                sheet[(subject, MEAN_COL)], errors='coerce'
+            )
+            column_data[f'median_{subject}'] = pd.to_numeric(
+                sheet[(subject, MEDIAN_COL)], errors='coerce'
+            )
         per_file_frames.append(pd.DataFrame(column_data))
 
     df = pd.concat(per_file_frames, ignore_index=True)
@@ -176,25 +187,31 @@ def read_clean_rows(data_dir: Path) -> list[dict]:
     for record in df.to_dict('records'):
         row = {'rspo': int(record['rspo']), 'year': int(record['year'])}
         for subject in CORE_SUBJECTS:
-            row[subject] = {'n': record[f'n_{subject}'],
-                            'mean': record[f'mean_{subject}'],
-                            'median': record[f'median_{subject}']}
+            row[subject] = {
+                'n': record[f'n_{subject}'],
+                'mean': record[f'mean_{subject}'],
+                'median': record[f'median_{subject}'],
+            }
         rows.append(row)
     return rows
 
 
 # ── independent metric / view / rank recomputation ──────────────────────────
 
+
 def compute_voivodeship_means(rows: list[dict]) -> dict[Subject, dict[Year, float]]:
     """subject -> year -> mean over schools of mean_subject, on the clean rows —
     the per-year reference that diff_mean / unit_norm_diff_mean subtract off."""
     subject_to_year_to_means: dict[Subject, dict[Year, list]] = {
-        subject: defaultdict(list) for subject in CORE_SUBJECTS}
+        subject: defaultdict(list) for subject in CORE_SUBJECTS
+    }
     for row in rows:
         for subject in CORE_SUBJECTS:
             subject_to_year_to_means[subject][row['year']].append(row[subject]['mean'])
-    return {subject: {year: float(np.mean(means)) for year, means in by_year.items()}
-            for subject, by_year in subject_to_year_to_means.items()}
+    return {
+        subject: {year: float(np.mean(means)) for year, means in by_year.items()}
+        for subject, by_year in subject_to_year_to_means.items()
+    }
 
 
 def compute_per_year_values(
@@ -220,14 +237,18 @@ def compute_per_year_values(
             else:
                 denom = voivodeship_mean if voivodeship_mean > 0 else 1
             per_year_by_school_subject[(row['rspo'], subject)][year] = {
-                'n': n, 'mean': mean, 'median': median,
-                'diff_mean': diff_mean, 'unit_norm_diff_mean': diff_mean / denom,
+                'n': n,
+                'mean': mean,
+                'median': median,
+                'diff_mean': diff_mean,
+                'unit_norm_diff_mean': diff_mean / denom,
             }
     return per_year_by_school_subject
 
 
-def aggregate_across_years(metric: Metric, year_to_values: dict[Year, dict[str, float]],
-                           years_used) -> float:
+def aggregate_across_years(
+    metric: Metric, year_to_values: dict[Year, dict[str, float]], years_used
+) -> float:
     """Aggregate a metric across `years_used` for one school. Weighted by the
     student count for diff_mean / unit_norm_diff_mean, a plain mean otherwise.
     NaN inputs (and zero-weight years for the weighted case) are ignored; an empty
@@ -277,23 +298,30 @@ def compute_view_scores(
                 store('last_k', k, years[-k:])
 
     metric_to_view_params: dict[Metric, set] = defaultdict(set)
-    for (metric, subject, view_kind, param) in list(view_key_to_rspo_scores):
+    for metric, subject, view_kind, param in list(view_key_to_rspo_scores):
         if subject in CORE_SUBJECTS:
             metric_to_view_params[metric].add((view_kind, param))
     for metric, view_params in metric_to_view_params.items():
         for view_kind, param in view_params:
-            per_subject = {subject: view_key_to_rspo_scores.get((metric, subject, view_kind, param), {})
-                           for subject in CORE_SUBJECTS}
-            shared_rspos = (set(per_subject['polski'])
-                            & set(per_subject['matematyka'])
-                            & set(per_subject['angielski']))
+            per_subject = {
+                subject: view_key_to_rspo_scores.get((metric, subject, view_kind, param), {})
+                for subject in CORE_SUBJECTS
+            }
+            shared_rspos = (
+                set(per_subject['polski'])
+                & set(per_subject['matematyka'])
+                & set(per_subject['angielski'])
+            )
             for rspo in shared_rspos:
                 view_key_to_rspo_scores[(metric, 'composite_min', view_kind, param)][rspo] = min(
-                    per_subject[subject][rspo] for subject in CORE_SUBJECTS)
+                    per_subject[subject][rspo] for subject in CORE_SUBJECTS
+                )
     return view_key_to_rspo_scores
 
 
-def compute_ranks_and_percentiles(rspo_to_score: dict[Rspo, float]) -> dict[Rspo, tuple[int, float]]:
+def compute_ranks_and_percentiles(
+    rspo_to_score: dict[Rspo, float],
+) -> dict[Rspo, tuple[int, float]]:
     """rspo -> (rank, percentile) with min-rank (1 = highest score) and
     average-rank percentile (100 = highest), matching the export."""
     rspos = list(rspo_to_score)
@@ -301,8 +329,10 @@ def compute_ranks_and_percentiles(rspo_to_score: dict[Rspo, float]) -> dict[Rspo
     n = len(scores)
     ranks = stats.rankdata(-scores, method='min').astype(int)
     percentiles = stats.rankdata(scores, method='average') / n * 100
-    return {rspo: (int(rank), float(percentile))
-            for rspo, rank, percentile in zip(rspos, ranks, percentiles)}
+    return {
+        rspo: (int(rank), float(percentile))
+        for rspo, rank, percentile in zip(rspos, ranks, percentiles)
+    }
 
 
 def acceptable_rank_range(score: float, scores_ascending: list[float]):
@@ -319,7 +349,10 @@ def acceptable_rank_range(score: float, scores_ascending: list[float]):
 
 # ── JSON loading (kept as dicts keyed by rspo) ──────────────────────────────
 
-def load_json_exports(docs_data: Path) -> tuple[dict, dict[Rspo, dict], dict[Metric, dict[Rspo, dict]]]:
+
+def load_json_exports(
+    docs_data: Path,
+) -> tuple[dict, dict[Rspo, dict], dict[Metric, dict[Rspo, dict]]]:
     """Load the served JSON as dicts keyed by rspo. Returns
     (metadata, rspo_to_school_base_data, metric_to_rspo_to_school_data)."""
     base_path = docs_data / 'schools-base.json'
@@ -334,13 +367,14 @@ def load_json_exports(docs_data: Path) -> tuple[dict, dict[Rspo, dict], dict[Met
             sys.exit(f'Missing {path}')
         payload = json.loads(path.read_text())
         metric_to_rspo_to_school_data[metric] = {
-            int(rspo): school for rspo, school in payload['schools'].items()}
+            int(rspo): school for rspo, school in payload['schools'].items()
+        }
     return base['metadata'], rspo_to_school_base_data, metric_to_rspo_to_school_data
 
 
 def iter_json_views(
     metric_to_rspo_to_school_data: dict[Metric, dict[Rspo, dict]],
-) -> Iterator[tuple[Metric, Subject, ViewKind, "int | None", Rspo, ScoreCell]]:
+) -> Iterator[tuple[Metric, Subject, ViewKind, 'int | None', Rspo, ScoreCell]]:
     """Yield (metric, subject, view_kind, param, rspo, cell) for every score cell
     in the per-metric files (base param is None, others are ints)."""
     for metric, schools in metric_to_rspo_to_school_data.items():
@@ -356,6 +390,7 @@ def iter_json_views(
 
 
 # ── reporting ────────────────────────────────────────────────────────────────
+
 
 class Report:
     """Collects PASS/FAIL lines and a running comparison count; tracks whether any
@@ -385,6 +420,7 @@ def within_tolerance(a, b, tol: float) -> bool:
 
 # ── checks ───────────────────────────────────────────────────────────────────
 
+
 def check_subjects_vs_xlsx(rows, metric_to_rspo_to_school_data, rep: Report):
     """A — the single-year scores of the 'mean'/'median' metrics must equal the
     mean/median read straight from the xlsx (ties the JSON to the raw source)."""
@@ -403,29 +439,40 @@ def check_subjects_vs_xlsx(rows, metric_to_rspo_to_school_data, rep: Report):
                 n += 1
                 max_diff = max(max_diff, abs(cell['score'] - row[subject][field]))
                 if not within_tolerance(cell['score'], row[subject][field], SCORE_TOL):
-                    mismatches.append(f'rspo={rspo} {subject} {year}: '
-                                      f'json={cell["score"]} xlsx={row[subject][field]}')
+                    mismatches.append(
+                        f'rspo={rspo} {subject} {year}: '
+                        f'json={cell["score"]} xlsx={row[subject][field]}'
+                    )
         rep.checked += n
         if mismatches:
-            rep.fail(f'metric={metric}: {len(mismatches)}/{n} single-year values differ from xlsx',
-                     mismatches)
+            rep.fail(
+                f'metric={metric}: {len(mismatches)}/{n} single-year values differ from xlsx',
+                mismatches,
+            )
         else:
-            rep.ok(f'metric={metric}: all {n} single-year values match the xlsx (max delta {max_diff:.2e})')
+            rep.ok(
+                f'metric={metric}: all {n} single-year values match the xlsx (max delta {max_diff:.2e})'
+            )
 
 
-def check_aggregates(view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_school_data, rep: Report):
+def check_aggregates(
+    view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_school_data, rep: Report
+):
     """B — every JSON aggregate score (all metrics x subjects x views) must equal
     the independent recomputation. Reports the largest deviation per view kind."""
     rep.section('B. Aggregates recomputed from xlsx vs JSON (all views)')
     kind_to_stats = defaultdict(lambda: [0, 0, 0.0])  # view_kind -> [checked, failed, max_diff]
     examples = defaultdict(list)
-    for metric, subject, view_kind, param, rspo, cell in iter_json_views(metric_to_rspo_to_school_data):
+    for metric, subject, view_kind, param, rspo, cell in iter_json_views(
+        metric_to_rspo_to_school_data
+    ):
         recomputed = view_key_to_rspo_scores.get((metric, subject, view_kind, param), {}).get(rspo)
         kind_to_stats[view_kind][0] += 1
         if recomputed is None:
             kind_to_stats[view_kind][1] += 1
             examples[view_kind].append(
-                f'{metric}/{subject}/{view_kind}/{param} rspo={rspo}: missing in recompute')
+                f'{metric}/{subject}/{view_kind}/{param} rspo={rspo}: missing in recompute'
+            )
             continue
         diff = abs(cell['score'] - recomputed)
         kind_to_stats[view_kind][2] = max(kind_to_stats[view_kind][2], diff)
@@ -433,33 +480,45 @@ def check_aggregates(view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_scho
             kind_to_stats[view_kind][1] += 1
             examples[view_kind].append(
                 f'{metric}/{subject}/{view_kind}/{param} rspo={rspo}: '
-                f'json={cell["score"]} recomp={recomputed:.6f}')
+                f'json={cell["score"]} recomp={recomputed:.6f}'
+            )
     for view_kind, (checked, failed, max_diff) in sorted(kind_to_stats.items()):
         rep.checked += checked
         if failed:
-            rep.fail(f'{view_kind}: {failed}/{checked} scores differ (max delta {max_diff:.2e})',
-                     examples[view_kind])
+            rep.fail(
+                f'{view_kind}: {failed}/{checked} scores differ (max delta {max_diff:.2e})',
+                examples[view_kind],
+            )
         else:
             rep.ok(f'{view_kind}: all {checked} aggregate scores match (max delta {max_diff:.2e})')
 
 
-def check_completeness(view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_school_data, rep: Report):
+def check_completeness(
+    view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_school_data, rep: Report
+):
     """C — the JSON and the recomputation must contain exactly the same set of
     (metric, subject, view, param, school) score cells (nothing dropped/invented)."""
     rep.section('C. Completeness: JSON view set == recomputed view set')
-    json_keys = {(metric, subject, view_kind, param, rspo)
-                 for metric, subject, view_kind, param, rspo, _
-                 in iter_json_views(metric_to_rspo_to_school_data)}
-    recomputed_keys = {(metric, subject, view_kind, param, rspo)
-                       for (metric, subject, view_kind, param), rspo_to_score
-                       in view_key_to_rspo_scores.items() for rspo in rspo_to_score}
+    json_keys = {
+        (metric, subject, view_kind, param, rspo)
+        for metric, subject, view_kind, param, rspo, _ in iter_json_views(
+            metric_to_rspo_to_school_data
+        )
+    }
+    recomputed_keys = {
+        (metric, subject, view_kind, param, rspo)
+        for (metric, subject, view_kind, param), rspo_to_score in view_key_to_rspo_scores.items()
+        for rspo in rspo_to_score
+    }
     only_json = json_keys - recomputed_keys
     only_recomputed = recomputed_keys - json_keys
     rep.checked += len(json_keys | recomputed_keys)
     if only_json or only_recomputed:
         examples = [f'in JSON only: {key}' for key in list(only_json)[:3]]
         examples += [f'in recompute only: {key}' for key in list(only_recomputed)[:3]]
-        rep.fail(f'{len(only_json)} JSON-only + {len(only_recomputed)} recompute-only cells', examples)
+        rep.fail(
+            f'{len(only_json)} JSON-only + {len(only_recomputed)} recompute-only cells', examples
+        )
     else:
         rep.ok(f'identical key sets ({len(json_keys):,} score cells)')
 
@@ -472,18 +531,29 @@ def check_base_consistency(rspo_to_school_base_data, metric_to_rspo_to_school_da
     for rspo, school in rspo_to_school_base_data.items():
         for metric, by_subject in school['scores'].items():
             for subject, base_cell in by_subject.items():
-                per_metric_base = (metric_to_rspo_to_school_data.get(metric, {})
-                                   .get(rspo, {}).get(subject, {}).get('base'))
+                per_metric_base = (
+                    metric_to_rspo_to_school_data.get(metric, {})
+                    .get(rspo, {})
+                    .get(subject, {})
+                    .get('base')
+                )
                 if per_metric_base is None:
-                    mismatches.append(f'rspo={rspo} {metric}/{subject}: base entry missing '
-                                      f'from per-metric file')
+                    mismatches.append(
+                        f'rspo={rspo} {metric}/{subject}: base entry missing from per-metric file'
+                    )
                     continue
                 n += 1
-                if (base_cell['rank'] != per_metric_base['rank']
-                        or not within_tolerance(base_cell['score'], per_metric_base['score'], SCORE_TOL)
-                        or not within_tolerance(base_cell['pct'], per_metric_base['pct'], PCT_TOL)):
-                    mismatches.append(f'rspo={rspo} {metric}/{subject}: '
-                                      f'base={base_cell} perMetric={per_metric_base}')
+                if (
+                    base_cell['rank'] != per_metric_base['rank']
+                    or not within_tolerance(
+                        base_cell['score'], per_metric_base['score'], SCORE_TOL
+                    )
+                    or not within_tolerance(base_cell['pct'], per_metric_base['pct'], PCT_TOL)
+                ):
+                    mismatches.append(
+                        f'rspo={rspo} {metric}/{subject}: '
+                        f'base={base_cell} perMetric={per_metric_base}'
+                    )
     rep.checked += n
     if mismatches:
         rep.fail(f'{len(mismatches)} base entries disagree between the two files', mismatches)
@@ -496,9 +566,11 @@ def check_ranks(view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_school_da
     recomputed (full-precision) scores, accepting any order among near-ties (see
     acceptable_rank_range)."""
     rep.section('E. Ranks/percentiles match rankdata over the recomputed scores')
-    view_to_stored_rank_pct = defaultdict(dict)   # view_key -> {rspo: (rank, pct)}
-    view_to_json_population = defaultdict(set)     # view_key -> {rspo}
-    for metric, subject, view_kind, param, rspo, cell in iter_json_views(metric_to_rspo_to_school_data):
+    view_to_stored_rank_pct = defaultdict(dict)  # view_key -> {rspo: (rank, pct)}
+    view_to_json_population = defaultdict(set)  # view_key -> {rspo}
+    for metric, subject, view_kind, param, rspo, cell in iter_json_views(
+        metric_to_rspo_to_school_data
+    ):
         view_key = (metric, subject, view_kind, param)
         view_to_stored_rank_pct[view_key][rspo] = (cell['rank'], cell['pct'])
         view_to_json_population[view_key].add(rspo)
@@ -513,7 +585,8 @@ def check_ranks(view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_school_da
                 examples.append(
                     f'{view_key}: population differs '
                     f'(json-only {len(view_to_json_population[view_key] - set(recomputed_scores))}, '
-                    f'recomp-only {len(set(recomputed_scores) - view_to_json_population[view_key])})')
+                    f'recomp-only {len(set(recomputed_scores) - view_to_json_population[view_key])})'
+                )
             continue
         scores_ascending = sorted(recomputed_scores.values())
         for rspo, score in recomputed_scores.items():
@@ -525,8 +598,10 @@ def check_ranks(view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_school_da
             if not (rank_lo <= stored_rank <= rank_hi):
                 rank_fail += 1
                 if len(examples) < 5:
-                    examples.append(f'{view_key} rspo={rspo}: '
-                                    f'json_rank={stored_rank} not in [{rank_lo},{rank_hi}]')
+                    examples.append(
+                        f'{view_key} rspo={rspo}: '
+                        f'json_rank={stored_rank} not in [{rank_lo},{rank_hi}]'
+                    )
                 continue
             if not (pct_lo - PCT_TOL <= stored_pct <= pct_hi + PCT_TOL):
                 pct_fail += 1
@@ -534,11 +609,16 @@ def check_ranks(view_key_to_rspo_scores: ViewScores, metric_to_rspo_to_school_da
                     examples.append(f'{view_key} rspo={rspo}: json_pct={stored_pct} out of range')
     rep.checked += total
     if pop_fail or rank_fail or pct_fail:
-        rep.fail(f'{pop_fail} population + {rank_fail} rank + {pct_fail} pct mismatches '
-                 f'(of {total} ranked)', examples)
+        rep.fail(
+            f'{pop_fail} population + {rank_fail} rank + {pct_fail} pct mismatches '
+            f'(of {total} ranked)',
+            examples,
+        )
     else:
-        rep.ok(f'all {total} (rank, pct) values consistent with the scores '
-               f'({ambiguous:,} within near-tie tolerance)')
+        rep.ok(
+            f'all {total} (rank, pct) values consistent with the scores '
+            f'({ambiguous:,} within near-tie tolerance)'
+        )
 
 
 def check_metadata(metadata, view_key_to_rspo_scores: ViewScores, rep: Report):
@@ -554,35 +634,48 @@ def check_metadata(metadata, view_key_to_rspo_scores: ViewScores, rep: Report):
 
     for metric in EXPORT_METRICS:
         for subject in ALL_SUBJECTS:
-            base_scores = np.array(list(
-                view_key_to_rspo_scores.get((metric, subject, 'base', None), {}).values()))
+            base_scores = np.array(
+                list(view_key_to_rspo_scores.get((metric, subject, 'base', None), {}).values())
+            )
             if len(base_scores) < 2:
                 continue
             n += 1
             expected_sigma = round(float(base_scores.std(ddof=1)), 4)
-            expected_centre = (round(float(base_scores.mean()), 4)
-                               if subject == 'composite_min' or metric in ('mean', 'median') else 0.0)
+            expected_centre = (
+                round(float(base_scores.mean()), 4)
+                if subject == 'composite_min' or metric in ('mean', 'median')
+                else 0.0
+            )
             if not within_tolerance(sigma[metric][subject], expected_sigma, SCORE_TOL):
-                mismatches.append(f'sigma {metric}/{subject}: '
-                                  f'json={sigma[metric][subject]} recomp={expected_sigma}')
+                mismatches.append(
+                    f'sigma {metric}/{subject}: '
+                    f'json={sigma[metric][subject]} recomp={expected_sigma}'
+                )
             if not within_tolerance(centre[metric][subject], expected_centre, SCORE_TOL):
-                mismatches.append(f'centre {metric}/{subject}: '
-                                  f'json={centre[metric][subject]} recomp={expected_centre}')
+                mismatches.append(
+                    f'centre {metric}/{subject}: '
+                    f'json={centre[metric][subject]} recomp={expected_centre}'
+                )
 
     for metric in EXPORT_METRICS:
-        base_scores = np.array(list(
-            view_key_to_rspo_scores.get((metric, 'composite_min', 'base', None), {}).values()))
+        base_scores = np.array(
+            list(view_key_to_rspo_scores.get((metric, 'composite_min', 'base', None), {}).values())
+        )
         if len(base_scores) == 0 or metric not in slider_ranges:
             continue
         n += 1
-        expected = {'min': round(float(base_scores.min()), 4),
-                    'max': round(float(base_scores.max()), 4),
-                    'p1': round(float(np.quantile(base_scores, 0.01)), 4),
-                    'p99': round(float(np.quantile(base_scores, 0.99)), 4)}
+        expected = {
+            'min': round(float(base_scores.min()), 4),
+            'max': round(float(base_scores.max()), 4),
+            'p1': round(float(np.quantile(base_scores, 0.01)), 4),
+            'p99': round(float(np.quantile(base_scores, 0.99)), 4),
+        }
         for field, value in expected.items():
             if not within_tolerance(slider_ranges[metric].get(field), value, SCORE_TOL):
-                mismatches.append(f'slider {metric}.{field}: '
-                                  f'json={slider_ranges[metric].get(field)} recomp={value}')
+                mismatches.append(
+                    f'slider {metric}.{field}: '
+                    f'json={slider_ranges[metric].get(field)} recomp={value}'
+                )
 
     rep.checked += n
     if mismatches:
@@ -611,30 +704,48 @@ def check_class_spread(metadata, rspo_to_school_base_data, rep: Report):
                 if not cell:
                     continue
                 score = cell['score']
-                school_class = ('A' if score > subject_centre + CLASS_BOUND * subject_sigma
-                                else 'C' if score < subject_centre - CLASS_BOUND * subject_sigma
-                                else 'B')
+                school_class = (
+                    'A'
+                    if score > subject_centre + CLASS_BOUND * subject_sigma
+                    else 'C'
+                    if score < subject_centre - CLASS_BOUND * subject_sigma
+                    else 'B'
+                )
                 class_counts[school_class] += 1
             for school_class, count in class_counts.items():
                 if count == 0:
-                    empty_classes.append(f'{metric}/{subject}: class {school_class} empty ({class_counts})')
+                    empty_classes.append(
+                        f'{metric}/{subject}: class {school_class} empty ({class_counts})'
+                    )
     rep.checked += n
     if empty_classes:
-        rep.fail(f'{len(empty_classes)} (metric, subject) groups have an empty class', empty_classes)
+        rep.fail(
+            f'{len(empty_classes)} (metric, subject) groups have an empty class', empty_classes
+        )
     else:
         rep.ok(f'all {n} (metric, subject) groups populate every class A/B/C')
 
 
 # ── main ─────────────────────────────────────────────────────────────────────
 
+
 def build_parser() -> argparse.ArgumentParser:
     """Command-line arguments: where the source xlsx and the served JSON live."""
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--data-dir', default='data/egzamin-osmoklasisty', type=Path,
-                        help='directory with the source OKE xlsx files')
-    parser.add_argument('--docs-data', default='docs/data', type=Path,
-                        help='directory with schools-base.json and schools-{metric}.json')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument(
+        '--data-dir',
+        default='data/egzamin-osmoklasisty',
+        type=Path,
+        help='directory with the source OKE xlsx files',
+    )
+    parser.add_argument(
+        '--docs-data',
+        default='docs/data',
+        type=Path,
+        help='directory with schools-base.json and schools-{metric}.json',
+    )
     return parser
 
 
@@ -645,8 +756,10 @@ def filter_rows_to_json_years(all_rows: list[dict], json_years: set[Year]) -> li
     xlsx_years = {row['year'] for row in all_rows}
     missing_years = json_years - xlsx_years
     if missing_years:
-        sys.exit(f'The JSON was built from years {sorted(json_years)} but the xlsx is '
-                 f'missing {sorted(missing_years)} — cannot validate.')
+        sys.exit(
+            f'The JSON was built from years {sorted(json_years)} but the xlsx is '
+            f'missing {sorted(missing_years)} — cannot validate.'
+        )
     rows = [row for row in all_rows if row['year'] in json_years]
     extra_years = xlsx_years - json_years
     note = f' (ignoring extra xlsx years {sorted(extra_years)})' if extra_years else ''
@@ -658,10 +771,14 @@ def main():
     args = build_parser().parse_args()
 
     print('Loading JSON exports …')
-    metadata, rspo_to_school_base_data, metric_to_rspo_to_school_data = load_json_exports(args.docs_data)
+    metadata, rspo_to_school_base_data, metric_to_rspo_to_school_data = load_json_exports(
+        args.docs_data
+    )
     json_years = set(metadata['years_in_data'])
-    print(f'  base.json: {len(rspo_to_school_base_data):,} schools; years {sorted(json_years)}; '
-          f'metrics {list(metric_to_rspo_to_school_data)}')
+    print(
+        f'  base.json: {len(rspo_to_school_base_data):,} schools; years {sorted(json_years)}; '
+        f'metrics {list(metric_to_rspo_to_school_data)}'
+    )
 
     print('Reading source xlsx …')
     rows = filter_rows_to_json_years(read_clean_rows(args.data_dir), json_years)
