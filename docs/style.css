@@ -84,12 +84,15 @@ body { display: flex; flex-direction: column; }
 /* Note explaining the bold (weakest) subject in the detail tables */
 .detail-tables-note { margin: 0.4rem 0 0.6rem; }
 
-/* Methodology page layout */
+/* Methodology page layout. It is a normal document, not the full-height flex app
+   shell — so it scrolls at the window edge and the readable text column (capped
+   for legibility) is centred rather than left-aligned with the scrollbar at 1/5. */
+body.page-methodology { display: block; height: auto; }
+.page-methodology .topnav { position: sticky; top: 0; z-index: 10; }
 .page-methodology main {
-  flex: 1;
-  padding: 1.25rem;
   max-width: 720px;
-  overflow-y: auto;
+  margin: 0 auto;
+  padding: 1.25rem;
   line-height: 1.5;
 }
 .page-methodology .lead { font-size: 1.05rem; margin: 0 0 1.2rem; }
