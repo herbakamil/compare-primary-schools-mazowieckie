@@ -97,8 +97,48 @@ After a new year of results is published:
    means the export and the source disagree — investigate before publishing.
    (Override the locations with `--data-dir` / `--docs-data`.)
 
-6. **Commit** the generated files in `docs/data/` and `output/`, plus
+6. **Preview the map locally** before committing (see below) — the JSON is only
+   as good as it looks on the map.
+
+7. **Commit** the generated files in `docs/data/` and `output/`, plus
    `data/school_coords.csv`.
+
+## Previewing the map locally
+
+`docs/` is a plain static site, but it fetches `docs/data/*.json`, so opening
+`index.html` straight from the filesystem fails — browsers block `fetch()` on
+`file://`. Serve the directory over HTTP instead:
+
+```bash
+uv run python -m http.server 8765 --bind 127.0.0.1 --directory docs
+```
+
+Then open:
+
+- <http://localhost:8765/index.html> — the map
+- <http://localhost:8765/ranking.html> — the ranking table
+- <http://localhost:8765/methodology.html> — the methodology page
+
+`--bind 127.0.0.1` keeps the server on your own machine; without it Python
+listens on every interface and anyone on your network can reach it. Any free
+port works — 8765 is just the one this project uses by convention.
+
+**Stopping it.** `Ctrl-C` in the terminal running it. If it is in the background
+or you have lost the terminal:
+
+```bash
+pkill -f "http.server 8765"
+```
+
+To check whether something is already on the port before starting (the server
+fails with `Address already in use` if so):
+
+```bash
+ss -ltnp | grep 8765
+```
+
+Hard refresh (`Ctrl-Shift-R`) after regenerating the data — the browser caches
+the JSON, so a normal reload can show you the previous run's numbers.
 
 ## Output files
 
