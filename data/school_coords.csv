@@ -356,7 +356,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 133575,Warszawa,ul. Michała Drzymały 1,52.1873213,20.8880291
 267728,Warszawa,ul. Dzieci Warszawy 42A,52.1970362,20.8997313
 74989,Warszawa,ul. Mariana Keniga 20,52.1965768,20.8685889
-53026,Warszawa,ul. Czerniakowska 128,52.2026463,21.0492022
+53026,Warszawa,ul. Antoniego Malczewskiego 45,52.192646,21.0131584
 124008,Warszawa,ul. Piękna 24/26,52.2238744,21.0180591
 264241,Warszawa,ul. Świętojerska 24,52.249638,20.9997022
 264822,Warszawa,ul. Karmelicka 26,52.2507971,20.9899244
@@ -402,7 +402,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 105304,Warszawa,ul. Strażacka 57,52.2594726,21.1324092
 262429,Warszawa,"ul. gen. Karola Ziemskiego ""Wachnowskiego"" 22",52.2589768,21.177008
 268561,Warszawa,ul. Cyrulików 87,52.2572477,21.1668213
-44669,Warszawa,ul. Moliera 2/4,52.2439308,21.0116061
+44669,Warszawa,ul. Moliera 4/6,52.2442616,21.0116535
 34745,Warszawa,ul. Leona Kruczkowskiego 12b,52.2360424,21.0283464
 262236,Warszawa,ul. Boremlowska 6/12,52.2471817,21.1082704
 262232,Warszawa,ul. Afrykańska 11,52.2274596,21.069347
@@ -436,7 +436,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 25028,Warszawa,ul. Ostrobramska 72,52.2352403,21.1124956
 34229,Warszawa,ul. ks. Jana Sztuki 13,52.2455918,21.1031865
 262235,Warszawa,ul. Angorska 2,52.2375432,21.0578064
-263454,Warszawa,ul. Wołoska 5,52.1850674,21.0023321
+263454,Warszawa,ul. Janusza Kurtyki 4,52.18092,20.9998868
 111978,Warszawa,ul. Stępińska 13,52.2038552,21.0374875
 90364,Warszawa,ul. Rakowiecka 21,52.2081841,21.0162656
 60286,Warszawa,ul. Niegocińska 2,52.1741847,21.0087092
@@ -469,7 +469,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 128602,Warszawa,ul. Czerska 14,52.2063606,21.0451621
 196257,Warszawa,ul. Mahatmy Gandhiego 13,52.1934658,21.0081264
 60295,Warszawa,ul. Domaniewska 33,52.1827524,21.0101782
-60278,Warszawa,"ul. Pułku AK ""Baszta"" 3",52.1906318,21.005565
+60278,Warszawa,ul. Konstruktorska 10,52.1858781,20.9907914
 83750,Warszawa,ul. Piaseczyńska 114/116,52.1984863,21.0329303
 60290,Warszawa,ul. Giordana Bruna 11,52.2085398,21.001672
 60280,Warszawa,ul. Kazimierzowska 16,52.199897,21.0181716
@@ -723,7 +723,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 4920,Ruda Wielka,ul. Radomska 10,51.2880872,21.0483591
 4808,Dąbrówka Warszawska,117,51.28148,21.10797
 4810,Polany,141,51.22597,21.11447
-4809,Łączany,40,51.2461016,21.1522032
+4809,Łączany,41a,51.2444257,21.1569158
 41811,Jedlanka,ul. Główna 29,51.384173,21.567974
 109598,Myśliszewice,15,51.41324,21.29051
 2880,Słupica,84,51.41084,21.38722
@@ -734,7 +734,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 35230,Kowala-Stępocina,ul. Marii Walewskiej 6,51.3246477,21.0702786
 35232,Mazowszany,ul. Wierzbicka 247,51.3415809,21.1278145
 35233,Młodocin Mniejszy,47,51.3445383,21.0318904
-262272,Parznice,53,51.3212436,21.1218735
+262272,Parznice,ul. Szlachecka 2,51.3213446,21.1222174
 92305,Pionki,ul. Niepodległości 3,51.4731386,21.4403906
 92307,Pionki,ul. Targowa 9,51.4810001,21.4568014
 107180,Laski,68,51.473009,21.5190799
@@ -943,7 +943,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 106219,Jednorożec,ul. Odrodzenia 13,53.1404584,21.0505655
 123360,Parciaki,22,53.1988792,21.1224752
 12909,Zielona,37,52.936944,20.8492912
-12911,Krasne,ul. Spółdzielcza 1,52.9197278,20.9686869
+12911,Krasne,ul. Komisji Edukacji Narodowej 4,52.9186228,20.9688379
 3322,Krzynowłoga Mała,ul. Szkolna 4,53.1552,20.78811
 4982,Romany-Sebory,7,53.1080811,20.8552953
 69962,Przasnysz,ul. Żwirki i Wigury 4,53.0200055,20.8949767
@@ -1072,7 +1072,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 478331,Józefów,ul. Graniczna 24A,52.1457135,21.216022
 104462,Nadbrzeż,ul. Szkolna 4,52.0535017,21.2222257
 7167,Karczew,ul. Otwocka 13,52.0822621,21.2492364
-7088,Glinki,50,52.0054136,21.2331005
+7088,Glinki,Kalwaryjska 69,52.0119365,21.2380013
 15216,Otwock Wielki,ul. Zamkowa 4,52.0491934,21.2474444
 196215,Karczew,ul. Franciszka Bielińskiego 7,52.07461,21.24834
 63407,Sobiekursk,36,52.0252147,21.2854375
@@ -1225,7 +1225,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 62427,Jeruzal,ul. Szkolna 8,52.0677228,21.8495566
 60929,Grodzisk,ul. Mazowiecka 86,52.1598634,21.8553018
 83381,Siennica,ul. Latowicka 16,52.0915526,21.6193996
-83382,Starogród,9B,52.0293975,21.6418405
+83382,Starogród,ul. Szkolna 15,52.0280923,21.6431013
 92449,Żaków,48A,52.0642833,21.663725
 83384,Grzebowilk,ul. Mazowiecka 37,52.1166667,21.55
 83629,Nowa Pogorzel,ul. Pałacowa 17,52.119204,21.5790897
@@ -1252,7 +1252,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 110270,Brzóze,ul. Szkolna 20,52.222602,21.5391587
 111180,Zamienie,ul. Kołbielska 34,52.1501809,21.5030437
 111148,Stara Niedziałka,ul. Mazowiecka 154,52.202875,21.6078729
-264028,Podciernie,182,52.1027867,21.8039853
+264028,Grębiszew,ul. Kołbielska 32,52.1232108,21.5006319
 9411,Mlęcin,51,52.2786404,21.6809444
 10556,Dobre,ul. Szkolna 3,52.32171,21.67852
 9412,Drop,31,52.35448,21.72799
@@ -1483,7 +1483,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 70421,Garwolin,ul. Aleja Żwirki i Wigury 16,51.9003435,21.6161871
 86841,Garwolin,ul. Aleja Legionów 21,51.8830241,21.6275247
 87121,Garwolin,ul. Janusza Korczaka 10,51.9024676,21.6058905
-277051,Garwolin,ul. Jana Pawła II 5,51.8986429,21.6127654
+277051,Garwolin,ul. Zamojska 10,51.9059163,21.6034727
 482382,Garwolin,ul. Jana Pawła II 5,51.8986429,21.6127654
 49892,Rębków,ul. Starowiejska 8,51.877494,21.5550592
 49720,Wola Władysławowska,27,51.8949803,21.4271286
@@ -1564,7 +1564,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 13020,Nowe Budy,32,52.63927,21.66235
 123985,Sieczychy,43,52.71638,21.49384
 4534,Bielino,32A,52.7636521,21.3523416
-55342,Międzyleś,12A,52.3642417,21.472533
+55342,Międzyleś,ul. Główna 12,52.3608231,21.4655512
 278600,Wólka Dąbrowicka,41A,52.34532,21.4599
 127702,Kobyłka,ul. Jana Brzechwy 5,52.3499723,21.2086841
 106832,Marki,al. Marszałka Józefa Piłsudskiego 93,52.3264286,21.1059891
@@ -1617,7 +1617,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 78969,Popowo Borowe,111,52.55259,20.89021
 25707,Proszkowo,3,53.0123956,20.1979137
 77599,Kaliszki,170,52.3681995,20.7386655
-276102,Sulejówek,ul. Krasickiego 59,52.239381,21.2699068
+276102,Sulejówek,ul. Jaśminowa 15,52.2365434,21.2909677
 263439,Mrozy,ul. Licealna 3,52.1568155,21.8023867
 119011,Sulejówek,ul. Aleja Piłsudskiego 81,52.230792,21.2508607
 71253,Cyganka,ul. Szkolna 21,52.0999639,20.3580899
@@ -1662,7 +1662,7 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 55958,Piotrkówek,75,52.40042,19.96485
 86862,Radom,ul. 25 Czerwca 70,51.404682,21.165466
 262307,Radom,ul. Długojowska 6,51.3849954,21.1797273
-107184,Augustów,102B,51.35845,21.03777
+107184,Augustów,33,51.5197764,21.4737484
 40629,Krynica,33,52.3004679,22.2901509
 87173,Nowy Bartków,19,52.33528,22.55972
 104441,Warszawa,ul. Rakowiecka 21,52.2081841,21.0162656
@@ -1719,3 +1719,26 @@ rspo,miejscowosc,ulica_nr,latitude,longitude
 11892,Romanowo,12,52.8764973,21.0263155
 133534,Warszawa,ul. Szczęśliwicka 50/54,52.2158254,20.9679633
 263526,Płock,al. Jana Kilińskiego 4,52.5382069,19.7043424
+6325,Brzegi,124,51.86747,21.79525
+62578,Pupkowizna,38,53.3891344,21.6281789
+66475,Pieczyska,13,51.9213307,21.0177496
+119294,Kołodziąż,82,52.0042,21.95161
+125097,Mrozy,ul. Leśna 8,52.1761113,21.8076049
+129776,Grodzisk Mazowiecki,ul. 11 Listopada 48,52.10915,20.62197
+129946,Warszawa,Ziemowita 39,52.2664355,21.069002
+133614,Warszawa,Turmoncka 2,52.2965854,21.0303333
+263162,Warszawa,Mińska 25,52.2487947,21.0594334
+265871,Warszawa,ul. Armii Krajowej 121,52.2496447,21.2459786
+267304,Warszawa,ul. Zygmunta Krasińskiego 31,52.2659073,20.976265
+272684,Kaputy,Sochaczewska 215,52.23032,20.78393
+273266,Kotarwice,ul. Wierzbicka 252,51.3385363,21.1265279
+278442,Lubiczów,ul. Warszawska 65b,52.2419894,20.8741308
+279201,Warszawa,ul. Wąchocka 9,52.2287066,21.0558601
+479862,Warszawa,Na Uboczu 9,52.1395378,21.048888
+480282,Jazgarzewszczyzna,ul. Okrężna 25A,52.0623,20.98633
+483369,Warszawa,ul. Bitwy Warszawskiej 1920 r. 7,52.2113333,20.9761194
+483813,Urszulin,ul. Legionistów 3,52.0731507,20.726052
+483895,Płock,ul. Górna 30,52.5343046,19.7244056
+484246,Warszawa,ul. Tkaczy 15,52.2209352,20.9079171
+484577,Mińsk Mazowiecki,ul. Stefana Okrzei 10,52.1798502,21.5591157
+485108,Warszawa,ul. Grójecka 208,52.1996195,20.9656659

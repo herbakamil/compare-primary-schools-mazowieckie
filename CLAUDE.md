@@ -83,6 +83,20 @@ relevant columns are:
 Subjects present: `polski`, `matematyka`, `angielski`, and several minor foreign
 languages (`francuski`, `hiszpanski`, `niemiecki`, `rosyjski`, `wloski`).
 
+### The address column is not equally good every year
+
+`ulica nr` degraded in the 2026 file: it drops the `ul.` marker and the leading
+words of the street name — `ul. 3 Maja 27` → `Maja 27`, `ul. Adama Mickiewicza
+126/128` → `Mickiewicza 126/128`. Of 1,625 schools present in both 2025 and 2026,
+850 are unchanged, 566 lost only the prefix, 196 lost leading words (10 of those
+lost a *number*, which makes the address wrong), and 13 genuinely moved.
+
+So **never assume the newest year has the best address.** The notebook picks one
+address per school by walking its years oldest → newest and keeping a current
+value; a newer address replaces it only if it is *not* a shortened form of it
+(see "Address selection" under the notebook structure). Declined updates are
+written to `output/rejected_addresses.csv`.
+
 ### Provenance — `data/egzamin-osmoklasisty/SOURCES.csv`
 
 Every source xlsx must be documented in `SOURCES.csv` (columns: `file_name,
@@ -221,8 +235,8 @@ gradient) renders a continuous colour instead of 3 flat ones: B stays flat
 yellow (muddy middle, §7), A ramps yellow→green and C ramps yellow→red out to the
 **1st / 99th percentile** of the actual score distribution (robust to outliers,
 so one extreme school can't stretch the scale). p1/p99 are computed **client-side**
-from the 1,720 base scores per (metric, subject) — not exported (cheap: a sort of
-1,720 numbers, cached per metric/subject). Only `sigma`/`sigma_centre` come from
+from the ~1.7k base scores per (metric, subject) — not exported (cheap: a sort of
+~1.7k numbers, cached per metric/subject). Only `sigma`/`sigma_centre` come from
 the JSON metadata; the ±0.33σ boundary and gradient anchors derive from those.
 
 σ and centre are computed **per metric and per subject**, because the metrics
@@ -268,6 +282,32 @@ the subject that colours the map.
   lollipop charts for two samples (12 schools = 4 top/4 mid/4 bottom; 15 schools
   = 3 each at P10/30/50/70/90); population-wide scatter of range and min/max
 - **6. Export data to external map** — computes alternative views, writes JSON + xlsx
+
+### Address selection (`select_address`, Section 6)
+
+One address per school, chosen by walking its years oldest → newest and keeping a
+current value. A newer address replaces it **unless it is a shortened form**:
+same town, same house number, and its street words appearing as a contiguous run
+inside the current street words. Anything else — different street, different
+house number, different town — is a real change and wins.
+
+Comparison details that matter:
+
+- **Town and street are compared separately.** Concatenating them breaks the
+  contiguity test whenever `ul.` sits at the boundary: `Raczyny | ul. Kopernika 5`
+  tokenises to `(raczyny, ul, kopernika, 5)` and `Raczyny | Kopernika 5` to
+  `(raczyny, kopernika, 5)` — the shorter is not a contiguous run of the longer.
+- **Tokens split on punctuation, not just spaces**, so `Grota-Roweckiego` matches
+  `Grota Roweckiego`, and `Ks.Kan.E.Sierbińskiego` matches `ks. kan. E. Sierbińskiego`.
+- **The last token (house number) must match.** Without it `Krynoliny 9` would
+  count as a shortened form of `Krynoliny 9/11`, and `Szkolna 1` of `Szkolna 12`.
+- **`al. Aleja …` / `pl. Plac …` / `os. Osiedle …` collapse to the full word.**
+  The abbreviation carries nothing the next word doesn't; OKE cleaned this up
+  between 2024 and 2026, so collapsing keeps one spelling across years. A lone
+  `ul.` is kept — it is the only street-type marker present.
+
+On the 2021–2026 data this declines 745 updates and lets the geocoder touch
+**49 schools instead of 790**.
 
 ### Helper: `render_min_highlighted_table(df, caption, value_fmt='{:.3f}', axis=1)`
 
@@ -328,6 +368,12 @@ students the composite value came from).
   - **`legend`** sheet: a human-readable description of the metric, the
     across-years aggregation method, and every column / view_kind / subject — so
     someone validating a school's number knows exactly how it was computed.
+- **`output/rejected_addresses.csv`** — every address update the pipeline declined
+  as a shortened form: `rspo, school_name, year, kept_miejscowosc, kept_ulica_nr,
+  declined_miejscowosc, declined_ulica_nr, dropped_words`. The rejection reason is
+  the same for every row, so instead of a constant comment column the report names
+  the words that would have been lost (`dropped_words`). Same contract as
+  `output/rejected_schools.csv`: whatever the pipeline drops is written out.
 
 ### Slider ranges (value filter config)
 
@@ -385,6 +431,14 @@ falls inside the Mazowieckie bounding box (`lon 19.2–23.2`, `lat 51.0–53.6`)
 "Clean street" = the original `ulica_nr` with leading `ul./Ul./al./Al./pl./Pl./os./Os.`
 stripped. Results that land outside the Mazowieckie bbox are rejected even if
 returned (Nominatim's `state=` is sometimes a soft preference).
+
+**The cache key strips the same prefix.** `normalize_address` (used to decide
+whether a cached row is still valid) applies `_strip_street_prefix`, so
+`ul. Kopernika 5` and `Kopernika 5` are one address. They produce an identical
+query, so treating them as different would re-geocode a school for a result that
+cannot change — which is exactly what the 2026 file would have triggered for ~570
+schools. Keep these two normalisations in step: whatever the query ignores, the
+cache key must ignore too.
 
 **No town-only fallback.** If all three strategies fail, the geocoder writes an
 empty `latitude,longitude` row for that school. Such schools stay off the map

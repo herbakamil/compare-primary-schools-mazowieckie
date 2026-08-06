@@ -115,6 +115,12 @@ For analysts (Excel, in `output/`):
 - `output/schools-{metric}.xlsx` × 4 — long format (one row = one data point),
   with a `legend` sheet and administrative metadata (powiat, gmina, typ_gminy)
   for filtering and pivot tables
+- `output/rejected_schools.{xlsx,csv}` — (school, year) rows dropped for missing
+  core-subject results, with which subjects were missing
+- `output/rejected_addresses.csv` — address updates the pipeline declined because
+  the newer file gave a shortened form of an address it already had (OKE's 2026
+  file drops `ul.` and the leading words of street names), with the words that
+  would have been lost
 
 Metrics: `mean`, `median`, `diff_mean`, `unit_norm_diff_mean` (default).
 

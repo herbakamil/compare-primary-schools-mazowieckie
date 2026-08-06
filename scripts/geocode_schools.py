@@ -86,8 +86,17 @@ CSV_COLUMNS = ['rspo', 'miejscowosc', 'ulica_nr', 'latitude', 'longitude']
 
 
 def normalize_address(miejscowosc: str | None, ulica_nr: str | None) -> str:
-    """Build a normalized address key for comparison (lowercased, stripped)."""
-    parts = [str(miejscowosc or '').strip(), str(ulica_nr or '').strip()]
+    """Build a normalized address key for comparison (lowercased, stripped).
+
+    The key drops the street-type prefix, because `_strip_street_prefix` already
+    drops it before the address is sent to Nominatim: "ul. Kopernika 5" and
+    "Kopernika 5" produce the identical query, so treating them as different
+    addresses would re-geocode a school for a result that cannot change. The 2026
+    OKE file stopped writing the prefix for ~570 schools, which would otherwise
+    invalidate their cached coordinates for nothing.
+    """
+    parts = [str(miejscowosc or '').strip(),
+             _strip_street_prefix(str(ulica_nr or '').strip())]
     return '|'.join(p.lower() for p in parts)
 
 
