@@ -371,7 +371,25 @@ body.page-methodology { display: block; height: auto; }
    the table itself below the fold. */
 .ranking-meta { margin: 0 0 0.6rem; }
 .ranking-meta > p { margin: 0.1rem 0; }
+.ranking-meta > details { margin: 0.1rem 0; }
 .ranking-meta .data-years { margin-bottom: 0.15rem; }
+
+/* Collapsed settings: a single muted line the same size as the notes around it,
+   so shipping it costs no vertical space until someone opens it. */
+.settings-block > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  list-style: none;
+}
+.settings-block > summary::-webkit-details-marker { display: none; }
+.settings-block > summary::before { content: '⚙'; font-size: 0.95em; }
+.settings-block > summary:hover { color: var(--text); }
+.settings-block[open] > summary { margin-bottom: 0.25rem; }
+.settings-block .checkbox-field { margin-bottom: 0.15rem; }
 
 .ranking-table-wrap { overflow-x: auto; }
 table.ranking-table {
@@ -628,11 +646,17 @@ table.ranking-table tr.detail-row > td {
     align-items: baseline;
     margin-bottom: 0.5rem;
   }
-  .ranking-meta > p { margin: 0; }
+  .ranking-meta > p,
+  .ranking-meta > details { margin: 0; }
   .ranking-meta .data-years { grid-column: 1; grid-row: 1; font-size: 0.9rem; }
   .ranking-meta #ranking-info { grid-column: 2; grid-row: 1; }
-  .ranking-meta .click-hint { grid-column: 1 / -1; }
-  .ranking-meta .muted { grid-column: 1 / -1; }
+  .ranking-meta .click-hint { grid-column: 1 / -1; grid-row: 2; }
+  /* Collapsed, the settings toggle rides along in the methodology link's row, so
+     it adds no height at all. Opened, it drops to a full-width row of its own —
+     a half-width column would squeeze the explanation into a ribbon. */
+  .ranking-meta .meta-links { grid-column: 1; grid-row: 3; }
+  .ranking-meta .settings-block { grid-column: 2; grid-row: 3; justify-self: end; }
+  .ranking-meta .settings-block[open] { grid-column: 1 / -1; grid-row: 4; justify-self: stretch; }
 
   .page-map main { flex-direction: column; }
   #map { height: 60vh; flex: 0 0 60vh; }

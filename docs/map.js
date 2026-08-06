@@ -20,6 +20,7 @@
     selectedSchool: null,         // rspo (number) or null
     lang: DEFAULTS.lang,
     gradient: true,               // continuous colour by default; flat 3 classes via the toggle
+    advancedMetrics: false,       // unlocks median + diff_mean in the metric select
   };
 
   let map = null;
@@ -33,6 +34,7 @@
   // Initial state resolution: URL > localStorage > default (§9)
 
   function resolveInitialState() {
+    state.advancedMetrics = resolveAdvancedMetrics();
     state.metric   = resolvePref('metric',  METRICS);
     state.subject  = resolvePref('subject', SUBJECTS);
     state.lang     = resolvePref('lang',    ['pl', 'en']);
@@ -110,12 +112,12 @@
     marker.bindPopup(() => renderPopup(school), {
       maxWidth: 360,
       minWidth: 280,
-      // Mobile bug fix: when the user taps "Pokaż historię roczną", the popup
-      // grows tall after the async load. With autoPan on, Leaflet then pans the
-      // map to fit the taller popup — on touch that map movement, landing under
-      // the just-tapped finger, was closing the popup right after it opened
-      // (worse the longer the school's history, because taller popup = bigger
-      // pan). Disable autoPan on touch devices; the max-height + internal scroll
+      // Mobile bug fix: the popup grows tall when the background history fetch
+      // lands and its chart is added. With autoPan on, Leaflet then pans the map
+      // to fit the taller popup — on touch that map movement, landing under the
+      // just-tapped finger, was closing the popup right after it opened (worse
+      // the longer the school's history, because taller popup = bigger pan).
+      // Disable autoPan on touch devices; the max-height + internal scroll
       // (see .leaflet-popup-content in style.css) keeps a tall popup usable
       // without needing to pan. Desktop keeps autoPan — the bug is touch-only
       // and autoPan is genuinely useful there.
@@ -650,7 +652,7 @@
     const subjectSel = document.getElementById('subject-select');
     const metricSel  = document.getElementById('metric-select');
     fillSubjectSelect(subjectSel, state.subject);
-    fillMetricSelect(metricSel,   state.metric);
+    fillMetricSelect(metricSel,   state.metric, state.advancedMetrics);
 
     subjectSel.addEventListener('change', e => onSubjectChange(e.target.value));
     metricSel .addEventListener('change', e => onMetricChange(e.target.value));
@@ -695,6 +697,21 @@
       refreshFilters();
     });
 
+    // Advanced-metrics toggle — shared preference, so ticking it here also
+    // unlocks the metrics in the ranking.
+    const advancedCB = document.getElementById('advanced-metrics-toggle');
+    advancedCB.checked = state.advancedMetrics;
+    advancedCB.addEventListener('change', () => {
+      state.advancedMetrics = advancedCB.checked;
+      writePref('advanced_metrics', state.advancedMetrics);
+      // Turning it off while an advanced metric colours the map would strand the
+      // user on a metric they can no longer reselect — fall back to the default.
+      if (!state.advancedMetrics && isAdvancedMetric(state.metric)) {
+        onMetricChange(DEFAULTS.metric);
+      }
+      fillMetricSelect(metricSel, state.metric, state.advancedMetrics);
+    });
+
     // Gradient toggle (continuous colour in B/D bands)
     const gradCb = document.getElementById('gradient-toggle');
     gradCb.checked = state.gradient;
@@ -717,7 +734,7 @@
       state.lang = currentLang;
       syncURL();
       fillSubjectSelect(subjectSel, state.subject);
-      fillMetricSelect(metricSel, state.metric);
+      fillMetricSelect(metricSel, state.metric, state.advancedMetrics);
       fillDataYears();
       refreshFilters();
       if (state.selectedSchool != null) reopenSelectedPopup();

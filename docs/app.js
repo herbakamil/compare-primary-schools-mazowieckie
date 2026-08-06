@@ -8,6 +8,41 @@
 // Constants
 
 const METRICS  = ['mean', 'median', 'diff_mean', 'unit_norm_diff_mean'];
+
+// Only two metrics are offered by default; the other two sit behind the
+// "advanced metrics" toggle. Not decluttering for its own sake — neither hidden
+// metric tells a reader anything the visible pair doesn't:
+//   diff_mean  ranks identically to unit_norm_diff_mean (Spearman 1.000), so
+//              switching to it reorders nothing and only changes the numbers.
+//   median     scored measurably worse than mean on the leave-one-out stability
+//              test: the median moves the full exam-difficulty shift each year,
+//              while the mean is damped by floor/ceiling effects.
+// Both stay in the xlsx exports, where an analyst can use them deliberately.
+const BASIC_METRICS = ['unit_norm_diff_mean', 'mean'];
+
+function isAdvancedMetric(metric) {
+  return !BASIC_METRICS.includes(metric);
+}
+
+// Advanced mode is on when the user ticked it, or when the URL asks for an
+// advanced metric. A shared link must show the recipient what the sender saw —
+// silently swapping in a different metric would be worse than briefly revealing
+// a control they hadn't opted into.
+function resolveAdvancedMetrics() {
+  const url = getURLParams();
+  if (url.get('advanced') === '1') return true;
+  if (isAdvancedMetric(url.get('metric'))  && METRICS.includes(url.get('metric'))) return true;
+  if (readPrefs().advanced_metrics) return true;
+  const stored = readPrefs().metric;
+  return !!stored && METRICS.includes(stored) && isAdvancedMetric(stored);
+}
+
+// Basic metrics keep their positions when the advanced ones are appended, so the
+// default metric stays first in both modes instead of jumping down the list.
+function visibleMetrics(advanced) {
+  if (!advanced) return BASIC_METRICS;
+  return [...BASIC_METRICS, ...METRICS.filter(m => !BASIC_METRICS.includes(m))];
+}
 const SUBJECTS = ['polski', 'matematyka', 'angielski', 'composite_min'];
 const CORE_SUBJECTS = ['polski', 'matematyka', 'angielski'];
 
@@ -384,6 +419,8 @@ const I18N = {
     historyFailed: 'Nie udało się wczytać danych rocznych — odśwież stronę.',
     chartYearsCaption: 'Wynik w poszczególnych latach',
     helpPopupChart: 'Wykres pokazuje wynik policzony osobno dla każdego roku — to nie jest wynik zbiorczy za wszystkie lata ani wersja LOO. Wynik zbiorczy masz w tabeli powyżej.',
+    advancedMetrics: 'Metryki zaawansowane',
+    advancedMetricsHelp: 'Dokłada „Mediana” i „Różnica od średniej”. Różnica od średniej ustawia szkoły w dokładnie tej samej kolejności co wynik znormalizowany — zmienia się tylko skala liczb.',
     chartDiffCaption: 'LOO a pojedyncze lata — jaka różnica?',
     helpChartDiff: 'Pojedyncze lata: każdy punkt policzony wyłącznie z tego jednego rocznika — pokazuje, jak wynik skacze rok do roku. LOO („leave-one-out”): każdy punkt to wynik za wszystkie lata z pominięciem tego jednego — punkty zmieniają się słabiej, bo każdy opiera się na pozostałych rocznikach. Duży rozrzut punktów LOO znaczy, że wynik szkoły mocno zależy od jednego rocznika.',
     publicYesShort: 'Tak',
@@ -486,6 +523,8 @@ const I18N = {
     historyFailed: 'Could not load the year-by-year data — try refreshing.',
     chartYearsCaption: 'Score in each year',
     helpPopupChart: 'The chart plots the score computed from each year on its own — not the multi-year score, and not the LOO version. The multi-year score is in the table above.',
+    advancedMetrics: 'Advanced metrics',
+    advancedMetricsHelp: 'Adds "Median" and "Difference from mean". Difference from mean orders schools exactly as the normalised score does — only the scale of the numbers changes.',
     chartDiffCaption: 'LOO vs single years — what is the difference?',
     helpChartDiff: 'Single years: each point uses that one year alone — it shows how much the score swings from year to year. LOO ("leave-one-out"): each point is the score over all years except that one, so the points move less because each still rests on the remaining years. A wide spread of LOO points means the school\'s score depends heavily on a single year.',
     publicYesShort: 'Yes',
@@ -574,9 +613,14 @@ function fillDataYears() {
 // -----------------------------------------------------------------------------
 // Helpers used by both pages
 
-function fillMetricSelect(selectEl, currentMetric) {
+function fillMetricSelect(selectEl, currentMetric, advanced) {
   selectEl.innerHTML = '';
-  for (const m of METRICS) {
+  // Keep the selected metric listed even when it is advanced and the toggle is
+  // off (a deep link can put us there), so the select never shows a value the
+  // user cannot see.
+  const listed = visibleMetrics(advanced);
+  const options = listed.includes(currentMetric) ? listed : [...listed, currentMetric];
+  for (const m of options) {
     const opt = document.createElement('option');
     opt.value = m;
     opt.textContent = t('metric_' + m);

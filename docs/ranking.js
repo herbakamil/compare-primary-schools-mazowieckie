@@ -14,6 +14,7 @@
     sortDir: 'asc',
     selectedSchool: null,
     lang: DEFAULTS.lang,
+    advancedMetrics: false,
     // Detail-panel UI (ephemeral, not in the URL):
     detailTablesOpen: false,        // numeric tables hidden until asked for
     detailTableDim: 'score',        // 'score' | 'rank' | 'pct'
@@ -29,6 +30,7 @@
   // State resolution
 
   function resolveInitialState() {
+    state.advancedMetrics = resolveAdvancedMetrics();
     state.metric  = resolvePref('metric',  METRICS);
     state.subject = resolvePref('subject', SUBJECTS);
     state.lang    = resolvePref('lang',    ['pl', 'en']);
@@ -568,9 +570,26 @@
     const viewParamSel = document.getElementById('view-param-select');
     const nameInput  = document.getElementById('name-search');
 
-    fillMetricSelect(metricSel,   state.metric);
+    fillMetricSelect(metricSel,   state.metric, state.advancedMetrics);
     fillSubjectSelect(subjectSel, state.subject);
     viewSel.value = state.view;
+
+    const advancedCB = document.getElementById('advanced-metrics-toggle');
+    advancedCB.checked = state.advancedMetrics;
+    advancedCB.addEventListener('change', () => {
+      state.advancedMetrics = advancedCB.checked;
+      writePref('advanced_metrics', state.advancedMetrics);
+      // Turning it off while an advanced metric is selected would leave the
+      // table showing a metric with no way back to it — fall back to the default.
+      if (!state.advancedMetrics && isAdvancedMetric(state.metric)) {
+        state.metric = DEFAULTS.metric;
+        writePref('metric', state.metric);
+        loadMetricInBackground();
+      }
+      fillMetricSelect(metricSel, state.metric, state.advancedMetrics);
+      syncURL();
+      renderAll();
+    });
 
     metricSel.addEventListener('change', () => {
       state.metric = metricSel.value;
@@ -627,7 +646,7 @@
     wireLangToggle(() => {
       state.lang = currentLang;
       syncURL();
-      fillMetricSelect(metricSel, state.metric);
+      fillMetricSelect(metricSel, state.metric, state.advancedMetrics);
       fillSubjectSelect(subjectSel, state.subject);
       fillDataYears();
       renderAll();
