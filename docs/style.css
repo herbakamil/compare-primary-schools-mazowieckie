@@ -553,7 +553,8 @@ table.ranking-table tr.detail-row > td {
 .cg-cell svg { display: block; max-width: 100%; height: auto; }
 .chart-legend { margin-bottom: 0.5rem; }
 
-.detail-tables-toggle {
+.detail-tables-toggle,
+.popup-tables-toggle {
   border: 1px solid var(--border);
   background: white;
   padding: 0.35rem 0.7rem;
@@ -562,7 +563,11 @@ table.ranking-table tr.detail-row > td {
   font: inherit;
   font-size: 0.85rem;
 }
-.detail-tables-toggle:hover { background: #eee; }
+.detail-tables-toggle:hover,
+.popup-tables-toggle:hover { background: #eee; }
+/* Full width in the popup: it is the only control there, and a comfortable tap
+   target matters more than a snug button on a phone. */
+.popup-tables-toggle { display: block; width: 100%; margin-top: 0.4rem; }
 .detail-dim-switch { margin: 0.5rem 0; display: flex; gap: 0.25rem; }
 .detail-dim-btn {
   border: 1px solid var(--border);

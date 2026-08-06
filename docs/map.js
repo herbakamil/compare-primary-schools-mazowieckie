@@ -21,6 +21,7 @@
     lang: DEFAULTS.lang,
     gradient: true,               // continuous colour by default; flat 3 classes via the toggle
     advancedMetrics: false,       // unlocks median + diff_mean in the metric select
+    popupTablesOpen: false,       // year-by-year numbers in the popup; reset per school
   };
 
   let map = null;
@@ -99,6 +100,7 @@
     marker._school = school;  // attach for cluster colour access
     marker.on('popupopen', () => {
       state.selectedSchool = school.rspo;
+      state.popupTablesOpen = false;   // each newly opened school starts collapsed
       syncURL();
     });
     marker.on('popupclose', () => {
@@ -356,13 +358,23 @@
 
     const spark = sparklineSVG(school, hist, yearsPresent);
 
+    // The year-by-year breakdown is a wall of numbers that dominated the popup
+    // and read as intimidating rather than informative. The chart above it makes
+    // the same point at a glance, so the table hides behind a toggle — matching
+    // the ranking's detail panel. The headline table (score/rank/percentile per
+    // subject) stays visible: without it the popup would answer nothing.
+    const tables = state.popupTablesOpen
+      ? `<button type="button" class="popup-tables-toggle">${t('detailHideTables')}</button>
+         <table class="history-table">
+           <thead>${header}</thead>
+           <tbody>${tableRows}${lastKRows ? '<tr class="sep"><td colspan="5"></td></tr>' + lastKRows : ''}</tbody>
+         </table>`
+      : `<button type="button" class="popup-tables-toggle">${t('detailShowTables')}</button>`;
+
     return `
       <div class="history">
         ${spark}
-        <table class="history-table">
-          <thead>${header}</thead>
-          <tbody>${tableRows}${lastKRows ? '<tr class="sep"><td colspan="5"></td></tr>' + lastKRows : ''}</tbody>
-        </table>
+        ${tables}
       </div>`;
   }
 
@@ -627,6 +639,16 @@
     historyData[metric] = await loadMetricData(metric);
   }
 
+  function wirePopupToggles() {
+    // Delegated from the map container: popup content is rebuilt on every open,
+    // so a listener bound to the button itself would not survive.
+    document.getElementById('map').addEventListener('click', (ev) => {
+      if (!ev.target.closest('.popup-tables-toggle')) return;
+      state.popupTablesOpen = !state.popupTablesOpen;
+      reopenSelectedPopup();
+    });
+  }
+
   // Never awaited by a handler: the map stays interactive for the whole
   // download, and a failure leaves the base map working. Refreshes the open
   // popup so a chart the user is already looking at fills itself in.
@@ -725,6 +747,7 @@
 
     wireSearch();
     wireSchoolFind();
+    wirePopupToggles();
     wireNavLinks();
 
     // Language toggle: re-translate the dynamic, JS-built content that
