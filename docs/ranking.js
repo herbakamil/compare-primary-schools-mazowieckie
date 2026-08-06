@@ -14,7 +14,6 @@
     sortDir: 'asc',
     selectedSchool: null,
     lang: DEFAULTS.lang,
-    historyOptIn: false,
     // Detail-panel UI (ephemeral, not in the URL):
     detailTablesOpen: false,        // numeric tables hidden until asked for
     detailTableDim: 'score',        // 'score' | 'rank' | 'pct'
@@ -22,8 +21,9 @@
 
   const ALLOWED_VIEWS = ['base', 'last_k', 'single_year', 'loo'];
 
-  // History data fetched on demand (per-metric).
+  // History data fetched in the background (per-metric).
   const histByMetric = {};
+  let historyError = false;       // last background fetch failed
 
   // ---------------------------------------------------------------------------
   // State resolution
@@ -50,8 +50,6 @@
 
     const school = parseInt(url.get('school'), 10);
     state.selectedSchool = Number.isInteger(school) ? school : null;
-
-    state.historyOptIn = !!readPrefs().history_optin;
   }
 
   function syncURL() {
@@ -298,13 +296,14 @@
   // The expandable detail panel: class trajectory for the selected subject, a
   // 2×3 grid of charts (LOO / single-year × score / rank / percentile) showing
   // all subjects, and numeric tables behind a toggle. Needs the per-metric
-  // history file; offers to load it if absent.
+  // history file, which is fetched in the background from page load — so the
+  // only time it is absent is while that fetch is still in flight.
   function renderDetailRow(row) {
     const colspan = COLUMNS.length;
     const hist = histByMetric[state.metric]?.schools?.[String(row.rspo)];
     if (!hist) {
       return `<tr class="detail-row"><td colspan="${colspan}">
-        <button type="button" class="detail-load-btn">${t('detailLoadHistory')}</button>
+        <span class="muted small">${t(historyError ? 'historyFailed' : 'historyLoading')}</span>
       </td></tr>`;
     }
 
@@ -438,19 +437,6 @@
         renderAll();
       });
     }
-    // The detail panel's "load year-by-year data" button (shown when the
-    // per-metric file isn't loaded yet).
-    const loadBtn = table.querySelector('.detail-load-btn');
-    if (loadBtn) {
-      loadBtn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        loadBtn.disabled = true;
-        loadBtn.textContent = t('historyLoading');
-        await ensureMetricLoaded();
-        maybeShowHistoryOptIn();
-        renderAll();
-      });
-    }
     // Detail panel: toggle the numeric tables, and switch their dimension.
     const tablesToggle = table.querySelector('.detail-tables-toggle');
     if (tablesToggle) {
@@ -537,24 +523,34 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Non-base views need a metric file
-
-  function maybeShowHistoryOptIn() {
-    // The LOO-range and single-year-range columns are always in the table (and
-    // non-base views also need the per-metric file), so offer the opt-in
-    // whenever the current metric's file isn't loaded — not only for non-base
-    // views. Previously it was hidden on the default base view, leaving those
-    // two columns showing "—" with no visible way to fill them.
-    const row = document.getElementById('history-optin-row');
-    row.style.display = histByMetric[state.metric] ? 'none' : '';
-  }
+  // Per-metric history file
+  //
+  // The rank-range columns, the non-base views and the detail panel all need it,
+  // so it is fetched for whatever metric is selected — always, in the background,
+  // never behind a checkbox. Asking first made the ranking look broken: picking
+  // a non-base view showed "—" everywhere until you spotted an opt-in row well
+  // above the table and guessed it was related.
 
   async function ensureMetricLoaded() {
     if (histByMetric[state.metric]) return;
-    document.getElementById('ranking-info').textContent = t('historyLoading');
-    histByMetric[state.metric] = await loadMetricData(state.metric);
-    writePref('history_optin', true);
-    state.historyOptIn = true;
+    const metric = state.metric;
+    histByMetric[metric] = await loadMetricData(metric);
+  }
+
+  // Fetch in the background and re-render when it lands. Never awaited by a
+  // handler, so the table stays interactive for the whole download; a failure
+  // leaves the base view working rather than blanking the page.
+  function loadMetricInBackground() {
+    if (histByMetric[state.metric]) return;
+    historyError = false;
+    ensureMetricLoaded()
+      .then(renderAll)
+      .catch(e => {
+        // Say so rather than leaving "Ładowanie…" on screen forever.
+        console.error('history load failed', e);
+        historyError = true;
+        renderAll();
+      });
   }
 
   // ---------------------------------------------------------------------------
@@ -566,21 +562,18 @@
     const viewSel    = document.getElementById('view-select');
     const viewParamSel = document.getElementById('view-param-select');
     const nameInput  = document.getElementById('name-search');
-    const optinCB    = document.getElementById('history-optin-cb');
 
     fillMetricSelect(metricSel,   state.metric);
     fillSubjectSelect(subjectSel, state.subject);
     viewSel.value = state.view;
 
-    metricSel.addEventListener('change', async () => {
+    metricSel.addEventListener('change', () => {
       state.metric = metricSel.value;
       writePref('metric', state.metric);
       syncURL();
-      maybeShowHistoryOptIn();
-      // Auto-load if the user has already consented — the range columns need
-      // the new metric's file even on the base view.
-      if (state.historyOptIn) { try { await ensureMetricLoaded(); } catch (e) { console.error(e); } }
       renderAll();
+      // The range columns need the new metric's file even on the base view.
+      loadMetricInBackground();
     });
 
     subjectSel.addEventListener('change', () => {
@@ -590,13 +583,12 @@
       renderAll();
     });
 
-    viewSel.addEventListener('change', async () => {
+    viewSel.addEventListener('change', () => {
       state.view = viewSel.value;
       updateViewParamField();
       syncURL();
-      maybeShowHistoryOptIn();
-      if (state.historyOptIn) { try { await ensureMetricLoaded(); } catch (e) { console.error(e); } }
       renderAll();
+      loadMetricInBackground();
     });
 
     viewParamSel.addEventListener('change', () => {
@@ -619,15 +611,6 @@
     nameInput.addEventListener('input', () => {
       state.nameQuery = nameInput.value;
       syncURL();
-      renderAll();
-    });
-
-    optinCB.addEventListener('change', async () => {
-      if (!optinCB.checked) return;
-      optinCB.disabled = true;
-      try { await ensureMetricLoaded(); } catch (e) { console.error(e); }
-      optinCB.disabled = false;
-      maybeShowHistoryOptIn();
       renderAll();
     });
 
@@ -678,25 +661,16 @@
     wireControls();
     fillDataYears();
     updateViewParamField();
-    maybeShowHistoryOptIn();
 
     // Show the base table immediately — it works from schools-base.json alone.
     renderAll();
     syncURL();
 
-    // Returning users who already consented get the per-metric file (~0.8 MB
-    // gzipped) so the range columns fill in. Load it AFTER the first render and
-    // without blocking — otherwise the page would show only "Ładowanie…" with no
-    // data for the whole download, and a failed/slow fetch would look broken.
-    if (state.historyOptIn) {
-      try {
-        await ensureMetricLoaded();
-      } catch (e) {
-        console.error('history load failed', e);
-      }
-      maybeShowHistoryOptIn();
-      renderAll();   // refresh ranges + reset the info line
-    }
+    // Then pull the per-metric file (~0.8 MB gzipped) so the range columns, the
+    // non-base views and the detail panels fill in. After the first render and
+    // unawaited: the page stays usable for the whole download instead of showing
+    // "Ładowanie…" with no data.
+    loadMetricInBackground();
   }
 
   main();

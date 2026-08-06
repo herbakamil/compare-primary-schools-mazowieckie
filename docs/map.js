@@ -19,7 +19,6 @@
     minYears: 1,                  // 1..(number of dataset years)
     selectedSchool: null,         // rspo (number) or null
     lang: DEFAULTS.lang,
-    historyOptIn: false,
     gradient: true,               // continuous colour by default; flat 3 classes via the toggle
   };
 
@@ -27,7 +26,8 @@
   let clusterGroup = null;
   let markersByRspo = new Map();  // rspo -> Leaflet circleMarker
   let schoolSearchIndex = [];     // [{rspo,name,town,gmina,onMap,hay}] for the "find school" box
-  let historyData = null;         // metric-keyed cache for opt-in history
+  let historyData = null;         // metric-keyed cache, filled in the background
+  let historyError = false;       // last background fetch failed
 
   // ---------------------------------------------------------------------------
   // Initial state resolution: URL > localStorage > default (§9)
@@ -49,8 +49,6 @@
 
     const school = parseInt(url.get('school'), 10);
     state.selectedSchool = Number.isInteger(school) ? school : null;
-
-    state.historyOptIn = !!readPrefs().history_optin;
 
     // gradient: URL > localStorage > default(true)
     const gradParam = getURLParams().get('gradient');
@@ -319,9 +317,9 @@
   function renderHistorySection(school) {
     if (school.n_years < 2) return '';
     const hist = historyData?.[state.metric]?.schools?.[String(school.rspo)];
-    if (!hist) {
-      return `<button type="button" class="show-history-btn" data-rspo="${school.rspo}">${t('showHistory')}</button>`;
-    }
+    // The per-metric file is fetched in the background from page load, so it is
+    // only missing while that fetch is still in flight.
+    if (!hist) return `<p class="muted small">${t(historyError ? 'historyFailed' : 'historyLoading')}</p>`;
     return renderHistoryTableAndSparkline(school, hist);
   }
 
@@ -416,15 +414,11 @@
     syncThresholdSlider();
     recolourAll();
     refreshFilters();
-    if (state.selectedSchool != null) {
-      // History (sparkline + table) comes from the per-metric file. If the user
-      // already opted into history, load the NEW metric's file before reopening
-      // so the popup shows the new metric's history — otherwise it would fall
-      // back to the "Pokaż historię" button and the user couldn't read the new
-      // metric's year-by-year data without clicking again.
-      if (state.historyOptIn) await ensureHistoryLoaded();
-      reopenSelectedPopup();
-    }
+    // History (sparkline + table) comes from the per-metric file, so switching
+    // metric needs the new metric's file. Reopen right away with whatever is
+    // cached; the background fetch reopens again once the new file lands.
+    if (state.selectedSchool != null) reopenSelectedPopup();
+    loadHistoryInBackground();
   }
 
   function onSubjectChange(newSubject) {
@@ -610,36 +604,35 @@
   }
 
   // ---------------------------------------------------------------------------
-  // History opt-in fetch
+  // Per-metric history file
+  //
+  // Fetched for whatever metric is selected — always, in the background, never
+  // behind a button. A popup that offered to load its own chart read as a bug,
+  // not as a choice.
 
   async function ensureHistoryLoaded() {
     if (historyData?.[state.metric]) return;
     historyData = historyData || {};
-    // Show a tiny loading hint in panel summary.
-    const summary = document.getElementById('filter-summary');
-    const prev = summary.textContent;
-    summary.textContent = t('historyLoading');
-    try {
-      historyData[state.metric] = await loadMetricData(state.metric);
-      writePref('history_optin', true);
-      state.historyOptIn = true;
-    } finally {
-      summary.textContent = prev;
-    }
+    const metric = state.metric;
+    historyData[metric] = await loadMetricData(metric);
   }
 
-  function wireHistoryButtons() {
-    // Delegate from the map container so dynamic popup buttons get caught.
-    document.getElementById('map').addEventListener('click', async (ev) => {
-      const btn = ev.target.closest('.show-history-btn');
-      if (!btn) return;
-      const rspo = parseInt(btn.getAttribute('data-rspo'), 10);
-      btn.disabled = true;
-      btn.textContent = t('loadingHistory');
-      await ensureHistoryLoaded();
-      const marker = markersByRspo.get(rspo);
-      if (marker) marker.setPopupContent(renderPopup(marker._school));
-    });
+  // Never awaited by a handler: the map stays interactive for the whole
+  // download, and a failure leaves the base map working. Refreshes the open
+  // popup so a chart the user is already looking at fills itself in.
+  function loadHistoryInBackground() {
+    if (historyData?.[state.metric]) return;
+    historyError = false;
+    ensureHistoryLoaded()
+      .then(() => {
+        if (state.selectedSchool != null) reopenSelectedPopup();
+      })
+      .catch(e => {
+        // Say so rather than leaving "Ładowanie…" in the popup forever.
+        console.error('history load failed', e);
+        historyError = true;
+        if (state.selectedSchool != null) reopenSelectedPopup();
+      });
   }
 
   // ---------------------------------------------------------------------------
@@ -707,7 +700,6 @@
 
     wireSearch();
     wireSchoolFind();
-    wireHistoryButtons();
     wireNavLinks();
 
     // Language toggle: re-translate the dynamic, JS-built content that
@@ -774,6 +766,7 @@
     wireControls();
     syncURL();          // canonicalise the URL (e.g. add resolved threshold)
     openInitialPopup(); // if ?school=… was in the URL
+    loadHistoryInBackground();  // popups' year-by-year charts, no button to press
   }
 
   main();
