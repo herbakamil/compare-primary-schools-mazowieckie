@@ -383,7 +383,15 @@
       width: 260,
       height: 120,
     });
-    return `<div class="sparkline">${svg}<div class="spark-legend">${subjectLegendHTML(subjects)}</div></div>`;
+    // Say which of the three score flavours this is: the chart plots each year
+    // on its own, while the table above it shows the multi-year score. Without
+    // the caption a reader has no way to tell them apart, or to know this is not
+    // the LOO view they saw in the ranking.
+    return `<div class="sparkline">
+      ${helpDetailsHTML('chartYearsCaption', 'helpPopupChart')}
+      ${svg}
+      <div class="spark-legend">${subjectLegendHTML(subjects)}</div>
+    </div>`;
   }
 
   // ---------------------------------------------------------------------------

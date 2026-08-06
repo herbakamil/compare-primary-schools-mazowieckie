@@ -382,6 +382,10 @@ const I18N = {
     dataYears: (lo, hi) => `Egzamin ósmoklasisty ${lo}–${hi}`,
     historyLoading: 'Ładowanie szczegółowych danych…',
     historyFailed: 'Nie udało się wczytać danych rocznych — odśwież stronę.',
+    chartYearsCaption: 'Wynik w poszczególnych latach',
+    helpPopupChart: 'Wykres pokazuje wynik policzony osobno dla każdego roku — to nie jest wynik zbiorczy za wszystkie lata ani wersja LOO. Wynik zbiorczy masz w tabeli powyżej.',
+    chartDiffCaption: 'LOO a pojedyncze lata — jaka różnica?',
+    helpChartDiff: 'Pojedyncze lata: każdy punkt policzony wyłącznie z tego jednego rocznika — pokazuje, jak wynik skacze rok do roku. LOO („leave-one-out”): każdy punkt to wynik za wszystkie lata z pominięciem tego jednego — punkty zmieniają się słabiej, bo każdy opiera się na pozostałych rocznikach. Duży rozrzut punktów LOO znaczy, że wynik szkoły mocno zależy od jednego rocznika.',
     publicYesShort: 'Tak',
     publicNoShort: 'Nie',
     langPL: 'PL',
@@ -480,6 +484,10 @@ const I18N = {
     dataYears: (lo, hi) => `8th-grade exam ${lo}–${hi}`,
     historyLoading: 'Loading detailed data…',
     historyFailed: 'Could not load the year-by-year data — try refreshing.',
+    chartYearsCaption: 'Score in each year',
+    helpPopupChart: 'The chart plots the score computed from each year on its own — not the multi-year score, and not the LOO version. The multi-year score is in the table above.',
+    chartDiffCaption: 'LOO vs single years — what is the difference?',
+    helpChartDiff: 'Single years: each point uses that one year alone — it shows how much the score swings from year to year. LOO ("leave-one-out"): each point is the score over all years except that one, so the points move less because each still rests on the remaining years. A wide spread of LOO points means the school\'s score depends heavily on a single year.',
     publicYesShort: 'Yes',
     publicNoShort: 'No',
     langPL: 'PL',
@@ -488,6 +496,17 @@ const I18N = {
 };
 
 let currentLang = 'pl';
+
+// Inline help disclosure: a caption plus a "?" affordance that expands its
+// explanation in the document flow. Used where an absolutely-positioned tooltip
+// would be clipped — the Leaflet popup scrolls (overflow-y:auto) and the ranking
+// chart grid scrolls sideways on mobile (overflow-x:auto).
+function helpDetailsHTML(captionKey, helpKey) {
+  return `<details class="chart-help">
+      <summary><span>${t(captionKey)}</span><span class="help-dot" aria-hidden="true">i</span></summary>
+      <p>${t(helpKey)}</p>
+    </details>`;
+}
 
 function t(key, ...args) {
   const v = (I18N[currentLang] && I18N[currentLang][key]) || I18N.pl[key] || key;

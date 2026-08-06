@@ -429,6 +429,42 @@ table.ranking-table th .sort-indicator { color: var(--text-muted); font-size: 0.
   z-index: 20;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
+/* Inline help disclosure: same "?" affordance as .help-icon, but the text
+   expands in the flow rather than being absolutely positioned. Both places that
+   use it sit inside a scroll container — the Leaflet popup (overflow-y:auto) and
+   the ranking chart grid on mobile (overflow-x:auto) — which would clip a
+   positioned tooltip. Also works on touch, where :hover never fires. */
+.chart-help { margin: 0 0 0.35rem; }
+.chart-help > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  list-style: none;
+}
+.chart-help > summary::-webkit-details-marker { display: none; }
+.chart-help .help-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 1.15em;
+  height: 1.15em;
+  border: 1px solid var(--text-muted);
+  border-radius: 50%;
+  font: italic 700 0.85em/1 Georgia, "Times New Roman", serif;
+}
+.chart-help > summary:hover .help-dot,
+.chart-help[open] .help-dot { background: var(--text-muted); color: #fff; }
+.chart-help > p {
+  margin: 0.3rem 0 0;
+  font: 400 0.78rem/1.45 system-ui, sans-serif;
+  color: var(--text-muted);
+}
+
 table.ranking-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 table.ranking-table td.num .dec {
   font-size: 0.85em;

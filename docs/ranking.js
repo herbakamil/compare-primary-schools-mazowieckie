@@ -333,7 +333,12 @@
       { dim: 'rank',  label: t('popupRank') },
       { dim: 'pct',   label: t('popupPct') },
     ];
+    // The grid's two rows are the same numbers computed two different ways, and
+    // the row labels alone ("LOO", "pojedyncze lata") don't say what separates
+    // them. One disclosure above the grid explains both, since the point is the
+    // contrast between them.
     const chartGrid = `
+      ${helpDetailsHTML('chartDiffCaption', 'helpChartDiff')}
       <div class="chart-grid">
         <div class="cg-corner"></div>
         ${dims.map(d => `<div class="cg-colhead">${d.label}</div>`).join('')}
