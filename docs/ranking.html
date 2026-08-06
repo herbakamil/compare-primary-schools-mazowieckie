@@ -19,17 +19,17 @@
 
   <main>
     <div class="ranking-controls">
-      <label class="field">
+      <label class="field field--metric">
         <span data-i18n="labelMetric">Metryka</span>
         <select id="metric-select"></select>
       </label>
 
-      <label class="field">
+      <label class="field field--subject">
         <span data-i18n="labelSubject">Przedmiot</span>
         <select id="subject-select"></select>
       </label>
 
-      <label class="field">
+      <label class="field field--view">
         <span data-i18n="rankingView">Widok danych</span>
         <select id="view-select">
           <option value="base" data-i18n="rankingViewBase">wszystkie lata (base)</option>
@@ -51,16 +51,18 @@
         <label><input type="radio" name="public" value="nie"> <span data-i18n="publicNo">Niepubliczne</span></label>
       </fieldset>
 
-      <label class="field">
+      <label class="field field--search">
         <span data-i18n="rankingNameSearch">Szukaj po nazwie</span>
         <input type="text" id="name-search" placeholder="np. STO, Vizja, Słupica" data-i18n-attr="placeholder|rankingSearchPlaceholder">
       </label>
     </div>
 
-    <p class="data-years" id="data-years"></p>
-    <p id="ranking-info"></p>
-    <p class="small click-hint" data-i18n="clickHint">Kliknij wiersz, aby rozwinąć szczegóły szkoły.</p>
-    <p class="muted small"><a href="methodology.html#stability" data-i18n="methodologyLink">Jak liczone są wyniki? → Metodyka</a></p>
+    <div class="ranking-meta">
+      <p class="data-years" id="data-years"></p>
+      <p id="ranking-info"></p>
+      <p class="small click-hint" data-i18n="clickHint">Kliknij wiersz, aby rozwinąć szczegóły szkoły.</p>
+      <p class="muted small"><a href="methodology.html#stability" data-i18n="methodologyLink">Jak liczone są wyniki? → Metodyka</a></p>
+    </div>
 
     <div class="ranking-table-wrap">
       <table class="ranking-table" id="ranking-table"></table>

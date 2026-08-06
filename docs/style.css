@@ -366,6 +366,13 @@ body.page-methodology { display: block; height: auto; }
 
 #ranking-info { color: var(--text-muted); font-size: 0.85rem; }
 
+/* The four one-line notes between the controls and the table. Left to default
+   <p> margins they stacked ~16px of air between each, which on a phone pushed
+   the table itself below the fold. */
+.ranking-meta { margin: 0 0 0.6rem; }
+.ranking-meta > p { margin: 0.1rem 0; }
+.ranking-meta .data-years { margin-bottom: 0.15rem; }
+
 .ranking-table-wrap { overflow-x: auto; }
 table.ranking-table {
   width: 100%;
@@ -547,6 +554,49 @@ table.ranking-table tr.detail-row > td {
      let the wide chart grid scroll horizontally inside the pinned panel. */
   .detail-tables { flex-direction: column; }
   .chart-grid { overflow-x: auto; }
+
+  /* Ranking controls on a phone: a fixed 2-column grid instead of flex-wrap.
+     Wrapping left the fields ragged (a select and a 3-radio fieldset are
+     different heights, and align-items:flex-end staggered them), and pushed the
+     search box onto a row of its own. The "Publiczna" fieldset is the tall item,
+     so it spans two rows and the two short fields — data view, then search —
+     stack beside it instead of below it. Explicit placement rather than auto
+     flow, so the optional view-param field can appear without reshuffling. */
+  .ranking-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0.6rem;
+    row-gap: 0.45rem;
+    align-items: start;
+  }
+  .ranking-controls .field--metric   { grid-column: 1; grid-row: 1; }
+  .ranking-controls .field--subject  { grid-column: 2; grid-row: 1; }
+  .ranking-controls .field--view     { grid-column: 1; grid-row: 2; }
+  .ranking-controls .field--search   { grid-column: 1; grid-row: 3; }
+  .ranking-controls .radio-group     { grid-column: 2; grid-row: 2 / span 2; }
+  .ranking-controls #view-param-field { grid-column: 1 / -1; grid-row: 4; }
+  /* Grid columns are half the viewport, so the desktop min-widths would overflow. */
+  .ranking-controls .field,
+  .ranking-controls .field input[type="text"] { min-width: 0; }
+  .ranking-controls .field select,
+  .ranking-controls .field input[type="text"] { width: 100%; }
+  .ranking-controls .radio-group { margin-bottom: 0; }
+
+  /* Years and school count share a line; the hint and the methodology link get
+     one each. Four lines of notes become three, with the air taken out. */
+  .ranking-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.5rem;
+    row-gap: 0.15rem;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+  }
+  .ranking-meta > p { margin: 0; }
+  .ranking-meta .data-years { grid-column: 1; grid-row: 1; font-size: 0.9rem; }
+  .ranking-meta #ranking-info { grid-column: 2; grid-row: 1; }
+  .ranking-meta .click-hint { grid-column: 1 / -1; }
+  .ranking-meta .muted { grid-column: 1 / -1; }
 
   .page-map main { flex-direction: column; }
   #map { height: 60vh; flex: 0 0 60vh; }
