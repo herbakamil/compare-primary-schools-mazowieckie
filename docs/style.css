@@ -433,6 +433,18 @@ table.ranking-table th .sort-indicator { color: var(--text-muted); font-size: 0.
 /* When the icon is a link into the help page, keep it looking like the icon
    rather than like body-text link. */
 a.help-icon { text-decoration: none; margin-left: 0.3rem; }
+
+/* A help icon inside a form field anchors its bubble to the label row, not to
+   itself, and opens rightwards. The default (hanging off the icon with right:0,
+   which suits the ranking's right-aligned column headers) sends the bubble left
+   — and in the 320px map panel that runs straight off the left edge, where it
+   gets clipped: overflow-y:auto forces overflow-x to auto too, so the panel
+   cuts it and the map shows through. Anchored to the label, the bubble starts at
+   the field's left edge and its 240px fits the panel with room to spare. */
+.field > span { position: relative; }
+.field a.help-icon { position: static; }
+.field a.help-icon:hover::after,
+.field a.help-icon:focus::after { left: 0; right: auto; }
 .help-icon:hover, .help-icon:focus { background: var(--text-muted); color: #fff; outline: none; }
 .help-icon:hover::after, .help-icon:focus::after {
   content: attr(data-help);
