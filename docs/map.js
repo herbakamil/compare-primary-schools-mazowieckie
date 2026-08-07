@@ -639,6 +639,25 @@
     historyData[metric] = await loadMetricData(metric);
   }
 
+  // The legend has to follow the gradient toggle, not describe one fixed scheme.
+  // With the gradient on, A and C are ramps and the map shows far more than the
+  // three colours the legend lists — a reviewer counted five and read it as a
+  // mismatch. With it off there are exactly three flat colours, and a legend
+  // still showing ramps would be the wrong half of the same problem.
+  function syncLegend() {
+    const swatchA = document.getElementById('legend-swatch-a');
+    const swatchC = document.getElementById('legend-swatch-c');
+    const note    = document.getElementById('legend-gradient-note');
+    if (state.gradient) {
+      swatchA.style.background = `linear-gradient(90deg,${COLOURS.yellow},${COLOURS.satGreen})`;
+      swatchC.style.background = `linear-gradient(90deg,${COLOURS.yellow},${COLOURS.satRed})`;
+    } else {
+      swatchA.style.background = COLOURS.satGreen;
+      swatchC.style.background = COLOURS.satRed;
+    }
+    note.style.display = state.gradient ? '' : 'none';
+  }
+
   function wirePopupToggles() {
     // Delegated from the map container: popup content is rebuilt on every open,
     // so a listener bound to the button itself would not survive.
@@ -743,7 +762,9 @@
       writePref('gradient', state.gradient);
       syncURL();
       recolourAll();
+      syncLegend();
     });
+    syncLegend();
 
     wireSearch();
     wireSchoolFind();
