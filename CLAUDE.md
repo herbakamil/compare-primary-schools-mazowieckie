@@ -260,9 +260,30 @@ map for **any** selected metric, not just the primary one.
 Indicative `unit_norm_diff_mean` σ (recomputed each run):
 polski ≈ 0.192, matematyka ≈ 0.284, angielski ≈ 0.361, composite_min ≈ 0.245.
 
-The **app defaults to `composite_min`** under the primary metric, but all four
-metrics × four subjects are exported, so the user can toggle both the metric and
-the subject that colours the map.
+All four metrics × four subjects are exported, so the user can toggle both the
+metric and the subject that colours the map.
+
+### Primary metric vs the app's default — deliberately different
+
+`unit_norm_diff_mean` is the **primary metric**: the one the LOO stability test
+picked, and the one `metadata.default_metric` names in `schools-base.json`.
+
+The **app opens on `mean`** (subject `composite_min`). That is a UI decision, not
+a statistical one. `unit_norm_diff_mean` renders as an unlabelled decimal near
+zero; a reader looking for "56%" concludes the page is broken rather than that it
+is precise. `mean` answers the question people arrive with, and the normalised
+score is one entry away in the same dropdown.
+
+So the two can disagree, and the frontend **never reads
+`metadata.default_metric`** — the UI default lives in `DEFAULTS.metric`
+(`docs/app.js`) alone. Don't "fix" the metadata to match the UI: the field
+records which metric the analysis endorses. Changing the app's default is a
+one-line edit in `app.js` and needs no re-export.
+
+`median` and `diff_mean` sit behind the app's "advanced metrics" toggle
+(`BASIC_METRICS` in `docs/app.js`): `diff_mean` ranks identically to
+`unit_norm_diff_mean` (Spearman 1.000), and `median` lost the LOO test to `mean`.
+Both stay fully present in the JSON and xlsx exports.
 
 ---
 
