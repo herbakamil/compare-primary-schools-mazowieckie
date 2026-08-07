@@ -430,6 +430,9 @@ table.ranking-table th .sort-indicator { color: var(--text-muted); font-size: 0.
   position: relative;
   vertical-align: middle;
 }
+/* When the icon is a link into the help page, keep it looking like the icon
+   rather than like body-text link. */
+a.help-icon { text-decoration: none; margin-left: 0.3rem; }
 .help-icon:hover, .help-icon:focus { background: var(--text-muted); color: #fff; outline: none; }
 .help-icon:hover::after, .help-icon:focus::after {
   content: attr(data-help);
