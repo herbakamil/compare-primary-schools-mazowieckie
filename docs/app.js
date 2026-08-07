@@ -18,7 +18,14 @@ const METRICS  = ['mean', 'median', 'diff_mean', 'unit_norm_diff_mean'];
 //              test: the median moves the full exam-difficulty shift each year,
 //              while the mean is damped by floor/ceiling effects.
 // Both stay in the xlsx exports, where an analyst can use them deliberately.
-const BASIC_METRICS = ['unit_norm_diff_mean', 'mean'];
+//
+// `mean` leads because it is the number people arrive expecting: a percentage
+// per subject. unit_norm_diff_mean is the more defensible metric — it is the one
+// the leave-one-out test picked, and it neutralises a year's exam difficulty —
+// but it reads as an unlabelled decimal around zero, and a reader who cannot
+// find "56%" anywhere concludes the page is broken rather than that it is
+// precise. The stronger metric stays one click away.
+const BASIC_METRICS = ['mean', 'unit_norm_diff_mean'];
 
 function isAdvancedMetric(metric) {
   return !BASIC_METRICS.includes(metric);
@@ -47,7 +54,7 @@ const SUBJECTS = ['polski', 'matematyka', 'angielski', 'composite_min'];
 const CORE_SUBJECTS = ['polski', 'matematyka', 'angielski'];
 
 const DEFAULTS = {
-  metric:  'unit_norm_diff_mean',
+  metric:  'mean',
   subject: 'composite_min',
   lang:    'pl',
 };

@@ -40,7 +40,7 @@
         <li><a href="#metrics">Metryki dla przedmiotu</a></li>
         <li><a href="#composite">Łączenie przedmiotów</a></li>
         <li><a href="#aggregation">Agregacja po latach</a></li>
-        <li><a href="#default-metric">Domyślna metryka</a></li>
+        <li><a href="#metric-stability">Która metryka jest najstabilniejsza</a></li>
         <li><a href="#colour">Kolor i klasy</a></li>
         <li><a href="#stability">Stabilność i niepewność</a></li>
         <li><a href="#map">Mapa i lokalizacje</a></li>
@@ -57,7 +57,7 @@
         <li><a href="#metrics">Per-subject metrics</a></li>
         <li><a href="#composite">Combining the subjects</a></li>
         <li><a href="#aggregation">Aggregating across years</a></li>
-        <li><a href="#default-metric">The default metric</a></li>
+        <li><a href="#metric-stability">Which metric is the most stable</a></li>
         <li><a href="#colour">Colour and classes</a></li>
         <li><a href="#stability">Stability and uncertainty</a></li>
         <li><a href="#map">The map and locations</a></li>
@@ -170,7 +170,7 @@
           roku i przedmiocie). Neutralizuje to zmiany trudności — surowe 60% w trudnym roku
           bywa odpowiednikiem 70% w łatwym. Po latach: średnia <strong>ważona liczbą
           zdających</strong>, więc rok z mniejszym (bardziej niepewnym) rocznikiem waży mniej.</p>
-        <h3>Znormalizowana różnica od średniej <span class="muted">(w apce „Wynik znormalizowany"; domyślna)</span></h3>
+        <h3>Znormalizowana różnica od średniej <span class="muted">(w apce „Wynik znormalizowany")</span></h3>
         <p>Różnicę od średniej skalujemy do zakresu <strong>[−1, +1]</strong>: powyżej zera
           dzielimy przez to, ile jeszcze brakuje do 100%; poniżej — przez samą średnią.
           Wtedy <strong>0 = średnia województwa</strong>, <strong>+1 = sufit (100%)</strong>,
@@ -191,7 +191,7 @@
           school's mean. This neutralises difficulty shifts — a raw 60% in a hard year can equal
           70% in an easy one. Across years: a mean <strong>weighted by the number of pupils</strong>,
           so a year with a smaller (less certain) cohort counts for less.</p>
-        <h3>Normalised difference from the mean <span class="muted">(the app's "Normalised score"; default)</span></h3>
+        <h3>Normalised difference from the mean <span class="muted">(the app's "Normalised score")</span></h3>
         <p>We scale the difference to the range <strong>[−1, +1]</strong>: above zero we divide
           by how far it still is to 100%; below zero, by the mean itself. Then
           <strong>0 = the voivodeship mean</strong>, <strong>+1 = the ceiling (100%)</strong>,
@@ -238,24 +238,23 @@
       </div>
     </section>
 
-    <section id="default-metric">
+    <section id="metric-stability">
       <div data-lang-block="pl">
-        <h2>Domyślna metryka</h2>
+        <h2>Która metryka jest najstabilniejsza</h2>
         <p>Znormalizowana różnica od średniej — bo w testach to przy niej pozycje szkół
           wahały się najmniej rok do roku (sprawdzane metodą „leave-one-out": liczymy wynik,
           pomijając po kolei każdy rok, i patrzymy, jak bardzo skacze). Mimo to nawet po
           pominięciu pojedynczych lat pozycje potrafią mocno się zmieniać — dlatego nie warto
-          przywiązywać się do konkretnego miejsca w rankingu. Pełna analiza, na której oparty
-          jest ten wybór:
+          przywiązywać się do konkretnego miejsca w rankingu. Pełna analiza:
           <a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie/blob/main/notebooks/how_to_measure_school_quality-2021-2025.ipynb">notebook</a>.</p>
       </div>
       <div data-lang-block="en" hidden>
-        <h2>The default metric</h2>
+        <h2>Which metric is the most stable</h2>
         <p>The normalised difference from the mean — because in testing its school positions
           moved the least year to year (checked with a "leave-one-out" method: recompute the
           score leaving each year out in turn, and see how much it jumps). Even so, dropping
           single years can still move positions a lot — which is why a specific ranking place is
-          not worth clinging to. The full analysis behind this choice:
+          not worth clinging to. The full analysis:
           <a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie/blob/main/notebooks/how_to_measure_school_quality-2021-2025.ipynb">notebook</a>.</p>
       </div>
     </section>
