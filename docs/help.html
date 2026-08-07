@@ -47,6 +47,7 @@
         <li><a href="#map">Mapa i lokalizacje</a></li>
         <li><a href="#caveat">Czego dane nie mówią</a></li>
         <li><a href="#sources">Inne źródła i kod</a></li>
+        <li><a href="#data-files">Dane do pobrania</a></li>
       </ul>
     </details>
     <details class="toc" open data-lang-block="en" hidden>
@@ -65,6 +66,7 @@
         <li><a href="#map">The map and locations</a></li>
         <li><a href="#caveat">What the data does not say</a></li>
         <li><a href="#sources">Other sources and code</a></li>
+        <li><a href="#data-files">Data files</a></li>
       </ul>
     </details>
 
@@ -419,6 +421,46 @@
             <a target="_blank" rel="noopener" href="https://www.rankingedukacji.pl/rankingi/szkoly-podstawowe/warszawa">rankingedukacji.pl</a>.</li>
           <li>Code and the full analysis (notebook):
             <a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie">GitHub</a>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="data-files">
+      <div data-lang-block="pl">
+        <h2>Dane do pobrania</h2>
+        <p>Każdą liczbę z tej strony da się prześledzić wstecz aż do arkusza OKE. Wszystkie
+          trzy etapy są jawne:</p>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie/tree/main/data/egzamin-osmoklasisty">Pliki
+            źródłowe OKE</a> — arkusze xlsx dokładnie tak, jak opublikowała je OKE Warszawa,
+            bez żadnych zmian. Obok leży <code>SOURCES.csv</code> z adresem i datą pobrania
+            każdego pliku.</li>
+          <li><a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie/tree/main/output">Dane
+            przetworzone (xlsx)</a> — po przeliczeniu, jeden wiersz na (szkoła, przedmiot,
+            widok), osobny plik dla każdej metryki. Każdy ma arkusz <code>legend</code>
+            objaśniający wszystkie kolumny, więc da się sprawdzić pojedynczą szkołę
+            w Excelu.</li>
+          <li><a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie/tree/main/docs/data">Dane
+            JSON</a> — dokładnie te pliki, które wczytuje ta strona. Wyniki, miejsca
+            i percentyle są w nich gotowe; przeglądarka dobiera do nich już tylko kolory.</li>
+        </ul>
+      </div>
+      <div data-lang-block="en" hidden>
+        <h2>Data files</h2>
+        <p>Every number on this site can be traced back to an OKE spreadsheet. All three
+          stages are public:</p>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie/tree/main/data/egzamin-osmoklasisty">OKE
+            source files</a> — the xlsx sheets exactly as the Warsaw OKE district published
+            them, unmodified. Alongside them, <code>SOURCES.csv</code> records where each file
+            came from and when it was retrieved.</li>
+          <li><a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie/tree/main/output">Processed
+            data (xlsx)</a> — after computation, one row per (school, subject, view), a separate
+            file per metric. Each has a <code>legend</code> sheet explaining every column, so a
+            single school can be checked in Excel.</li>
+          <li><a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie/tree/main/docs/data">JSON
+            data</a> — the very files this site loads. Scores, ranks and percentiles arrive
+            ready-made; the browser only maps them to colours.</li>
         </ul>
       </div>
     </section>
