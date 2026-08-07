@@ -84,46 +84,46 @@ body { display: flex; flex-direction: column; }
 /* Note explaining the bold (weakest) subject in the detail tables */
 .detail-tables-note { margin: 0.4rem 0 0.6rem; }
 
-/* Methodology page layout. It is a normal document, not the full-height flex app
+/* Help page layout. It is a normal document, not the full-height flex app
    shell — so it scrolls at the window edge and the readable text column (capped
    for legibility) is centred rather than left-aligned with the scrollbar at 1/5. */
-body.page-methodology { display: block; height: auto; }
-.page-methodology .topnav { position: sticky; top: 0; z-index: 10; }
-.page-methodology main {
+body.page-help { display: block; height: auto; }
+.page-help .topnav { position: sticky; top: 0; z-index: 10; }
+.page-help main {
   max-width: 720px;
   margin: 0 auto;
   padding: 1.25rem;
   line-height: 1.5;
 }
-.page-methodology .lead { font-size: 1.05rem; margin: 0 0 1.2rem; }
-.page-methodology section { margin: 1.6rem 0; }
-.page-methodology h2 {
+.page-help .lead { font-size: 1.05rem; margin: 0 0 1.2rem; }
+.page-help section { margin: 1.6rem 0; }
+.page-help h2 {
   font-size: 1.15rem;
   margin: 0 0 0.5rem;
   padding-bottom: 0.25rem;
   border-bottom: 1px solid var(--border);
 }
-.page-methodology h3 { font-size: 1rem; margin: 1rem 0 0.3rem; }
-.page-methodology p { margin: 0.5rem 0; }
-.page-methodology ul { margin: 0.5rem 0; padding-left: 1.3rem; }
-.page-methodology li { margin: 0.3rem 0; }
-.page-methodology .swatch { vertical-align: middle; margin-right: 0.2rem; }
-.page-methodology a { color: #2166ac; }
+.page-help h3 { font-size: 1rem; margin: 1rem 0 0.3rem; }
+.page-help p { margin: 0.5rem 0; }
+.page-help ul { margin: 0.5rem 0; padding-left: 1.3rem; }
+.page-help li { margin: 0.3rem 0; }
+.page-help .swatch { vertical-align: middle; margin-right: 0.2rem; }
+.page-help a { color: #2166ac; }
 /* sections clear the sticky nav when reached via an anchor link */
-.page-methodology section { scroll-margin-top: 3.5rem; }
+.page-help section { scroll-margin-top: 3.5rem; }
 
 /* Table of contents (collapsible) */
-.page-methodology .toc {
+.page-help .toc {
   margin: 0 0 1.5rem;
   padding: 0.5rem 0.9rem;
   border: 1px solid var(--border);
   border-radius: 4px;
   background: var(--bg-muted);
 }
-.page-methodology .toc summary { cursor: pointer; font-weight: 600; }
-.page-methodology .toc ul { columns: 2; margin: 0.5rem 0 0; padding-left: 1.1rem; }
-.page-methodology .toc li { margin: 0.15rem 0; }
-@media (max-width: 640px) { .page-methodology .toc ul { columns: 1; } }
+.page-help .toc summary { cursor: pointer; font-weight: 600; }
+.page-help .toc ul { columns: 2; margin: 0.5rem 0 0; padding-left: 1.1rem; }
+.page-help .toc li { margin: 0.15rem 0; }
+@media (max-width: 640px) { .page-help .toc ul { columns: 1; } }
 
 /* Floating "back to contents" button — appears after scrolling, jumps to the top */
 #toc-fab {
