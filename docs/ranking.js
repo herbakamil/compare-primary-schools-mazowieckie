@@ -216,7 +216,10 @@
   // Short formatter per dimension shown on a chart axis / in a table cell.
   function dimFmt(dim) {
     if (dim === 'rank') return (v) => '#' + Math.round(v);
-    if (dim === 'pct')  return (v) => Math.round(v) + '%';
+    // No "%" on a percentile: it is a position in the distribution, not a share
+    // of anything the school scored. The neighbouring score column is a real
+    // percentage (of points), so marking both invites reading them alike.
+    if (dim === 'pct')  return (v) => v.toFixed(1);
     return (v) => fmtScore(v, state.metric);
   }
 
@@ -333,7 +336,7 @@
     const dims = [
       { dim: 'score', label: t('popupScore') },
       { dim: 'rank',  label: t('popupRank') },
-      { dim: 'pct',   label: t('popupPct') },
+      { dim: 'pct',   label: t('popupPct'), help: 'helpPct' },
     ];
     // The grid's two rows are the same numbers computed two different ways, and
     // the row labels alone ("LOO", "pojedyncze lata") don't say what separates
@@ -343,7 +346,7 @@
       ${helpDetailsHTML('chartDiffCaption', 'helpChartDiff')}
       <div class="chart-grid">
         <div class="cg-corner"></div>
-        ${dims.map(d => `<div class="cg-colhead">${d.label}</div>`).join('')}
+        ${dims.map(d => `<div class="cg-colhead">${d.label}${d.help ? helpIconHTML(d.help) : ''}</div>`).join('')}
         <div class="cg-rowhead">${t('detailViewLOO')}</div>
         ${dims.map(d => `<div class="cg-cell">${detailChart(hist, yearsPresent, 'loo', d.dim)}</div>`).join('')}
         <div class="cg-rowhead">${t('detailViewSingle')}</div>

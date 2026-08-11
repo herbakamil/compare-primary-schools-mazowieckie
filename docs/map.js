@@ -261,7 +261,7 @@
         <th>${t('subject_' + subj)}</th>
         <td class="num">${fmtScore(cell?.score, metric)}</td>
         <td class="num">#${cell?.rank ?? '—'}</td>
-        <td class="num">${cell?.pct != null ? cell.pct.toFixed(1) + '%' : '—'}</td>
+        <td class="num">${cell?.pct != null ? cell.pct.toFixed(1) : '—'}</td>
       </tr>`;
     }).join('');
 
@@ -270,7 +270,7 @@
       <th>${t('popupComposite')}</th>
       <td class="num">${fmtScore(composite?.score, metric)}</td>
       <td class="num">#${composite?.rank ?? '—'}</td>
-      <td class="num">${composite?.pct != null ? composite.pct.toFixed(1) + '%' : '—'}</td>
+      <td class="num">${composite?.pct != null ? composite.pct.toFixed(1) : '—'}</td>
     </tr>`;
 
     const warnings = warningsFor(school);
@@ -284,7 +284,7 @@
         <h3>${escapeHTML(school.name)}</h3>
         <p class="addr">${escapeHTML(addr)} · ${pub} · ${school.n_years} ${t('popupYears')}</p>
         <table>
-          <thead><tr><th></th><th>${t('popupScore')}</th><th>${t('popupRank')}</th><th>${t('popupPct')}</th></tr></thead>
+          <thead><tr><th></th><th>${t('popupScore')}</th><th>${t('popupRank')}</th><th>${t('popupPct')}${helpIconHTML('helpPct')}</th></tr></thead>
           <tbody>${rowsHTML}${compositeHTML}</tbody>
         </table>
         ${warnHTML}

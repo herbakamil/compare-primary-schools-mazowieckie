@@ -382,6 +382,7 @@ const I18N = {
     popupScore: 'Wynik',
     popupRank: 'Miejsce',
     popupPct: 'Percentyl',
+    helpPct: 'Ile procent szkół ma wynik nie lepszy niż ta szkoła. 50 znaczy, że połowa wypadła gorzej lub tak samo; 100 to najlepszy wynik w zestawieniu. Liczone wśród szkół obecnych w tym samym widoku.',
     popupComposite: 'Najsłabszy z 3',
     warnShortHistory: 'Krótka historia (< 3 lata) — wyniki mniej pewne.',
     warnVolatile: 'Duże wahania roczne — wynik zależy od wyboru lat.',
@@ -488,6 +489,7 @@ const I18N = {
     popupScore: 'Score',
     popupRank: 'Rank',
     popupPct: 'Percentile',
+    helpPct: 'The share of schools whose result is no better than this school\'s. 50 means half did worse or the same; 100 is the best result in the set. Computed among the schools present in the same view.',
     popupComposite: 'Weakest of 3',
     warnShortHistory: 'Short history (< 3 years) — less certain.',
     warnVolatile: 'High year-to-year volatility — score depends on which years are included.',
@@ -546,6 +548,16 @@ const I18N = {
 };
 
 let currentLang = 'pl';
+
+// A "?" carrying its explanation in data-help, shown by the CSS tooltip. Use
+// where the bubble has room to open; inside a scroll container prefer
+// helpDetailsHTML, which expands in the flow instead of being positioned.
+function helpIconHTML(key) {
+  const text = String(t(key))
+    .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+  return `<span class="help-icon" tabindex="0" role="button" aria-label="?" data-help="${text}">i</span>`;
+}
 
 // Inline help disclosure: a caption plus a "?" affordance that expands its
 // explanation in the document flow. Used where an absolutely-positioned tooltip
