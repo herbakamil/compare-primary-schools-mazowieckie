@@ -80,7 +80,11 @@
 
   function initMap() {
     map = L.map('map', { zoomControl: true, preferCanvas: true });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // CARTO requires an API key since 2026 (unkeyed tiles get an "API KEY
+    // REQUIRED" watermark baked into the image). The key is free (5M tiles per
+    // month) and public by design — basemap keys are tied to the declared
+    // domain, not kept secret. Renew/manage at carto.com/basemaps/apikey.
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_30l0_1_4216fabc7f5215539f724e48', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 19,
