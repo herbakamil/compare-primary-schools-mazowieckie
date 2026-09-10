@@ -11,7 +11,8 @@ data to build the app — everything about the data shape is described below.
 
 A public, static, client-side web map where a parent can look up primary schools
 in the Mazowieckie voivodeship (Poland) and see how they perform on the 8th-grade
-exam (egzamin ósmoklasisty), 2021–2025.
+exam (egzamin ósmoklasisty), 2021 onward (2026+ as of this writing; a new year
+of data arrives each summer).
 
 - **Hosting:** GitHub Pages, serving a `docs/` directory. No backend, no server,
   no build step required at runtime.
