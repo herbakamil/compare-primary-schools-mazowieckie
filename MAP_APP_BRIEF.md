@@ -14,12 +14,15 @@ in the Mazowieckie voivodeship (Poland) and see how they perform on the 8th-grad
 exam (egzamin ósmoklasisty), 2021–2025.
 
 - **Hosting:** GitHub Pages, serving a `docs/` directory. No backend, no server,
-  no API keys, no build step required at runtime.
+  no build step required at runtime.
 - **Tech:** vanilla JavaScript + Leaflet.js + Leaflet.markercluster (from CDN).
   No framework, no bundler. Keep it simple enough to open `docs/index.html` and
   have it work.
-- **Tiles:** Carto Positron (muted basemap so the coloured school markers stand
-  out). Free, attribution required. Do not use a keyed provider.
+- **Tiles:** Carto Positron raster PNG (muted basemap so the coloured school
+  markers stand out). Free with attribution; since 2026 CARTO requires an API
+  key (public by design, tied to the declared domain — unkeyed tiles get a
+  watermark baked into the image). Raster is a deliberate choice — vector
+  migration is a recorded deferred decision, see §13.
 - **Audience:** Polish parents, mostly on mobile. Polish UI by default.
 
 The whole point is the **colour** of each school marker, which encodes a quality
@@ -565,3 +568,32 @@ lives in one place.
 
 Build incrementally; steps 1–7 give a fully useful, shareable map and ranking
 from a single 0.4 MB download.
+
+---
+
+## 13. Deferred decisions
+
+Decisions taken deliberately, with the conditions that would reopen them. Not a
+task list — an entry here means "we considered it and chose not to, for now".
+
+### Vector basemap migration — deferred (Sep 2026)
+
+CARTO is retiring its raster PNG basemaps (no date announced; data updates may
+freeze first — their own migration pitch says raster "is being retired"). We
+stay on raster anyway:
+
+- The basemap is **background under the markers**; sharper cartography and
+  runtime restyling buy this map almost nothing.
+- Vector tiles are not a URL swap. Leaflet cannot render MVT natively, so
+  migration means a rendering-engine change (Leaflet → MapLibre GL), putting at
+  risk the hard-won touch fixes (autoPan/closeOnClick popup behaviour, popup
+  scroll, enlarged close button) and the score-coloured cluster icons.
+- MapLibre GL is ~200 KB gzipped vs Leaflet's ~40 KB.
+
+**Reopen when:** CARTO announces an actual raster retirement date, or a quiet
+window opens after the recruitment season (Feb–Apr).
+
+**Path when reopened:** try the `maplibre-gl-leaflet` adapter first (vector
+basemap rendered as a layer inside Leaflet — markers, clusters and popups stay
+untouched); a full MapLibre GL rewrite only if the adapter fails. The API key
+already covers both raster and vector services, so nothing to redo there.
