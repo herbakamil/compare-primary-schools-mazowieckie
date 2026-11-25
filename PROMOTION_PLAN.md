@@ -78,11 +78,17 @@ zapytania o konkretne gminy i konkretne szkoły — patrz Faza 4.
 Kandydaci (status DNS z 25.11.2026 — brak delegacji ≈ prawdopodobnie wolna;
 **potwierdzić w wyszukiwarce rejestratora przed zakupem**):
 
-- [ ] wybór nazwy — wolne: `szkolypodstawowemazowieckie.pl` (precyzyjna, długa),
-      `szkolynamazowszu.pl`, `szkolymazowieckie.pl`, `szkolymazowsza.pl`,
-      `wynikiszkol.pl`, `ktoraszkola.pl`, `gdzieszkola.pl`.
-      Uwaga: rodzina „na mapie" odpada — `szkolynamapie.pl` to od jesieni
-      żywy konkurent, podobna nazwa wyglądałaby jak podszywanie się.
+- [ ] wybór nazwy. **Warunek twardy (decyzja właściciela): region musi być
+      w nazwie** — serwis obejmuje tylko Mazowsze i nazwa bez regionu byłaby
+      oszustwem; ewentualny ogólnopolski serwis za lata dostanie własną domenę,
+      a ta będzie przekierowywać. Kandydaci (wolne wg DNS 25.11.2026;
+      potwierdzić u rejestratora): **`szkolypodstawowemazowieckie.pl`**
+      (faworyt dotychczasowej dyskusji — precyzyjna co do typu szkół
+      i regionu, 30 znaków), `szkolymazowieckie.pl` (20),
+      `szkolynamazowszu.pl` (19, najnaturalniejsza w mowie),
+      `szkolymazowsza.pl` (17).
+      Poza listą: rodzina „na mapie" — `szkolynamapie.pl` to od jesieni żywy
+      konkurent, podobna nazwa wyglądałaby jak podszywanie się.
 - [ ] rejestrator — kryteria wyboru: **cena odnowienia** (nie promocyjna
       pierwszoroczna), darmowe **przekierowanie e-mail** (kontakt@ → prywatna
       skrzynka), ewentualnie SMTP w pakiecie; bez hostingu (zbędny).
@@ -168,9 +174,11 @@ Dziś strona nie ma żadnej treści statycznej do dopasowania zapytań. Plan:
 
 ## 5. Pytania do Ciebie (osoby od SEO/marketingu)
 
-1. **Nazwa domeny** — którą z wolnych byś wziął? Spór: precyzja i uczciwość
-   zakresu (`szkolypodstawowemazowieckie.pl`) vs krótkość i zapamiętywalność
-   (`wynikiszkol.pl`, `ktoraszkola.pl`).
+1. **Nazwa domeny** — region w nazwie to warunek nienegocjowalny (patrz
+   Faza 1). Spór do rozstrzygnięcia w obrębie wariantów regionalnych:
+   pełna precyzja typu szkół (`szkolypodstawowemazowieckie.pl`, 30 znaków)
+   vs krótsze (`szkolymazowieckie.pl`, `szkolynamazowszu.pl`). Czy długość
+   realnie boli pod SEO/brand, skoro nikt adresów nie wpisuje ręcznie?
 2. **Gminy czy szkoły najpierw?** Nasz argument za gminami: 216 stron zamiast
    1743, bogatsza pojedyncza strona; za szkołami: niemal zerowa konkurencja
    w długim ogonie.
