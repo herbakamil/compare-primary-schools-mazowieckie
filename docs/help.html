@@ -34,10 +34,11 @@
     <details class="toc" open data-lang-block="pl">
       <summary>Spis treści</summary>
       <ul>
-        <li><a href="#how-to-use">Jak korzystać</a></li>
         <li><a href="#goal">Cel</a></li>
         <li><a href="#not-goal">Co nie jest celem</a></li>
         <li><a href="#data">Dane i zakres</a></li>
+        <li><a href="#similar">Podobne serwisy</a></li>
+        <li><a href="#how-to-use">Jak korzystać</a></li>
         <li><a href="#metrics">Metryki dla przedmiotu</a></li>
         <li><a href="#composite">Łączenie przedmiotów</a></li>
         <li><a href="#aggregation">Agregacja po latach</a></li>
@@ -46,17 +47,18 @@
         <li><a href="#stability">Stabilność i niepewność</a></li>
         <li><a href="#map">Mapa i lokalizacje</a></li>
         <li><a href="#caveat">Czego dane nie mówią</a></li>
-        <li><a href="#sources">Inne źródła i kod</a></li>
+        <li><a href="#sources">Kod i pełna analiza</a></li>
         <li><a href="#data-files">Dane do pobrania</a></li>
       </ul>
     </details>
     <details class="toc" open data-lang-block="en" hidden>
       <summary>Contents</summary>
       <ul>
-        <li><a href="#how-to-use">How to use it</a></li>
         <li><a href="#goal">Goal</a></li>
         <li><a href="#not-goal">What is not the goal</a></li>
         <li><a href="#data">Data and scope</a></li>
+        <li><a href="#similar">Similar services</a></li>
+        <li><a href="#how-to-use">How to use it</a></li>
         <li><a href="#metrics">Per-subject metrics</a></li>
         <li><a href="#composite">Combining the subjects</a></li>
         <li><a href="#aggregation">Aggregating across years</a></li>
@@ -65,60 +67,10 @@
         <li><a href="#stability">Stability and uncertainty</a></li>
         <li><a href="#map">The map and locations</a></li>
         <li><a href="#caveat">What the data does not say</a></li>
-        <li><a href="#sources">Other sources and code</a></li>
+        <li><a href="#sources">Code and the full analysis</a></li>
         <li><a href="#data-files">Data files</a></li>
       </ul>
     </details>
-
-    <section id="how-to-use">
-      <div data-lang-block="pl">
-        <h2>Jak korzystać</h2>
-        <ul>
-          <li><strong>Mapa</strong> — kolor kropki to wynik wybranego przedmiotu i metryki.
-            Kliknij szkołę, żeby zobaczyć jej wyniki i wykres rok po roku. Przy oddaleniu
-            kropki łączą się w grona z liczbą szkół; kliknięcie grona przybliża.</li>
-          <li><strong>Ranking</strong> — kliknij nagłówek kolumny, żeby posortować, a wiersz,
-            żeby rozwinąć szczegóły szkoły: wykresy dla wszystkich trzech przedmiotów
-            i tabele liczbowe pod przyciskiem.</li>
-          <li><strong>Przedmiot</strong> — „Najsłabszy przedmiot" pokazuje najniższy z trzech
-            wyników, czyli odpowiada na pytanie „czy szkoła gdzieś nie wysiada?". Przełącz na
-            polski, matematykę lub angielski, żeby zobaczyć pojedynczy przedmiot.</li>
-          <li><strong>Metryka</strong> — „Średnia" to zwykły wynik procentowy.
-            „Wynik znormalizowany" to odległość od średniej województwa <em>z tego samego
-            roku</em>: 0 oznacza dokładnie średnią, wartości dodatnie są powyżej niej,
-            ujemne poniżej.</li>
-          <li><strong>Filtry</strong> — szkoły publiczne albo niepubliczne, minimalny wynik
-            oraz minimalna liczba lat danych (szkoły z krótką historią są mniej pewne).</li>
-          <li><strong>Szukanie</strong> — wpisz nazwę szkoły lub miejscowość. Na mapie jest
-            dodatkowo wyszukiwanie po adresie, które przesuwa widok w wybrane miejsce.</li>
-          <li><strong>Ustawienia</strong> — płynne przejście koloru oraz metryki zaawansowane,
-            jeśli chcesz porównać sposoby liczenia.</li>
-        </ul>
-      </div>
-      <div data-lang-block="en" hidden>
-        <h2>How to use it</h2>
-        <ul>
-          <li><strong>Map</strong> — a dot's colour is the score for the selected subject and
-            metric. Click a school to see its results and a year-by-year chart. Zoomed out,
-            dots merge into clusters showing how many schools they hold; clicking one zooms in.</li>
-          <li><strong>Ranking</strong> — click a column header to sort, and a row to expand the
-            school's details: charts for all three subjects, with the numeric tables behind a
-            button.</li>
-          <li><strong>Subject</strong> — "Weakest subject" shows the lowest of the three scores,
-            answering "does this school fall down anywhere?". Switch to Polish, Maths or English
-            to see a single subject.</li>
-          <li><strong>Metric</strong> — "Mean" is the plain percentage score. "Normalised score"
-            is the distance from the voivodeship average <em>of the same year</em>: 0 is exactly
-            average, positive values sit above it, negative below.</li>
-          <li><strong>Filters</strong> — public or private schools, a minimum score, and a
-            minimum number of years of data (schools with a short history are less certain).</li>
-          <li><strong>Search</strong> — type a school name or a town. The map additionally has an
-            address search that moves the view to a chosen place.</li>
-          <li><strong>Settings</strong> — the continuous colour ramp, and the advanced metrics if
-            you want to compare ways of computing the score.</li>
-        </ul>
-      </div>
-    </section>
 
     <section id="goal">
       <div data-lang-block="pl">
@@ -205,6 +157,89 @@
           <li>Subject olympiads/contests are not included: complete data is hard to gather and
             contests measure individuals — in a large school a few pupils may shine while the
             typical pupil still does poorly.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="similar">
+      <div data-lang-block="pl">
+        <h2>Podobne serwisy</h2>
+        <p>Inne miejsca pokazujące wyniki szkół — każde z nieco innym zakresem i podejściem:</p>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://szkolynamapie.pl/">szkolynamapie.pl</a>
+            — szkoły obwodowe i wyniki egzaminu ósmoklasisty w największych miastach.</li>
+          <li><a target="_blank" rel="noopener" href="https://waszaedukacja.pl/">waszaedukacja.pl</a>
+            — ogólnopolski katalog placówek edukacyjnych z rankingami, progami punktowymi
+            i opiniami.</li>
+          <li><a target="_blank" rel="noopener" href="https://mapa.wyniki.edu.pl/MapaEgzaminow/">mapa.wyniki.edu.pl</a>
+            — mapa wyników egzaminów.</li>
+          <li><a target="_blank" rel="noopener" href="https://www.rankingedukacji.pl/rankingi/szkoly-podstawowe/warszawa">rankingedukacji.pl</a>
+            — rankingi szkół.</li>
+        </ul>
+      </div>
+      <div data-lang-block="en" hidden>
+        <h2>Similar services</h2>
+        <p>Other places showing school results — each with a somewhat different scope and approach:</p>
+        <ul>
+          <li><a target="_blank" rel="noopener" href="https://szkolynamapie.pl/">szkolynamapie.pl</a>
+            — catchment schools and 8th-grade exam results in the largest cities.</li>
+          <li><a target="_blank" rel="noopener" href="https://waszaedukacja.pl/">waszaedukacja.pl</a>
+            — a nationwide directory of schools with rankings, admission thresholds and
+            reviews.</li>
+          <li><a target="_blank" rel="noopener" href="https://mapa.wyniki.edu.pl/MapaEgzaminow/">mapa.wyniki.edu.pl</a>
+            — an exam-results map.</li>
+          <li><a target="_blank" rel="noopener" href="https://www.rankingedukacji.pl/rankingi/szkoly-podstawowe/warszawa">rankingedukacji.pl</a>
+            — school rankings.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="how-to-use">
+      <div data-lang-block="pl">
+        <h2>Jak korzystać</h2>
+        <ul>
+          <li><strong>Mapa</strong> — kolor kropki to wynik wybranego przedmiotu i metryki.
+            Kliknij szkołę, żeby zobaczyć jej wyniki i wykres rok po roku. Przy oddaleniu
+            kropki łączą się w grona z liczbą szkół; kliknięcie grona przybliża.</li>
+          <li><strong>Ranking</strong> — kliknij nagłówek kolumny, żeby posortować, a wiersz,
+            żeby rozwinąć szczegóły szkoły: wykresy dla wszystkich trzech przedmiotów
+            i tabele liczbowe pod przyciskiem.</li>
+          <li><strong>Przedmiot</strong> — „Najsłabszy przedmiot" pokazuje najniższy z trzech
+            wyników, czyli odpowiada na pytanie „czy szkoła gdzieś nie wysiada?". Przełącz na
+            polski, matematykę lub angielski, żeby zobaczyć pojedynczy przedmiot.</li>
+          <li><strong>Metryka</strong> — „Średnia" to zwykły wynik procentowy.
+            „Wynik znormalizowany" to odległość od średniej województwa <em>z tego samego
+            roku</em>: 0 oznacza dokładnie średnią, wartości dodatnie są powyżej niej,
+            ujemne poniżej.</li>
+          <li><strong>Filtry</strong> — szkoły publiczne albo niepubliczne, minimalny wynik
+            oraz minimalna liczba lat danych (szkoły z krótką historią są mniej pewne).</li>
+          <li><strong>Szukanie</strong> — wpisz nazwę szkoły lub miejscowość. Na mapie jest
+            dodatkowo wyszukiwanie po adresie, które przesuwa widok w wybrane miejsce.</li>
+          <li><strong>Ustawienia</strong> — płynne przejście koloru oraz metryki zaawansowane,
+            jeśli chcesz porównać sposoby liczenia.</li>
+        </ul>
+      </div>
+      <div data-lang-block="en" hidden>
+        <h2>How to use it</h2>
+        <ul>
+          <li><strong>Map</strong> — a dot's colour is the score for the selected subject and
+            metric. Click a school to see its results and a year-by-year chart. Zoomed out,
+            dots merge into clusters showing how many schools they hold; clicking one zooms in.</li>
+          <li><strong>Ranking</strong> — click a column header to sort, and a row to expand the
+            school's details: charts for all three subjects, with the numeric tables behind a
+            button.</li>
+          <li><strong>Subject</strong> — "Weakest subject" shows the lowest of the three scores,
+            answering "does this school fall down anywhere?". Switch to Polish, Maths or English
+            to see a single subject.</li>
+          <li><strong>Metric</strong> — "Mean" is the plain percentage score. "Normalised score"
+            is the distance from the voivodeship average <em>of the same year</em>: 0 is exactly
+            average, positive values sit above it, negative below.</li>
+          <li><strong>Filters</strong> — public or private schools, a minimum score, and a
+            minimum number of years of data (schools with a short history are less certain).</li>
+          <li><strong>Search</strong> — type a school name or a town. The map additionally has an
+            address search that moves the view to a chosen place.</li>
+          <li><strong>Settings</strong> — the continuous colour ramp, and the advanced metrics if
+            you want to compare ways of computing the score.</li>
         </ul>
       </div>
     </section>
@@ -406,20 +441,16 @@
 
     <section id="sources">
       <div data-lang-block="pl">
-        <h2>Inne źródła i kod</h2>
+        <h2>Kod i pełna analiza</h2>
         <ul>
-          <li>Podobne narzędzia: <a target="_blank" rel="noopener" href="https://mapa.wyniki.edu.pl/MapaEgzaminow/">mapa.wyniki.edu.pl</a>,
-            <a target="_blank" rel="noopener" href="https://www.rankingedukacji.pl/rankingi/szkoly-podstawowe/warszawa">rankingedukacji.pl</a>.</li>
-          <li>Kod i pełna analiza (notebook):
+          <li>Repozytorium projektu — kod, notebook z pełną analizą i skrypt walidacyjny:
             <a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie">GitHub</a>.</li>
         </ul>
       </div>
       <div data-lang-block="en" hidden>
-        <h2>Other sources and code</h2>
+        <h2>Code and the full analysis</h2>
         <ul>
-          <li>Similar tools: <a target="_blank" rel="noopener" href="https://mapa.wyniki.edu.pl/MapaEgzaminow/">mapa.wyniki.edu.pl</a>,
-            <a target="_blank" rel="noopener" href="https://www.rankingedukacji.pl/rankingi/szkoly-podstawowe/warszawa">rankingedukacji.pl</a>.</li>
-          <li>Code and the full analysis (notebook):
+          <li>The project repository — code, the full analysis notebook and the validation script:
             <a target="_blank" rel="noopener" href="https://github.com/herbakamil/compare-primary-schools-mazowieckie">GitHub</a>.</li>
         </ul>
       </div>
