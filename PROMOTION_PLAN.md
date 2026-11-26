@@ -75,20 +75,21 @@ zapytania o konkretne gminy i konkretne szkoły — patrz Faza 4.
 
 ### Faza 1 — domena (warunkuje prawie wszystko dalej)
 
-Kandydaci (status DNS z 25.11.2026 — brak delegacji ≈ prawdopodobnie wolna;
-**potwierdzić w wyszukiwarce rejestratora przed zakupem**):
-
-- [ ] wybór nazwy. **Warunek twardy (decyzja właściciela): region musi być
-      w nazwie** — serwis obejmuje tylko Mazowsze i nazwa bez regionu byłaby
-      oszustwem; ewentualny ogólnopolski serwis za lata dostanie własną domenę,
-      a ta będzie przekierowywać. Kandydaci (wolne wg DNS 25.11.2026;
-      potwierdzić u rejestratora): **`szkolypodstawowemazowieckie.pl`**
-      (faworyt dotychczasowej dyskusji — precyzyjna co do typu szkół
-      i regionu, 30 znaków), `szkolymazowieckie.pl` (20),
-      `szkolynamazowszu.pl` (19, najnaturalniejsza w mowie),
-      `szkolymazowsza.pl` (17).
-      Poza listą: rodzina „na mapie" — `szkolynamapie.pl` to od jesieni żywy
-      konkurent, podobna nazwa wyglądałaby jak podszywanie się.
+- [x] wybór nazwy: **`szkolypodstawowemazowieckie.pl`** (wolna w rejestrze
+      NASK wg WHOIS z 26.11.2026). **Warunki twarde (decyzja właściciela):
+      w nazwie musi być i typ szkół („podstawowe"), i region** — serwis
+      obejmuje wyłącznie szkoły podstawowe z województwa mazowieckiego,
+      a nazwa szersza od zakresu byłaby oszustwem; ewentualny szerszy serwis
+      za lata dostanie własną domenę, a ta będzie przekierowywać.
+      Rozważone alternatywy: `mazowieckieszkolypodstawowe.pl` (to samo
+      w odwrotnym szyku, ta sama długość — bez przewagi),
+      `szkolypodstawowe.mazowsze.pl` (domena regionalna NASK: czytelniejsza
+      dzięki kropce i tańsza, ale „Mazowsze" to region historyczny, nie
+      województwo, a adres wygląda jak poddomena oficjalnego serwisu
+      regionu), warianty krótsze bez „podstawowe" (`szkolymazowieckie.pl`
+      i podobne — nie spełniają warunku) oraz rodzina „na mapie"
+      (`szkolynamapie.pl` to od jesieni żywy konkurent, podobna nazwa
+      wyglądałaby jak podszywanie się).
 - [ ] rejestrator — kryteria wyboru: **cena odnowienia** (nie promocyjna
       pierwszoroczna), darmowe **przekierowanie e-mail** (kontakt@ → prywatna
       skrzynka), ewentualnie SMTP w pakiecie; bez hostingu (zbędny).
@@ -174,16 +175,13 @@ Dziś strona nie ma żadnej treści statycznej do dopasowania zapytań. Plan:
 
 ## 5. Pytania do Ciebie (osoby od SEO/marketingu)
 
-1. **Nazwa domeny** — region w nazwie to warunek nienegocjowalny (patrz
-   Faza 1). Spór do rozstrzygnięcia w obrębie wariantów regionalnych:
-   pełna precyzja typu szkół (`szkolypodstawowemazowieckie.pl`, 30 znaków)
-   vs krótsze (`szkolymazowieckie.pl`, `szkolynamazowszu.pl`). Czy długość
-   realnie boli pod SEO/brand, skoro nikt adresów nie wpisuje ręcznie?
-2. **Gminy czy szkoły najpierw?** Nasz argument za gminami: 216 stron zamiast
+Nazwa domeny jest już rozstrzygnięta (patrz Faza 1) — nie jest pytaniem.
+
+1. **Gminy czy szkoły najpierw?** Nasz argument za gminami: 216 stron zamiast
    1743, bogatsza pojedyncza strona; za szkołami: niemal zerowa konkurencja
    w długim ogonie.
-3. **Źródła linków** — konkretne tytuły/serwisy/ludzie, do których warto
+2. **Źródła linków** — konkretne tytuły/serwisy/ludzie, do których warto
    zapukać w naszym temacie?
-4. Czy widzisz ryzyka (doorway, kanibalizacja fraz między gminą a szkołą),
+3. Czy widzisz ryzyka (doorway, kanibalizacja fraz między gminą a szkołą),
    których nie uwzględniliśmy?
-5. Czego brakuje w tym planie?
+4. Czego brakuje w tym planie?
