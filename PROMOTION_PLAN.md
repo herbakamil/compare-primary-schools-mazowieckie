@@ -11,7 +11,9 @@ poniżej: **25 listopada 2026**.
 **Mapa i ranking szkół podstawowych w województwie mazowieckim** na podstawie
 wyników egzaminu ósmoklasisty (dane OKE Warszawa, lata 2021–2026, 1743 szkoły).
 
-- Strona: https://herbakamil.github.io/compare-primary-schools-mazowieckie/
+- Strona: https://szkolypodstawowemazowieckie.pl/ (dawny adres
+  https://herbakamil.github.io/compare-primary-schools-mazowieckie/
+  przekierowuje na nowy)
 - Kod i dane: https://github.com/herbakamil/compare-primary-schools-mazowieckie
 
 Stack: strona w pełni statyczna (HTML + vanilla JS + Leaflet), hostowana za
@@ -118,12 +120,17 @@ zapytania o konkretne gminy i konkretne szkoły — patrz Faza 4.
       i podobne — nie spełniają warunku) oraz rodzina „na mapie"
       (`szkolynamapie.pl` to od jesieni żywy konkurent, podobna nazwa
       wyglądałaby jak podszywanie się).
-- [ ] rejestrator — kryteria wyboru: **cena odnowienia** (nie promocyjna
-      pierwszoroczna), darmowe **przekierowanie e-mail** (kontakt@ → prywatna
-      skrzynka), ewentualnie SMTP w pakiecie; bez hostingu (zbędny).
-- [ ] rekordy DNS: 4×A (185.199.108–111.153) + 4×AAAA (2606:50c0:8000–8003::153)
-      na apex, `www CNAME herbakamil.github.io.`; TTL 600–3600 na czas konfiguracji.
-- [ ] plik `CNAME` w `docs/` (robi Claude po podaniu nazwy).
+- [x] rejestrator: **OVHcloud**, domena zarejestrowana 26.11.2026. Wybrany
+      za cenę odnowienia (72,56 zł brutto/rok wg cennika z tego dnia) oraz
+      darmowy pakiet z jedną skrzynką e-mail i edytorem strefy DNS. Kilku
+      rejestratorów ma odnowienie tańsze o 2–10 zł rocznie (Hostido,
+      Viperhost, VH.pl), ale bez potwierdzonej obsługi poczty przy samej
+      domenie.
+- [x] rekordy DNS (ustawione 26.11.2026 w strefie OVH): 4×A
+      (185.199.108–111.153) + 4×AAAA (2606:50c0:8000–8003::153) na samej
+      domenie, `www CNAME herbakamil.github.io.`; rekordy pocztowe OVH
+      (MX, SPF, DKIM) zostawione bez zmian.
+- [x] plik `CNAME` w `docs/`.
 - [ ] GitHub → Settings → Pages → Custom domain → wpisać domenę → po wydaniu
       certyfikatu zaznaczyć **Enforce HTTPS** (do ~24 h).
 - [ ] **dopisać nową domenę do klucza CARTO** (carto.com/basemaps/apikey) —
