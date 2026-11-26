@@ -65,12 +65,32 @@ HTTP 304 i ~0 B, bo dane zmieniają się raz w roku).
 
 ## 3. Konkurencja (stan: listopad 2026)
 
-| Serwis | Zakres | Uwagi |
-|---|---|---|
-| **szkolynamapie.pl** | obwody szkolne + wyniki E8, 21 największych miast, rankingi per województwo | **nowy, najbliższy zakresem**; pojawił się między wrześniem a listopadem 2026 |
-| **waszaedukacja.pl** | ogólnopolski katalog ~43 tys. placówek, rankingi, progi, opinie | duży, zasiedziały |
-| mapa.wyniki.edu.pl | mapa wyników egzaminów | |
-| rankingedukacji.pl | rankingi szkół | |
+Opis ten sam, co w sekcji „Podobne serwisy" na stronie Pomocy — tam jest jego
+źródło:
+
+- [szkolynamapie.pl](https://szkolynamapie.pl/)
+  - jedyny (oprócz naszego) serwis z mapą pokazującą dokładną lokalizację
+    szkoły (a do tego oznaczone rejony szkół publicznych);
+  - linki do stron poszczególnych szkół i podstrony dla każdej szkoły z dużą
+    ilością informacji o niej;
+  - są też podstrony dla poszczególnych miast.
+- [rankingedukacji.pl](https://www.rankingedukacji.pl/rankingi/szkoly-podstawowe/warszawa)
+  - rankingi szkół podstawowych i liceów;
+  - średnia wyników liczona za ostatnie 3 lata;
+  - uwzględnia wyniki w olimpiadach;
+  - dość dokładne informacje na temat szkół.
+- [waszaedukacja.pl](https://waszaedukacja.pl/)
+  - ranking podstawówek i liceów w całej Polsce;
+  - wiele szkół (nawet topowych) nie ma swoich podstron — brakuje o nich
+    informacji;
+  - nie jest jasne, dlaczego 1/3 szkół w mazowieckim jest pominięta
+    (1205 vs 1743 w naszym serwisie);
+  - nie jest jasne, jak liczone są punkty, olimpiady itp.
+- [mapa.wyniki.edu.pl](https://mapa.wyniki.edu.pl/MapaEgzaminow/)
+  - mapa ogólnopolska — niestety nie pokazuje lokalizacji na mapie; na
+    poziomie Warszawy mamy tylko tabelki dla dzielnic, bez lokalizacji szkół;
+  - brakuje metryki łączącej wszystkie przedmioty;
+  - nie ma metryki łączącej wszystkie lata.
 
 Wniosek pozycjonerski: frazy ogólne („ranking szkół podstawowych warszawa")
 są zajęte przez graczy z historią domeny. Realny teren to **długi ogon**:
