@@ -69,23 +69,26 @@ Opis ten sam, co w sekcji „Podobne serwisy" na stronie Pomocy — tam jest jeg
 źródło:
 
 - [szkolynamapie.pl](https://szkolynamapie.pl/)
-  - jedyny (oprócz naszego) serwis z mapą pokazującą dokładną lokalizację
-    szkoły (a do tego oznaczone rejony szkół publicznych);
+  - mapa pokazująca dokładną lokalizację szkół, z oznaczonymi rejonami szkół
+    publicznych — w 21 miastach (z województwa mazowieckiego: Warszawa
+    i Radom);
   - linki do stron poszczególnych szkół i podstrony dla każdej szkoły z dużą
     ilością informacji o niej;
   - są też podstrony dla poszczególnych miast.
 - [rankingedukacji.pl](https://www.rankingedukacji.pl/rankingi/szkoly-podstawowe/warszawa)
   - rankingi szkół podstawowych i liceów;
-  - średnia wyników liczona za ostatnie 3 lata;
+  - ranking liczony z wyników jednego, ostatniego roku (średnia z 3 ostatnich
+    lat tylko wtedy, gdy szkole brakuje wyniku z danego roku);
   - uwzględnia wyniki w olimpiadach;
   - dość dokładne informacje na temat szkół.
 - [waszaedukacja.pl](https://waszaedukacja.pl/)
   - ranking podstawówek i liceów w całej Polsce;
   - wiele szkół (nawet topowych) nie ma swoich podstron — brakuje o nich
     informacji;
-  - nie jest jasne, dlaczego 1/3 szkół w mazowieckim jest pominięta
-    (1205 vs 1743 w naszym serwisie);
-  - nie jest jasne, jak liczone są punkty, olimpiady itp.
+  - ranking liczony z jednego roku: po 28% za język polski, matematykę
+    i język obcy oraz 16% za olimpiady (wagi są podane pod tabelą rankingu);
+  - mapa szkół jest na stronach rankingów miast, ukryta pod przyciskiem
+    „Pokaż mapę szkół".
 - [mapa.wyniki.edu.pl](https://mapa.wyniki.edu.pl/MapaEgzaminow/)
   - mapa ogólnopolska — niestety nie pokazuje lokalizacji na mapie; na
     poziomie Warszawy mamy tylko tabelki dla dzielnic, bez lokalizacji szkół;
