@@ -18,15 +18,20 @@ Stack: strona w pełni statyczna (HTML + vanilla JS + Leaflet), hostowana za
 darmo na GitHub Pages, bez backendu. Dane odświeżane raz w roku (lipiec–sierpień,
 po publikacji wyników przez OKE).
 
-**Wyróżniki względem konkurencji** (uczciwie: to są wyróżniki dla wymagającego
-odbiorcy, nie dla masowego):
+**Wyróżniki względem konkurencji** (te same, co w sekcji „Główne cechy
+naszego serwisu" na stronie Pomocy — tam jest ich źródło):
 
-- pełna jawność: surowe pliki OKE, przetworzone xlsx i JSON-y serwowane stronie
-  są w publicznym repo; niezależny skrypt walidacyjny sprawdza eksport
-  ~1,3 mln porównań;
-- metryka wybrana testem stabilności (leave-one-out), a nie arbitralnie;
-- komunikacja niepewności wbudowana w UI (zakresy pozycji, ostrzeżenia przy
-  krótkiej historii, neutralne etykiety klas);
+- tylko województwo mazowieckie;
+- średnia z możliwie dużej liczby lat (aby wynik szkoły nie skakał mocno
+  rok do roku);
+- stara się podać wyniki możliwie dużej liczby szkół (nawet jeśli w danym
+  roku nie było egzaminów), więc większe pokrycie niż w innych serwisach;
+- zamiast średniej używa minimum z 3 przedmiotów (aby średnia nie ukryła
+  tego, że dana szkoła jest słaba w jednej z dziedzin);
+- stara się pokazać, jak zmieniają się wyniki szkoły rok do roku;
+- duża elastyczność w wyborze tego, co wyświetlamy na mapie i w rankingu;
+- ostrzeżenie przed mało wiarygodnymi wynikami (bo szkoła ma mało danych
+  albo wyniki mocno skaczą);
 - zero cookies, zero reklam, zero bannera zgód.
 
 ## 2. Stan wyjściowy — twarde fakty
