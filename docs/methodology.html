@@ -2,18 +2,20 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>Pomoc — Mazowieckie</title>
-  <!-- The page moved from methodology.html to help.html when the tab was renamed.
-       This stub keeps links shared before the rename working. The script carries
-       the query string and the fragment across, so a deep link such as
-       methodology.html#stability still lands on the right section; the
-       meta refresh is the no-JavaScript fallback and loses only the fragment. -->
-  <script>location.replace('help.html' + location.search + location.hash);</script>
-  <noscript><meta http-equiv="refresh" content="0; url=help.html"></noscript>
-  <link rel="canonical" href="help.html">
+  <title>O serwisie — Mazowieckie</title>
+  <!-- The page was first methodology.html, then help.html, and is now
+       about.html. This stub keeps links shared under the oldest name working
+       and goes straight to the current page, without a second hop through
+       help.html. The script carries the query string and the fragment across,
+       so a deep link such as methodology.html#stability still lands on the
+       right section; the meta refresh is the no-JavaScript fallback and loses
+       only the fragment. -->
+  <script>location.replace('about.html' + location.search + location.hash);</script>
+  <noscript><meta http-equiv="refresh" content="0; url=about.html"></noscript>
+  <link rel="canonical" href="about.html">
 </head>
 <body>
-  <p>Ta strona nazywa się teraz <a href="help.html">Pomoc</a>.</p>
-  <p>This page is now called <a href="help.html">Help</a>.</p>
+  <p>Ta strona nazywa się teraz <a href="about.html">O serwisie</a>.</p>
+  <p>This page is now called <a href="about.html">About</a>.</p>
 </body>
 </html>

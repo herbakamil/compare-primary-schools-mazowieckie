@@ -21,7 +21,7 @@ darmo na GitHub Pages, bez backendu. Dane odświeżane raz w roku (lipiec–sier
 po publikacji wyników przez OKE).
 
 **Wyróżniki względem konkurencji** (te same, co w sekcji „Główne cechy
-naszego serwisu" na stronie Pomocy — tam jest ich źródło):
+naszego serwisu" na stronie „O serwisie" — tam jest ich źródło):
 
 - tylko województwo mazowieckie;
 - średnia z możliwie dużej liczby lat (aby wynik szkoły nie skakał mocno
@@ -40,7 +40,7 @@ naszego serwisu" na stronie Pomocy — tam jest ich źródło):
 
 Zrobione:
 
-- strona działa i jest kompletna funkcjonalnie (mapa, ranking, strona Pomocy
+- strona działa i jest kompletna funkcjonalnie (mapa, ranking, strona „O serwisie"
   dwujęzyczna PL/EN);
 - jednorazowe posty: grupa rodziców (Google), LinkedIn, grupa FB porównywania
   szkół w Warszawie (sierpień 2026);
@@ -67,7 +67,7 @@ HTTP 304 i ~0 B, bo dane zmieniają się raz w roku).
 
 ## 3. Konkurencja (stan: listopad 2026)
 
-Opis ten sam, co w sekcji „Podobne serwisy" na stronie Pomocy — tam jest jego
+Opis ten sam, co w sekcji „Podobne serwisy" na stronie „O serwisie" — tam jest jego
 źródło:
 
 - [szkolynamapie.pl](https://szkolynamapie.pl/)
@@ -165,7 +165,7 @@ zapytania o konkretne gminy i konkretne szkoły — patrz Faza 4.
 - [ ] `kontakt@domena` → przekierowanie na prywatną skrzynkę (rejestrator
       albo Cloudflare Email Routing — oba darmowe); wysyłka „w drugą stronę"
       przez Gmail „Wyślij jako" + hasło aplikacji.
-- [ ] krótka sekcja „Prywatność" na stronie Pomocy: zero cookies, co widzi
+- [ ] krótka sekcja „Prywatność" na stronie „O serwisie": zero cookies, co widzi
       statystyka, jakie zasoby ładują się z zewnątrz (kafelki mapy = CARTO
       widzi IP jak każdy serwer). To atut do powiedzenia wprost, nie obowiązek.
 

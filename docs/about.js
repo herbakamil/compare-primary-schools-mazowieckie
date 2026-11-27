@@ -1,4 +1,4 @@
-// Methodology page: long bilingual prose. The text lives as two blocks in the
+// About page: long bilingual prose. The text lives as two blocks in the
 // HTML ([data-lang-block="pl"|"en"]); here we show the one for the current UI
 // language and keep the nav/title labels translated (setLang → applyI18N).
 

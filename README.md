@@ -117,7 +117,7 @@ Then open:
 
 - <http://localhost:8765/index.html> — the map
 - <http://localhost:8765/ranking.html> — the ranking table
-- <http://localhost:8765/help.html> — the help page (metric definitions, caveats)
+- <http://localhost:8765/about.html> — the "O serwisie" / About page (goal, data, metric definitions, caveats)
 
 `--bind 127.0.0.1` keeps the server on your own machine; without it Python
 listens on every interface and anyone on your network can reach it. Any free
