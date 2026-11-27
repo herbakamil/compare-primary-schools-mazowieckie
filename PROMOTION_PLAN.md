@@ -131,11 +131,17 @@ zapytania o konkretne gminy i konkretne szkoły — patrz Faza 4.
       domenie, `www CNAME herbakamil.github.io.`; rekordy pocztowe OVH
       (MX, SPF, DKIM) zostawione bez zmian.
 - [x] plik `CNAME` w `docs/`.
-- [ ] GitHub → Settings → Pages → Custom domain → wpisać domenę → po wydaniu
-      certyfikatu zaznaczyć **Enforce HTTPS** (do ~24 h).
-- [ ] **dopisać nową domenę do klucza CARTO** (carto.com/basemaps/apikey) —
-      inaczej kafelki mapy wrócą do znaku wodnego.
-- [ ] test: stary adres github.io przekierowuje na nową domenę (robi się sam).
+- [x] GitHub Pages: domena ustawiona, certyfikat wydany, **Enforce HTTPS**
+      włączone (sprawdzone 27.11.2026: `http://` i oba warianty z `www`
+      przekierowują na `https://szkolypodstawowemazowieckie.pl/`).
+- [x] klucz CARTO: zostaje bez zmian (decyzja 27.11.2026). Klucz nie ma
+      włączonego ograniczenia („The key works from anywhere"), więc mapa
+      działa pod nową domeną. Strony zapisanej przy kluczu
+      (`herbakamil.github.io`) nie da się zmienić bez utworzenia nowego
+      klucza; wrócić do tematu, gdyby pojawił się znak wodny. Ograniczenia
+      nie włączamy — lokalny podgląd na localhost dostałby znak wodny.
+- [x] test: stary adres github.io przekierowuje na nową domenę, razem ze
+      ścieżkami podstron (sprawdzone 27.11.2026).
 
 ### Faza 2 — techniczne SEO (jeden pakiet zmian po domenie)
 

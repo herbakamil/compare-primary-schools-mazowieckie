@@ -21,8 +21,9 @@ of data arrives each summer).
   have it work.
 - **Tiles:** Carto Positron raster PNG (muted basemap so the coloured school
   markers stand out). Free with attribution; since 2026 CARTO requires an API
-  key (public by design, tied to the declared domain — unkeyed tiles get a
-  watermark baked into the image). Raster is a deliberate choice — vector
+  key (public by design; its website restriction is switched off, so it works
+  from any origin — unkeyed tiles get a watermark baked into the image).
+  Raster is a deliberate choice — vector
   migration is a recorded deferred decision, see §13.
 - **Audience:** Polish parents, mostly on mobile. Polish UI by default.
 
